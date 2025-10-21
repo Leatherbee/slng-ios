@@ -22,7 +22,7 @@ struct SlangCardView: View {
                 Text(slangData.slang.uppercased())
                     .font(.title3)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(.primary)
                                 
                 Image(systemName: "arrow.right")
                     .foregroundColor(.gray)

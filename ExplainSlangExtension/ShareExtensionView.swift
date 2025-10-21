@@ -26,12 +26,12 @@ struct ShareExtensionView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Original Text")
                                 .font(.caption)
-                                .foregroundStyle(.black)
+                                .foregroundStyle(.primary)
                                 .textCase(.uppercase)
                             
                             Text(sharedText)
                                 .font(.body)
-                                .foregroundStyle(.black)
+                                .foregroundStyle(.primary)
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .background(.gray.opacity(0.1))
@@ -44,14 +44,19 @@ struct ShareExtensionView: View {
                             ProgressView("Translating...")
                                 .padding()
                         } else if let error = translationError {
-                            Text("\(error)")
-                                .foregroundColor(.red)
-                                .padding()
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundStyle(.yellow)
+                                Text("\(error)")
+                                    .foregroundColor(.red)
+                                    .padding(0.4)
+                            }
+                            .padding()
                         } else if !translatedText.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("English Translation")
                                     .font(.caption)
-                                    .foregroundStyle(.black)
+                                    .foregroundStyle(.primary)
                                     .textCase(.uppercase)
                                 
                                 Text(translatedText)
@@ -68,7 +73,7 @@ struct ShareExtensionView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Slang Detected (\(detectedSlangs.count))")
                                     .font(.caption)
-                                    .foregroundStyle(.black)
+                                    .foregroundStyle(.primary)
                                     .textCase(.uppercase)
                                     .padding(.horizontal)
                                 
