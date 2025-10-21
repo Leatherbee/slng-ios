@@ -91,3 +91,7 @@ struct ContentView: View {
         detectedSlangs = SlangDictionary.shared.findSlang(in: inputText)
     }
 }
+
+#Preview {
+    ContentView()
+}
