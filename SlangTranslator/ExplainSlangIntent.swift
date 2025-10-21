@@ -22,7 +22,6 @@ struct ExplainSlangIntent: AppIntent {
             SlangResult(
                 slang: slang.slang,
                 translationID: slang.translationID,
-                
                 translationEN: slang.translationEN,
                 contextEN: slang.contextEN,
                 exampleEN: slang.exampleEN
@@ -51,7 +50,6 @@ struct SlangResult: Identifiable, AppEntity {
     }
 
     var id: String { slang }
-
     let slang: String
     let translationID: String
     let translationEN: String
