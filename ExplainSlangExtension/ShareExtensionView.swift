@@ -104,6 +104,7 @@ struct ShareExtensionView: View {
                     Button("Close") { onDismiss() }
                 }
             }
+            .scrollIndicators(.hidden)
         }
         .translationTask(translationSession) { session in
             isTranslating = true
