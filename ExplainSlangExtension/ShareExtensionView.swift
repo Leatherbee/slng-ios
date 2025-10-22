@@ -20,60 +20,60 @@ struct ShareExtensionView: View {
 
     var body: some View {
         NavigationView {
-            ZStack {
-                Color(.systemGroupedBackground).ignoresSafeArea()
-                
+            VStack {
                 ScrollView {
                     VStack(spacing: 20) {
-                        
-                        // Original text section
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Original Text")
                                 .font(.caption)
-                                .foregroundColor(.gray)
+                                .foregroundStyle(.primary)
                                 .textCase(.uppercase)
                             
                             Text(sharedText)
                                 .font(.body)
+                                .foregroundStyle(.primary)
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color(.systemBackground))
+                                .background(.gray.opacity(0.1))
                                 .cornerRadius(8)
                         }
                         .padding(.horizontal)
                         .padding(.top)
                         
-                        // Translation section
                         if isTranslating {
                             ProgressView("Translating...")
                                 .padding()
                         } else if let error = translationError {
-                            Text("⚠️ \(error)")
-                                .foregroundColor(.red)
-                                .padding()
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundStyle(.yellow)
+                                Text("\(error)")
+                                    .foregroundColor(.red)
+                                    .padding(0.4)
+                            }
+                            .padding()
                         } else if !translatedText.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("English Translation")
                                     .font(.caption)
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.primary)
                                     .textCase(.uppercase)
                                 
                                 Text(translatedText)
                                     .font(.body)
                                     .padding()
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(Color(.systemBackground))
+                                    .background(.gray.opacity(0.1))
                                     .cornerRadius(8)
                             }
                             .padding(.horizontal)
                         }
                         
-                        // Slang detection results
                         if !detectedSlangs.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Slang Detected (\(detectedSlangs.count))")
                                     .font(.caption)
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.primary)
                                     .textCase(.uppercase)
                                     .padding(.horizontal)
                                 
@@ -86,10 +86,10 @@ struct ShareExtensionView: View {
                             VStack(spacing: 20) {
                                 Image(systemName: "questionmark.circle")
                                     .font(.system(size: 60))
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.gray)
                                 Text("No slang detected")
                                     .font(.headline)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                             }
                             .padding()
                         }
@@ -97,22 +97,15 @@ struct ShareExtensionView: View {
                     .padding(.bottom)
                 }
             }
-            .navigationTitle("Explain Slang")
+            .navigationTitle("Word Explanation")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Close") { onDismiss() }
                 }
-//                ToolbarItem(placement: .navigationBarLeading) {
-//                    Button {
-//                        performTranslation()
-//                    } label: {
-//                        Label("Translate", systemImage: "translate")
-//                    }
-//                }
             }
+            .scrollIndicators(.hidden)
         }
-        // Translation happens here automatically when configuration is non-nil
         .translationTask(translationSession) { session in
             isTranslating = true
             translationError = nil
@@ -131,7 +124,6 @@ struct ShareExtensionView: View {
     }
 
     private func performTranslation() {
-        // Initialize or toggle the translation session
         if translationSession == nil {
             translationSession = TranslationSession.Configuration(
                 source: nil,

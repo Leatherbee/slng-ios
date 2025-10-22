@@ -16,13 +16,12 @@ struct ExplainSlangIntent: AppIntent {
     var text: String
 
     func perform() async throws -> some IntentResult & ReturnsValue<[SlangResult]> & ProvidesDialog {
-        let found = await SlangDictionary.shared.findSlang(in: text)
+        let wordFound = await SlangDictionary.shared.findSlang(in: text)
         
-        let results = found.map { slang in
+        let results = wordFound.map { slang in
             SlangResult(
                 slang: slang.slang,
                 translationID: slang.translationID,
-                
                 translationEN: slang.translationEN,
                 contextEN: slang.contextEN,
                 exampleEN: slang.exampleEN
@@ -32,7 +31,7 @@ struct ExplainSlangIntent: AppIntent {
         if results.isEmpty {
             return .result(value: [], dialog: "No slang detected in the text.")
         } else {
-            let list = results.map { "\($0.slang) → \($0.translationEN)" }.joined(separator: ", ")
+            let list = results.map { "\($0.slang) → \($0.translationEN)" }.joined(separator: "\n")
             return .result(value: results, dialog: "Detected \(results.count) slang: \(list)")
         }
     }
@@ -51,7 +50,6 @@ struct SlangResult: Identifiable, AppEntity {
     }
 
     var id: String { slang }
-
     let slang: String
     let translationID: String
     let translationEN: String

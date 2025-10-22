@@ -8,7 +8,6 @@
 import UIKit
 import SwiftUI
 
-// MARK: - Share Extension View Controller
 class ShareViewController: UIViewController {
     
     private var sharedText: String = ""
@@ -16,7 +15,6 @@ class ShareViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Extract shared text
         extractSharedText { [weak self] text in
             guard let self = self else { return }
             self.sharedText = text

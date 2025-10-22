@@ -3,7 +3,7 @@
 //  SlangTranslator
 //
 //  Created by Pramuditha Muhammad Ikhwan on 17/10/25.
-//
+///Users/prammmoe/ADA-IL/Final Challenge/SlangTranslator/SlangTranslator/SlangCardView.swift
 //
 //  SlangCardView.swift
 //  SlangTranslator
@@ -18,22 +18,19 @@ struct SlangCardView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            // Header
             HStack(alignment: .center) {
                 Text(slangData.slang.uppercased())
                     .font(.title3)
                     .fontWeight(.bold)
-                    .foregroundColor(.blue)
-                
-                Spacer()
-                
+                    .foregroundColor(.primary)
+                                
                 Image(systemName: "arrow.right")
                     .foregroundColor(.gray)
                 
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(slangData.translationEN)
                         .font(.headline)
-                        .foregroundColor(.green)
+                        .foregroundColor(.secondary)
                 }
             }
             
@@ -54,7 +51,7 @@ struct SlangCardView: View {
             
             // Example Section
             VStack(alignment: .leading, spacing: 6) {
-                Label("Example", systemImage: "text.quote")
+                Text("Example")
                     .font(.subheadline)
                     .fontWeight(.semibold)
                 
@@ -71,9 +68,8 @@ struct SlangCardView: View {
             }
         }
         .padding(16)
-        .background(Color(.systemBackground))
+        .background(.gray.opacity(0.1))
         .cornerRadius(14)
-        .shadow(color: .gray.opacity(0.15), radius: 4, x: 0, y: 2)
     }
 }
 
