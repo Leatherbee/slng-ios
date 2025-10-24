@@ -6,18 +6,20 @@
 //
 
 import SwiftUI
-import Translation
 
 struct ShareExtensionView: View {
     let sharedText: String
     let onDismiss: () -> Void
     
     @State private var detectedSlangs: [SlangData] = []
-    @State private var translationSession: TranslationSession.Configuration?
     @State private var translatedText: String = ""
     @State private var isTranslating: Bool = false
     @State private var translationError: String?
 
+    @StateObject private var viewModel = ShareTranslateViewModel(
+        useCase: TranslateSentenceUseCaseImpl(repository: GPTTranslationRepositoryImpl(apiKey: Bundle.main.infoDictionary?["APIKey"] as? String ?? ""))
+    )
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -106,32 +108,18 @@ struct ShareExtensionView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .translationTask(translationSession) { session in
-            isTranslating = true
-            translationError = nil
-            do {
-                let response = try await session.translate(sharedText)
-                translatedText = response.targetText
-            } catch {
-                translationError = error.localizedDescription
-            }
-            isTranslating = false
-        }
         .onAppear {
             detectedSlangs = SlangDictionary.shared.findSlang(in: sharedText)
-            performTranslation()
-        }
-    }
-
-    private func performTranslation() {
-        if translationSession == nil {
-            translationSession = TranslationSession.Configuration(
-                source: nil,
-                target: Locale.Language(languageCode: .english)
-            )
-        } else {
-            translationSession?.invalidate()
-            translationSession = nil
+            Task {
+                isTranslating = true
+                viewModel.inputText = sharedText
+                await viewModel.translate()
+                translatedText = viewModel.result?.englishTranslation ?? ""
+                if let vmError = viewModel.errorMessage, !vmError.isEmpty {
+                    translationError = vmError
+                }
+                isTranslating = false
+            }
         }
     }
 }

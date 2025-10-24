@@ -13,18 +13,15 @@ struct OnboardingView: View {
         let items: [String]
     }
     
-    // MARK: - Data
     let categories: [Category] = [
         Category(name: "Buah", items: ["Apel", "Jeruk", "Mangga", "Semangka", "Pisang"]),
         Category(name: "Sayur", items: ["Bayam", "Wortel", "Kangkung", "Brokoli", "Tomat"]),
         Category(name: "Daging", items: ["Ayam", "Sapi", "Kambing", "Ikan", "Udang"])
     ]
     
-    // MARK: - State
     @State private var expandedCategories: Set<UUID> = [] // bisa buka banyak
     @State private var searchText: String = ""
     
-    // MARK: - Computed Property (Filtered Data)
     var filteredCategories: [Category] {
         if searchText.isEmpty {
             return categories

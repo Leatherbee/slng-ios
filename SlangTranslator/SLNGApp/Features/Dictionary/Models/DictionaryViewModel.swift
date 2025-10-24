@@ -11,6 +11,7 @@ struct DictionaryItems: Identifiable {
     let title: String
     let meaning: String
 }
+
 @MainActor
 final class DictionaryViewModel: ObservableObject {
     @Published var searchText: String = ""

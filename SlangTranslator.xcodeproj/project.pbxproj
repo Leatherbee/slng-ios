@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		502CE91A2EA1F8F2007F38E3 /* ExplainSlangExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 502CE9102EA1F8F2007F38E3 /* ExplainSlangExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		502CEAE22EABD37D007F38E3 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 502CEAE12EABD37D007F38E3 /* OpenAI */; };
+		502CEAE42EABD3A3007F38E3 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 502CEAE32EABD3A3007F38E3 /* OpenAI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,7 +43,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				502CE91A2EA1F8F2007F38E3 /* ExplainSlangExtension.appex in Embed Foundation Extensions */,
+				502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -49,10 +51,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		502CE8DC2EA1F638007F38E3 /* InText.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InText.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		502CE8DC2EA1F638007F38E3 /* SLNG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SLNG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		502CE8E92EA1F639007F38E3 /* SlangTranslatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SlangTranslatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		502CE8F32EA1F639007F38E3 /* SlangTranslatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SlangTranslatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		502CE9102EA1F8F2007F38E3 /* ExplainSlangExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ExplainSlangExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SLNGShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -66,8 +68,12 @@
 		502CE9262EA1FA0E007F38E3 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Shared/Core/DataSources/GPTTranslationRepositoryImpl.swift,
+				Shared/Core/Entities/SlangData.swift,
+				Shared/Core/Entities/TranslationData.swift,
+				Shared/Core/Repositories/TranslationRepository.swift,
+				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
 				SlangCardView.swift,
-				SlangData.swift,
 			);
 			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
 		};
@@ -107,6 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				502CEAE22EABD37D007F38E3 /* OpenAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				502CEAE42EABD3A3007F38E3 /* OpenAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,10 +156,10 @@
 		502CE8DD2EA1F638007F38E3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				502CE8DC2EA1F638007F38E3 /* InText.app */,
+				502CE8DC2EA1F638007F38E3 /* SLNG.app */,
 				502CE8E92EA1F639007F38E3 /* SlangTranslatorTests.xctest */,
 				502CE8F32EA1F639007F38E3 /* SlangTranslatorUITests.xctest */,
-				502CE9102EA1F8F2007F38E3 /* ExplainSlangExtension.appex */,
+				502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -178,9 +186,10 @@
 			);
 			name = SlangTranslator;
 			packageProductDependencies = (
+				502CEAE12EABD37D007F38E3 /* OpenAI */,
 			);
 			productName = SlangTranslator;
-			productReference = 502CE8DC2EA1F638007F38E3 /* InText.app */;
+			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
 			productType = "com.apple.product-type.application";
 		};
 		502CE8E82EA1F639007F38E3 /* SlangTranslatorTests */ = {
@@ -246,9 +255,10 @@
 			);
 			name = ExplainSlangExtension;
 			packageProductDependencies = (
+				502CEAE32EABD3A3007F38E3 /* OpenAI */,
 			);
 			productName = ExplainSlangExtension;
-			productReference = 502CE9102EA1F8F2007F38E3 /* ExplainSlangExtension.appex */;
+			productReference = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -286,6 +296,9 @@
 			);
 			mainGroup = 502CE8D32EA1F638007F38E3;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 502CE8DD2EA1F638007F38E3 /* Products */;
 			projectDirPath = "";
@@ -513,26 +526,33 @@
 				DEVELOPMENT_TEAM = RR3T853788;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = SLNG;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = prammmoe.SlangTranslator;
-				PRODUCT_NAME = InText;
+				PRODUCT_BUNDLE_IDENTIFIER = group.slang.prammmoe.SlangTranslator;
+				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -548,26 +568,33 @@
 				DEVELOPMENT_TEAM = RR3T853788;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = SLNG;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = prammmoe.SlangTranslator;
-				PRODUCT_NAME = InText;
+				PRODUCT_BUNDLE_IDENTIFIER = group.slang.prammmoe.SlangTranslator;
+				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -663,7 +690,7 @@
 				DEVELOPMENT_TEAM = RR3T853788;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ExplainSlangExtension;
+				INFOPLIST_KEY_CFBundleDisplayName = "Explain Slang";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -671,8 +698,8 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = prammmoe.SlangTranslator.ExplainSlangExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = group.slang.prammmoe.SlangTranslator.SLNGShareExtension;
+				PRODUCT_NAME = SLNGShareExtension;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -691,7 +718,7 @@
 				DEVELOPMENT_TEAM = RR3T853788;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ExplainSlangExtension;
+				INFOPLIST_KEY_CFBundleDisplayName = "Explain Slang";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -699,8 +726,8 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = prammmoe.SlangTranslator.ExplainSlangExtension;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = group.slang.prammmoe.SlangTranslator.SLNGShareExtension;
+				PRODUCT_NAME = SLNGShareExtension;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -760,6 +787,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MacPaw/OpenAI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		502CEAE12EABD37D007F38E3 /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+		502CEAE32EABD3A3007F38E3 /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 502CE8D42EA1F638007F38E3 /* Project object */;
 }

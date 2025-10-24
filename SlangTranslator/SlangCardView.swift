@@ -3,13 +3,6 @@
 //  SlangTranslator
 //
 //  Created by Pramuditha Muhammad Ikhwan on 17/10/25.
-///Users/prammmoe/ADA-IL/Final Challenge/SlangTranslator/SlangTranslator/SlangCardView.swift
-//
-//  SlangCardView.swift
-//  SlangTranslator
-//
-//  Created by Pramuditha Muhammad Ikhwan on 17/10/25.
-//
 
 import SwiftUI
 
@@ -36,7 +29,6 @@ struct SlangCardView: View {
             
             Divider()
             
-            // Context Section
             VStack(alignment: .leading, spacing: 6) {
                 Label("Context", systemImage: "info.circle")
                     .font(.subheadline)
@@ -49,7 +41,6 @@ struct SlangCardView: View {
                 }
             }
             
-            // Example Section
             VStack(alignment: .leading, spacing: 6) {
                 Text("Example")
                     .font(.subheadline)

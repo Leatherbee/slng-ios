@@ -21,6 +21,8 @@ class SlangDictionary {
     static let shared = SlangDictionary()
     
     let slangs: [String: SlangData] = [
+        /// yang tidak digunakan untuk di UI adalah translationID dan contextID
+        
         "gue": SlangData(
             slang: "gue",
             translationID: "saya / aku",

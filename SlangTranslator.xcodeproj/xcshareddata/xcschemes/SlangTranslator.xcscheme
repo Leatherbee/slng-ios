@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "502CE8DB2EA1F638007F38E3"
-               BuildableName = "SlangTranslator.app"
+               BuildableName = "InText.app"
                BlueprintName = "SlangTranslator"
                ReferencedContainer = "container:SlangTranslator.xcodeproj">
             </BuildableReference>
@@ -69,7 +69,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "502CE8DB2EA1F638007F38E3"
-            BuildableName = "SlangTranslator.app"
+            BuildableName = "InText.app"
             BlueprintName = "SlangTranslator"
             ReferencedContainer = "container:SlangTranslator.xcodeproj">
          </BuildableReference>
@@ -86,7 +86,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "502CE8DB2EA1F638007F38E3"
-            BuildableName = "SlangTranslator.app"
+            BuildableName = "InText.app"
             BlueprintName = "SlangTranslator"
             ReferencedContainer = "container:SlangTranslator.xcodeproj">
          </BuildableReference>
