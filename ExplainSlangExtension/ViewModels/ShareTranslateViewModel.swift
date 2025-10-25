@@ -7,6 +7,8 @@
 
 import Foundation
 import Combine
+import SwiftUI
+import SwiftData
 
 @MainActor
 final class ShareTranslateViewModel: ObservableObject {
@@ -14,6 +16,8 @@ final class ShareTranslateViewModel: ObservableObject {
     @Published var result: TranslationResponse?
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+    
+//    @Environment(\.modelContext) private var context
 
     private let useCase: TranslateSentenceUseCase
 

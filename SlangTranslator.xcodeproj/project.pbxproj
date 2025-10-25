@@ -68,11 +68,13 @@
 		502CE9262EA1FA0E007F38E3 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Shared/Core/DataSources/GPTTranslationRepositoryImpl.swift,
+				Shared/Core/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Core/Entities/SlangData.swift,
 				Shared/Core/Entities/TranslationData.swift,
+				Shared/Core/Model/TranslationModel.swift,
 				Shared/Core/Repositories/TranslationRepository.swift,
 				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
+				Shared/Core/Utils/SharedModelContainer.swift,
 				SlangCardView.swift,
 			);
 			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
@@ -685,6 +687,7 @@
 		502CE91D2EA1F8F2007F38E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ExplainSlangExtension/ExplainSlangExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR3T853788;
@@ -713,6 +716,7 @@
 		502CE91E2EA1F8F2007F38E3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ExplainSlangExtension/ExplainSlangExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR3T853788;

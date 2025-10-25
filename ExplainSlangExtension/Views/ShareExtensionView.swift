@@ -6,19 +6,18 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ShareExtensionView: View {
     let sharedText: String
     let onDismiss: () -> Void
-    
+            
     @State private var detectedSlangs: [SlangData] = []
     @State private var translatedText: String = ""
     @State private var isTranslating: Bool = false
     @State private var translationError: String?
-
-    @StateObject private var viewModel = ShareTranslateViewModel(
-        useCase: TranslateSentenceUseCaseImpl(repository: GPTTranslationRepositoryImpl(apiKey: Bundle.main.infoDictionary?["APIKey"] as? String ?? ""))
-    )
+    
+    @State private var viewModel: ShareTranslateViewModel?
     
     var body: some View {
         NavigationView {
@@ -110,12 +109,21 @@ struct ShareExtensionView: View {
         }
         .onAppear {
             detectedSlangs = SlangDictionary.shared.findSlang(in: sharedText)
+            
+            let context = SharedModelContainer.shared.context
+            let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
+            let repository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+            let useCase = TranslateSentenceUseCaseImpl(repository: repository)
+            viewModel = ShareTranslateViewModel(useCase: useCase)
+            
+            // Translate
             Task {
+                guard let vm = viewModel else { return }
                 isTranslating = true
-                viewModel.inputText = sharedText
-                await viewModel.translate()
-                translatedText = viewModel.result?.englishTranslation ?? ""
-                if let vmError = viewModel.errorMessage, !vmError.isEmpty {
+                vm.inputText = sharedText
+                await vm.translate()
+                translatedText = vm.result?.englishTranslation ?? ""
+                if let vmError = vm.errorMessage, !vmError.isEmpty {
                     translationError = vmError
                 }
                 isTranslating = false

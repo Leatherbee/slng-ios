@@ -14,7 +14,7 @@ enum SentimentType: String, Codable {
 }
 
 struct TranslationResponse: Decodable, Identifiable {
-    let id: UUID = UUID()
+    let id: UUID
     let originalText: String
     let englishTranslation: String
     let sentiment: SentimentType?

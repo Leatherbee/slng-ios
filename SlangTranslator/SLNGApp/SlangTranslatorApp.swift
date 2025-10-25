@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct SlangTranslatorApp: App {
     @State private var router = Router()
     @AppStorage("hasOnboarded") private var hasOnboarded = false
+
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $router.path) {
@@ -20,6 +22,7 @@ struct SlangTranslatorApp: App {
                     }
             }
         }
+        .modelContainer(SharedModelContainer.shared.container)
     }
 }
  
