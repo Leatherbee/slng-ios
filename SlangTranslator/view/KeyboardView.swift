@@ -19,7 +19,7 @@ struct KeyboardView: View {
                         .bold()
                     Spacer()
                 }
-                Text("Follow the instruction bellow to setup keyboard \ntranslator")
+                Text("Follow the instruction bellow to setup keyboard translator")
                     .font(.footnote)
        
                 //placeholder lottie

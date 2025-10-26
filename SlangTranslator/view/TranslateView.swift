@@ -47,8 +47,6 @@ struct TranslateView: View {
                     }
                 )
                 .frame(maxWidth: .infinity)
-//                .position(x: geometry.size.width / 2,
-//                          y: geometry.size.height / 2)
                 
                 Spacer()
                 
@@ -69,8 +67,14 @@ struct TranslateView: View {
                 .foregroundColor(Color(.white))
         }
         .frame(maxWidth: 314, minHeight: 60)
-        .background(Color(.black))
+        .background(
+            inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?
+            Color(.systemGray3) :
+            Color(.black)
+        )
         .clipShape(RoundedRectangle(cornerRadius: 30))
+        .padding()
+        .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         
     }
         
