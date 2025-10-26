@@ -19,7 +19,7 @@ final class SharedModelContainer {
             TranslationModel.self
         ])
         
-        let appGroupID = "group.prammmoe.SlangApp"
+        let appGroupID = "group.prammmoe.SLNG" 
         
         guard let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) else {
             fatalError("Cannot find AppGroup")

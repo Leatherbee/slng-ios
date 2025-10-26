@@ -82,46 +82,50 @@ final class SlangDictionary {
 
     func findSlang(in text: String, matching sentiment: SentimentType?) -> [SlangData] {
         let normalizedText = text.normalizedForSlangMatching()
-        var found: [SlangData] = []
-        
-        // Search all slangs that occurs in text, without filter
-        var rawMatches: [String: [SlangData]] = [:]
+        var found: [(data: SlangData, range: NSRange)] = []
         
         for slangData in slangs {
             let slang = slangData.slang.lowercased()
             let pattern = "\\b\(NSRegularExpression.escapedPattern(for: slang))\\b"
             
-            if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
-                let range = NSRange(location: 0, length: normalizedText.utf16.count)
-                if regex.firstMatch(in: normalizedText, options: [], range: range) != nil {
-                    rawMatches[slang, default: []].append(slangData)
+            guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+                continue
+            }
+            let fullRange = NSRange(location: 0, length: normalizedText.utf16.count)
+            
+            regex.enumerateMatches(in: normalizedText, options: [], range: fullRange) { match, _, _ in
+                if let matchRange = match?.range {
+                    found.append((data: slangData, range: matchRange))
                 }
             }
         }
         
-        // Loop for each slang that have more than one sentiment, then choose based on provided sentiment
-        for (_, variants) in rawMatches {
+        var filtered: [SlangData] = []
+        for (_, group) in Dictionary(grouping: found, by: { $0.data.slang }) {
+            let variants = group.map { $0.data }
             if variants.count == 1 {
-                found.append(variants.first!)
+                filtered.append(variants.first!)
             } else if let sentiment = sentiment {
-                // Find slang that has the same sentiment as the provided one
                 if let match = variants.first(where: { $0.sentiment == sentiment }) {
-                    found.append(match)
-                } else if let neutral = variants.first(where: { $0.sentiment == .neutral }){
-                    // If none match, fall back to the first variant
-                    found.append(neutral)
+                    filtered.append(match)
+                } else if let neutral = variants.first(where: { $0.sentiment == .neutral }) {
+                    filtered.append(neutral)
                 } else {
-                    // No sentiment provided; pick a default (first) to avoid ambiguity
-                    found.append(variants.first!)
+                    filtered.append(variants.first!)
                 }
             } else {
-                // If GPT don't have sentiment for the sentence, pick the first or neutral
                 let selected = variants.first(where: { $0.sentiment == .neutral }) ?? variants.first!
-                found.append(selected)
+                filtered.append(selected)
             }
         }
 
-        return found
+        let ordered = found.filter { slang in
+            filtered.contains(where: { $0.slang == slang.data.slang && $0.sentiment == slang.data.sentiment })
+        }
+        .sorted(by: { $0.range.location < $1.range.location })
+        .map { $0.data }
+        
+        return ordered
     }
 }
 
