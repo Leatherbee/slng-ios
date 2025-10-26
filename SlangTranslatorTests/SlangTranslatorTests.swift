@@ -6,7 +6,7 @@
 //
 
 import Testing
-@testable import SlangTranslator
+//@testable import SlangTranslator
 
 struct SlangTranslatorTests {
 

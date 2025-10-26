@@ -27,13 +27,6 @@
 			remoteGlobalIDString = 502CE8DB2EA1F638007F38E3;
 			remoteInfo = SlangTranslator;
 		};
-		502CE9182EA1F8F2007F38E3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 502CE8D42EA1F638007F38E3 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 502CE90F2EA1F8F2007F38E3;
-			remoteInfo = ExplainSlangExtension;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -70,7 +63,9 @@
 			membershipExceptions = (
 				Shared/Core/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Core/Entities/SlangData.swift,
+				Shared/Core/Entities/slng_data_seeded.json,
 				Shared/Core/Entities/TranslationData.swift,
+				"Shared/Core/Extensions/String+SlangNormalization.swift",
 				Shared/Core/Model/TranslationModel.swift,
 				Shared/Core/Repositories/TranslationRepository.swift,
 				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
@@ -181,7 +176,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				502CE9192EA1F8F2007F38E3 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				502CE8DE2EA1F638007F38E3 /* SlangTranslator */,
@@ -278,7 +272,6 @@
 					};
 					502CE8E82EA1F639007F38E3 = {
 						CreatedOnToolsVersion = 26.0;
-						TestTargetID = 502CE8DB2EA1F638007F38E3;
 					};
 					502CE8F22EA1F639007F38E3 = {
 						CreatedOnToolsVersion = 26.0;
@@ -386,11 +379,6 @@
 			isa = PBXTargetDependency;
 			target = 502CE8DB2EA1F638007F38E3 /* SlangTranslator */;
 			targetProxy = 502CE8F42EA1F639007F38E3 /* PBXContainerItemProxy */;
-		};
-		502CE9192EA1F8F2007F38E3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
-			targetProxy = 502CE9182EA1F8F2007F38E3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -603,7 +591,6 @@
 		502CE9012EA1F639007F38E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR3T853788;
@@ -618,14 +605,12 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SlangTranslator.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SlangTranslator";
 			};
 			name = Debug;
 		};
 		502CE9022EA1F639007F38E3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR3T853788;
@@ -640,7 +625,6 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SlangTranslator.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SlangTranslator";
 			};
 			name = Release;
 		};
