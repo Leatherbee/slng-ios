@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct TranslateView: View {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     @State private var inputText: String = ""
     @State private var dynamicTextStyle: Font.TextStyle = .largeTitle  // largeTitle default
     
@@ -19,13 +20,14 @@ struct TranslateView: View {
                 ZStack(alignment: .leading) {
                     if inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                         Text("Heard a slang you don't get? Type here")
-                            .foregroundColor(.gray)
+                            .foregroundColor(colorScheme == .dark ? DesignSystem.Colors.textDisableDark : DesignSystem.Colors.textDisable)
                             .padding(.horizontal)
                             .zIndex(1)
                     }
                     
                     TextEditor(text: $inputText)
                         .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
+                        .foregroundColor(.secondary)
                         .frame(height: textHeight)
                         .onChange(of: inputText) {
                             adjustFontSize()
@@ -64,15 +66,14 @@ struct TranslateView: View {
             Text("Translate  →")
                 .padding(.vertical, 18)
                 .font(Font.body.bold())
-                .foregroundColor(Color(.white))
+                .frame(maxWidth: 314, minHeight: 60)
+                .foregroundColor((colorScheme == .dark && (inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)==false) ? .black : .white)
+                .background(
+                    inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?
+                    Color(DesignSystem.Colors.buttonDisable) : (colorScheme == .light ? Color(DesignSystem.Colors.buttonPrimary) : .white)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 30))
         }
-        .frame(maxWidth: 314, minHeight: 60)
-        .background(
-            inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?
-            Color(.systemGray3) :
-            Color(.black)
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 30))
         .padding()
         .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         
