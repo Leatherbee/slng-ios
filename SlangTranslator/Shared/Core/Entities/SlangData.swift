@@ -80,10 +80,12 @@ final class SlangDictionary {
         }
     }
 
-    func findSlang(in text: String) -> [SlangData] {
+    func findSlang(in text: String, matching sentiment: SentimentType?) -> [SlangData] {
         let normalizedText = text.normalizedForSlangMatching()
-        
         var found: [SlangData] = []
+        
+        // Search all slangs that occurs in text, without filter
+        var rawMatches: [String: [SlangData]] = [:]
         
         for slangData in slangs {
             let slang = slangData.slang.lowercased()
@@ -92,11 +94,33 @@ final class SlangDictionary {
             if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
                 let range = NSRange(location: 0, length: normalizedText.utf16.count)
                 if regex.firstMatch(in: normalizedText, options: [], range: range) != nil {
-                    found.append(slangData)
+                    rawMatches[slang, default: []].append(slangData)
                 }
             }
         }
         
+        // Loop for each slang that have more than one sentiment, then choose based on provided sentiment
+        for (_, variants) in rawMatches {
+            if variants.count == 1 {
+                found.append(variants.first!)
+            } else if let sentiment = sentiment {
+                // Find slang that has the same sentiment as the provided one
+                if let match = variants.first(where: { $0.sentiment == sentiment }) {
+                    found.append(match)
+                } else if let neutral = variants.first(where: { $0.sentiment == .neutral }){
+                    // If none match, fall back to the first variant
+                    found.append(neutral)
+                } else {
+                    // No sentiment provided; pick a default (first) to avoid ambiguity
+                    found.append(variants.first!)
+                }
+            } else {
+                // If GPT don't have sentiment for the sentence, pick the first or neutral
+                let selected = variants.first(where: { $0.sentiment == .neutral }) ?? variants.first!
+                found.append(selected)
+            }
+        }
+
         return found
     }
 }
