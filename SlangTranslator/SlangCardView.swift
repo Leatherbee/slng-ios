@@ -64,17 +64,17 @@ struct SlangCardView: View {
     }
 }
 
-#Preview {
-    SlangCardView(
-        slangData: SlangData(
-            slang: "gue",
-            translationID: "saya / aku",
-            translationEN: "me, I, I am",
-            contextID: "Kata ganti orang pertama informal yang sangat umum di Jakarta dan sekitarnya.",
-            contextEN: "A very common informal first-person pronoun in Jakarta and its surroundings.",
-            exampleID: "Gue lagi sibuk nih.",
-            exampleEN: "I'm busy right now."
-        )
-    )
-}
+//#Preview {
+//    SlangCardView(
+//        slangData: SlangData(
+//            slang: "gue",
+//            translationID: "saya / aku",
+//            translationEN: "me, I, I am",
+//            contextID: "Kata ganti orang pertama informal yang sangat umum di Jakarta dan sekitarnya.",
+//            contextEN: "A very common informal first-person pronoun in Jakarta and its surroundings.",
+//            exampleID: "Gue lagi sibuk nih.",
+//            exampleEN: "I'm busy right now."
+//        )
+//    )
+//}
 

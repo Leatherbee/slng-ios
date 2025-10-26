@@ -35,8 +35,10 @@ final class TranslationRepositoryImpl: TranslationRepository {
         return gptResponse
     }
     
-    func fetchCachedTranslation(for text: String) -> TranslationResponse? {
-        let fetchDescriptor = FetchDescriptor<TranslationModel>(predicate: #Predicate { $0.originalText == text } )
+    private func fetchCachedTranslation(for text: String) -> TranslationResponse? {
+        let fetchDescriptor = FetchDescriptor<TranslationModel>(
+            predicate: #Predicate { $0.originalText == text }
+        )
         
         guard let cached = try? context.fetch(fetchDescriptor).first else { return nil }
         
@@ -48,7 +50,7 @@ final class TranslationRepositoryImpl: TranslationRepository {
         )
     }
     
-    func translateSentenceWithGPT(for text: String) async throws -> TranslationResponse {
+    private func translateSentenceWithGPT(for text: String) async throws -> TranslationResponse {
         let prompt = """
         Terjemahkan kalimat berikut dari Bahasa Indonesia informal ke Bahasa Inggris natural.
         Juga tentukan sentimen dari kalimat tersebut (positif, netral, atau negatif).

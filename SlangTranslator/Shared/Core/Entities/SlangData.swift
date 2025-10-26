@@ -7,7 +7,19 @@
 
 import Foundation
 
-struct SlangData {
+struct SlangData: Codable, Identifiable {
+    private enum CodingKeys: String, CodingKey {
+        case slang
+        case translationID
+        case translationEN
+        case contextID
+        case contextEN
+        case exampleID
+        case exampleEN
+        case sentiment
+    }
+
+    let id: UUID
     let slang: String
     let translationID: String
     let translationEN: String
@@ -15,68 +27,73 @@ struct SlangData {
     let contextEN: String
     let exampleID: String
     let exampleEN: String
+    let sentiment: SentimentType
+
+    init(id: UUID = UUID(), slang: String, translationID: String, translationEN: String, contextID: String, contextEN: String, exampleID: String, exampleEN: String, sentiment: SentimentType) {
+        self.id = id
+        self.slang = slang
+        self.translationID = translationID
+        self.translationEN = translationEN
+        self.contextID = contextID
+        self.contextEN = contextEN
+        self.exampleID = exampleID
+        self.exampleEN = exampleEN
+        self.sentiment = sentiment
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = UUID()
+        self.slang = try container.decode(String.self, forKey: .slang)
+        self.translationID = try container.decode(String.self, forKey: .translationID)
+        self.translationEN = try container.decode(String.self, forKey: .translationEN)
+        self.contextID = try container.decode(String.self, forKey: .contextID)
+        self.contextEN = try container.decode(String.self, forKey: .contextEN)
+        self.exampleID = try container.decode(String.self, forKey: .exampleID)
+        self.exampleEN = try container.decode(String.self, forKey: .exampleEN)
+        self.sentiment = try container.decode(SentimentType.self, forKey: .sentiment)
+    }
 }
 
-class SlangDictionary {
+final class SlangDictionary {
     static let shared = SlangDictionary()
     
-    let slangs: [String: SlangData] = [
-        /// yang tidak digunakan untuk di UI adalah translationID dan contextID
-        
-        "gue": SlangData(
-            slang: "gue",
-            translationID: "saya / aku",
-            translationEN: "me, I, I am",
-            contextID: "Kata ganti orang pertama informal yang sangat umum di Jakarta dan sekitarnya.",
-            contextEN: "A very common informal first-person pronoun in Jakarta and its surroundings.",
-            exampleID: "Gue lagi sibuk nih.",
-            exampleEN: "I'm busy right now."
-        ),
-        "lu": SlangData(
-            slang: "lu",
-            translationID: "kamu",
-            translationEN: "you",
-            contextID: "Kata ganti orang kedua informal, pasangan dari 'gue'.",
-            contextEN: "An informal second-person pronoun, often paired with 'gue'.",
-            exampleID: "Lu kemana aja?",
-            exampleEN: "Where have you been?"
-        ),
-        "gokil": SlangData(
-            slang: "gokil",
-            translationID: "gila / keren banget",
-            translationEN: "crazy / awesome",
-            contextID: "Digunakan untuk mengekspresikan sesuatu yang luar biasa atau mengejutkan.",
-            contextEN: "Used to express amazement or excitement; similar to 'crazy' or 'insane' in English slang.",
-            exampleID: "Film itu gokil banget!",
-            exampleEN: "That movie was insane!"
-        ),
-        "baper": SlangData(
-            slang: "baper",
-            translationID: "bawa perasaan",
-            translationEN: "too emotional / catching feelings",
-            contextID: "Ketika seseorang terlalu sensitif atau tersinggung, biasanya dalam konteks percintaan.",
-            contextEN: "Used when someone is overly emotional, often in romantic situations.",
-            exampleID: "Jangan baperan dong, cuma becanda.",
-            exampleEN: "Don't get so emotional, I was just joking."
-        ),
-        "kepo": SlangData(
-            slang: "kepo",
-            translationID: "ingin tahu urusan orang lain",
-            translationEN: "nosy / overly curious",
-            contextID: "Dari 'knowing every particular object', digunakan untuk orang yang terlalu ingin tahu.",
-            contextEN: "Derived from 'knowing every particular object'; refers to someone who is overly curious about others’ business.",
-            exampleID: "Duh kepo banget sih lu.",
-            exampleEN: "You're so nosy, dude."
-        )
-    ]
+    private(set) var slangs: [SlangData] = []
     
+    private init() {
+        loadFromJSON()
+    }
+    
+    private func loadFromJSON() {
+        guard let url = Bundle.main.url(forResource: "slng_data_seeded", withExtension: "json") else {
+            print("Slang JSON not found!")
+            return
+        }
+        
+        do {
+            let data = try Data(contentsOf: url)
+            let decoded = try JSONDecoder().decode([SlangData].self, from: data)
+            self.slangs = decoded
+            print("Loaded \(slangs.count) entries!")
+        } catch {
+            fatalError("Failed to load JSON entry")
+        }
+    }
+
     func findSlang(in text: String) -> [SlangData] {
-        let lowercased = text.lowercased()
+        let normalizedText = text.normalizedForSlangMatching()
+        
         var found: [SlangData] = []
         
-        for (key, value) in slangs {
-            if lowercased.contains(key) {
-                found.append(value)
+        for slangData in slangs {
+            let slang = slangData.slang.lowercased()
+            let pattern = "\\b\(NSRegularExpression.escapedPattern(for: slang))\\b"
+            
+            if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
+                let range = NSRange(location: 0, length: normalizedText.utf16.count)
+                if regex.firstMatch(in: normalizedText, options: [], range: range) != nil {
+                    found.append(slangData)
+                }
             }
         }
         
