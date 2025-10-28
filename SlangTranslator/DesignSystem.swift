@@ -8,12 +8,15 @@ import SwiftUI
 
 struct DesignSystem {
     struct Colors {
+        static let textPrimary = Color(hex: "#131212")
+        static let textPrimaryDark = Color(hex: "#FEFBF7")
         static let textSecondary = Color(hex: "#808080")
         static let textDisable = Color(hex: "#CCCCCC")
         static let textDisableDark = Color(hex: "#4D4D4D")
         static let buttonDisable = Color(hex:"#B2B2B2")
         static let buttonPrimary = Color(hex: "#1A1A1A")
-        static let textPrimary = Color(hex: "#131212")
+        static let backgroundSecondary = Color(hex: "#FCF6EA")
+        static let backgroundSecondaryDark = Color(hex: "#131212")
     }
 
 }
