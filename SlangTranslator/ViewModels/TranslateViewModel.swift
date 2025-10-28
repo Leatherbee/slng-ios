@@ -27,8 +27,8 @@ class TranslateViewModel: ObservableObject {
         inputText = ""
         translatedText = nil
         isTranslated = false
-        isDetectedSlangShown.toggle()
-        isExpanded.toggle()
+        isDetectedSlangShown = false
+        isExpanded = false
     }
     
     func copyToClipboard() {

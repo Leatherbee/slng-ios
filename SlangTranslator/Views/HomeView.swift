@@ -34,6 +34,10 @@ struct HomeView: View {
             }
         
         }
+//        .tabViewBottomAccessory {
+//            Image(systemName: "star.fill")
+//        }
+        .tabBarMinimizeBehavior(.onScrollDown)
     }
 
     

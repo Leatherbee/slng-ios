@@ -14,6 +14,7 @@ struct TranslateView: View {
     @State private var isTranslated: Bool = true
     
     @State private var textHeight: CGFloat = 100 // initial height
+    @State private var showExpanded = false
     
     var body: some View {
         if viewModel.translatedText == nil{
@@ -109,6 +110,7 @@ struct TranslateView: View {
                             HStack(spacing: 10){
                                 Button {
                                     viewModel.expandedView()
+                                    showExpanded = true
                                 } label: {
                                     Image(systemName: "arrow.up.left.and.arrow.down.right")
                                 }
@@ -154,7 +156,6 @@ struct TranslateView: View {
                         }
                         
                         Spacer()
-//                        Spacer()
                     }
                     .font(.body)
                     .frame(maxWidth: .infinity)
@@ -189,6 +190,13 @@ struct TranslateView: View {
                 colorScheme == .light ?
                 Color(DesignSystem.Colors.backgroundSecondary).ignoresSafeArea() : Color(DesignSystem.Colors.backgroundSecondaryDark).ignoresSafeArea()
             )
+            .fullScreenCover(isPresented: $showExpanded, content: {
+                ExpandedTranslationView(
+                    text: translatedText,
+                    onClose: { showExpanded = false }
+                )
+                .toolbar(.hidden, for: .tabBar)
+            })
         }
         
     }
@@ -220,6 +228,56 @@ struct TranslateView: View {
         
         // Limit growth so it doesn’t exceed screen height
         textHeight = min(estimatedHeight, geometry.size.height - 30)
+    }
+}
+
+struct ExpandedTranslationView: View {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    let text: String
+    let onClose: () -> Void
+    
+//    @State private var isLandscape: Bool = false
+    
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            Color(colorScheme == .light ?
+                  Color(DesignSystem.Colors.backgroundSecondary): Color(DesignSystem.Colors.backgroundSecondaryDark))
+                .ignoresSafeArea()
+
+            GeometryReader { geo in
+                ScrollView(.vertical, showsIndicators: true){
+                    VStack
+                    {
+                        Spacer(minLength: geo.size.height / 4)
+                        Text(text)
+                            .font(.system(size: 64, weight: .bold, design: .serif))
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                            .padding(.vertical, 10)
+                        Spacer(minLength: geo.size.height / 4)
+                    }
+                    .frame(minWidth: geo.size.width, minHeight: geo.size.height)
+                }
+                .frame(minWidth: geo.size.width, minHeight: geo.size.height)
+            }
+            
+            Button {
+                UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+                dismiss()
+                onClose()
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.largeTitle)
+                    .foregroundColor(colorScheme == .light ? .black : .white)
+                    .padding()
+            }
+        }
+        .onAppear {
+            UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
+        }
     }
 }
 
