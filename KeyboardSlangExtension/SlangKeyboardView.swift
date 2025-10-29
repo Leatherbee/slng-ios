@@ -72,8 +72,6 @@ struct SlangKeyboardView: View {
     
     private func explainView(vm: SlangKeyboardViewModel) -> some View {
         VStack(alignment: .leading ,spacing: 4) {
-            
-            
             Text(vm.getClipboardText())
                 .font(.system(.title, design: .serif, weight: .bold))
                 .lineLimit(4)

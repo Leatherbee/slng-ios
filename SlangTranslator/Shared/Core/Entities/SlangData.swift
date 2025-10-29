@@ -29,7 +29,15 @@ struct SlangData: Codable, Identifiable {
     let exampleEN: String
     let sentiment: SentimentType
 
-    init(id: UUID = UUID(), slang: String, translationID: String, translationEN: String, contextID: String, contextEN: String, exampleID: String, exampleEN: String, sentiment: SentimentType) {
+    init(id: UUID = UUID(),
+         slang: String,
+         translationID: String,
+         translationEN: String,
+         contextID: String,
+         contextEN: String,
+         exampleID: String,
+         exampleEN: String,
+         sentiment: SentimentType) {
         self.id = id
         self.slang = slang
         self.translationID = translationID
@@ -57,51 +65,69 @@ struct SlangData: Codable, Identifiable {
 
 final class SlangDictionary {
     static let shared = SlangDictionary()
-    
     private(set) var slangs: [SlangData] = []
-    
+    private var isLoaded = false
+
     private init() {
         loadFromJSON()
     }
-    
+
     private func loadFromJSON() {
-        guard let url = Bundle.main.url(forResource: "slng_data_seeded", withExtension: "json") else {
+        guard !isLoaded else { return }
+        isLoaded = true
+
+        guard let url = Bundle.main.url(forResource: "slng_data_seeded", withExtension: "json"),
+              let stream = InputStream(url: url) else {
             print("Slang JSON not found!")
             return
         }
-        
+
+        stream.open()
+        defer { stream.close() }
+
         do {
-            let data = try Data(contentsOf: url)
-            let decoded = try JSONDecoder().decode([SlangData].self, from: data)
-            self.slangs = decoded
-            print("Loaded \(slangs.count) entries!")
+            guard let array = try JSONSerialization.jsonObject(with: stream, options: []) as? [Any] else {
+                print("Invalid JSON format")
+                return
+            }
+
+            let decoder = JSONDecoder()
+            var temp: [SlangData] = []
+            temp.reserveCapacity(array.count)
+
+            for case let dict as [String: Any] in array {
+                if let data = try? JSONSerialization.data(withJSONObject: dict, options: []),
+                   let slang = try? decoder.decode(SlangData.self, from: data) {
+                    temp.append(slang)
+                }
+            }
+
+            self.slangs = temp
+            print("Finished loading \(slangs.count) entries (sync stream).")
         } catch {
-            fatalError("Failed to load JSON entry")
+            print("Failed to parse slang JSON: \(error)")
         }
     }
 
     func findSlang(in text: String, matching sentiment: SentimentType?) -> [SlangData] {
         let normalizedText = text.normalizedForSlangMatching()
         var found: [(data: SlangData, range: NSRange)] = []
-        
+
         for slangData in slangs {
             let slang = slangData.slang.lowercased()
             let pattern = "\\b\(NSRegularExpression.escapedPattern(for: slang))\\b"
-            
-            guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
-                continue
-            }
+            guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
             let fullRange = NSRange(location: 0, length: normalizedText.utf16.count)
-            
+
             regex.enumerateMatches(in: normalizedText, options: [], range: fullRange) { match, _, _ in
-                if let matchRange = match?.range {
-                    found.append((data: slangData, range: matchRange))
+                if let range = match?.range {
+                    found.append((data: slangData, range: range))
                 }
             }
         }
-        
+
         var filtered: [SlangData] = []
-        for (_, group) in Dictionary(grouping: found, by: { $0.data.slang }) {
+        for (_, group) in Dictionary(grouping: found, by: { $0.data.slang.lowercased() }) {
             let variants = group.map { $0.data }
             if variants.count == 1 {
                 filtered.append(variants.first!)
@@ -119,13 +145,29 @@ final class SlangDictionary {
             }
         }
 
-        let ordered = found.filter { slang in
-            filtered.contains(where: { $0.slang == slang.data.slang && $0.sentiment == slang.data.sentiment })
+        var firstPositions: [String: Int] = [:]
+        for slang in found {
+            let key = slang.data.slang.lowercased()
+            if firstPositions[key] == nil {
+                firstPositions[key] = slang.range.location
+            }
         }
-        .sorted(by: { $0.range.location < $1.range.location })
-        .map { $0.data }
-        
-        return ordered
+
+        // Filter only based on unique slang and its first position on text
+        let uniqueOrdered = filtered
+            .reduce(into: [String: SlangData]()) { dict, slang in
+                let key = slang.slang.lowercased()
+                if dict[key] == nil {
+                    dict[key] = slang
+                }
+            }
+            .values
+            .sorted {
+                let pos1 = firstPositions[$0.slang.lowercased()] ?? .max
+                let pos2 = firstPositions[$1.slang.lowercased()] ?? .max
+                return pos1 < pos2
+            }
+
+        return uniqueOrdered
     }
 }
-
