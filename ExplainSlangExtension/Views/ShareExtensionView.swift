@@ -11,7 +11,7 @@ import SwiftData
 struct ShareExtensionView: View {
     let sharedText: String
     let onDismiss: () -> Void
-            
+    
     @State private var detectedSlangs: [SlangData] = []
     @State private var translatedText: String = ""
     @State private var isTranslating: Bool = false

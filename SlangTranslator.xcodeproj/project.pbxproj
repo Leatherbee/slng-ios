@@ -10,6 +10,8 @@
 		502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		502CEAE22EABD37D007F38E3 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 502CEAE12EABD37D007F38E3 /* OpenAI */; };
 		502CEAE42EABD3A3007F38E3 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 502CEAE32EABD3A3007F38E3 /* OpenAI */; };
+		50FDB6942EB200AC004304A3 /* KeyboardSlangExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		50FDB6A72EB20700004304A3 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FDB6A62EB20700004304A3 /* OpenAI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +29,13 @@
 			remoteGlobalIDString = 502CE8DB2EA1F638007F38E3;
 			remoteInfo = SlangTranslator;
 		};
+		50FDB6922EB200AC004304A3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 502CE8D42EA1F638007F38E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 50FDB68C2EB200AC004304A3;
+			remoteInfo = KeyboardSlangExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +46,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */,
+				50FDB6942EB200AC004304A3 /* KeyboardSlangExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -48,6 +58,7 @@
 		502CE8E92EA1F639007F38E3 /* SlangTranslatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SlangTranslatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		502CE8F32EA1F639007F38E3 /* SlangTranslatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SlangTranslatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SLNGShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = KeyboardSlangExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -61,6 +72,7 @@
 		502CE9262EA1FA0E007F38E3 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Assets/Assets.xcassets,
 				ExplainSlangIntent.swift,
 				Shared/Common/ColorsConstant.swift,
 				Shared/Core/DataSources/TranslationRepositoryImpl.swift,
@@ -83,6 +95,30 @@
 			);
 			target = 502CE8DB2EA1F638007F38E3 /* SlangTranslator */;
 		};
+		50FDB6982EB200AC004304A3 /* Exceptions for "KeyboardSlangExtension" folder in "KeyboardSlangExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
+		};
+		50FDB69E2EB200CC004304A3 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets/Assets.xcassets,
+				Shared/Core/DataSources/TranslationRepositoryImpl.swift,
+				Shared/Core/Entities/SlangData.swift,
+				Shared/Core/Entities/slng_data_seeded.json,
+				Shared/Core/Entities/TranslationData.swift,
+				"Shared/Core/Extensions/String+SlangNormalization.swift",
+				Shared/Core/Model/TranslationModel.swift,
+				Shared/Core/Repositories/TranslationRepository.swift,
+				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
+				Shared/Core/Utils/SharedModelContainer.swift,
+				SlangCardView.swift,
+			);
+			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -91,6 +127,7 @@
 			exceptions = (
 				502CEB662EAE54ED007F38E3 /* Exceptions for "SlangTranslator" folder in "SlangTranslator" target */,
 				502CE9262EA1FA0E007F38E3 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */,
+				50FDB69E2EB200CC004304A3 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */,
 			);
 			path = SlangTranslator;
 			sourceTree = "<group>";
@@ -111,6 +148,14 @@
 				502CE91B2EA1F8F2007F38E3 /* Exceptions for "ExplainSlangExtension" folder in "ExplainSlangExtension" target */,
 			);
 			path = ExplainSlangExtension;
+			sourceTree = "<group>";
+		};
+		50FDB68E2EB200AC004304A3 /* KeyboardSlangExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				50FDB6982EB200AC004304A3 /* Exceptions for "KeyboardSlangExtension" folder in "KeyboardSlangExtension" target */,
+			);
+			path = KeyboardSlangExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -146,6 +191,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		50FDB68A2EB200AC004304A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50FDB6A72EB20700004304A3 /* OpenAI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -156,6 +209,7 @@
 				502CE8EC2EA1F639007F38E3 /* SlangTranslatorTests */,
 				502CE8F62EA1F639007F38E3 /* SlangTranslatorUITests */,
 				502CE9112EA1F8F2007F38E3 /* ExplainSlangExtension */,
+				50FDB68E2EB200AC004304A3 /* KeyboardSlangExtension */,
 				502CE8DD2EA1F638007F38E3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -167,6 +221,7 @@
 				502CE8E92EA1F639007F38E3 /* SlangTranslatorTests.xctest */,
 				502CE8F32EA1F639007F38E3 /* SlangTranslatorUITests.xctest */,
 				502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */,
+				50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -186,6 +241,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				50FDB6932EB200AC004304A3 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				502CE8DE2EA1F638007F38E3 /* SlangTranslator */,
@@ -267,6 +323,29 @@
 			productReference = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50FDB6952EB200AC004304A3 /* Build configuration list for PBXNativeTarget "KeyboardSlangExtension" */;
+			buildPhases = (
+				50FDB6892EB200AC004304A3 /* Sources */,
+				50FDB68A2EB200AC004304A3 /* Frameworks */,
+				50FDB68B2EB200AC004304A3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				50FDB68E2EB200AC004304A3 /* KeyboardSlangExtension */,
+			);
+			name = KeyboardSlangExtension;
+			packageProductDependencies = (
+				50FDB6A62EB20700004304A3 /* OpenAI */,
+			);
+			productName = KeyboardSlangExtension;
+			productReference = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -288,6 +367,9 @@
 						TestTargetID = 502CE8DB2EA1F638007F38E3;
 					};
 					502CE90F2EA1F8F2007F38E3 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					50FDB68C2EB200AC004304A3 = {
 						CreatedOnToolsVersion = 26.0;
 					};
 				};
@@ -313,6 +395,7 @@
 				502CE8E82EA1F639007F38E3 /* SlangTranslatorTests */,
 				502CE8F22EA1F639007F38E3 /* SlangTranslatorUITests */,
 				502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */,
+				50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -340,6 +423,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		502CE90E2EA1F8F2007F38E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50FDB68B2EB200AC004304A3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -377,6 +467,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		50FDB6892EB200AC004304A3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -389,6 +486,11 @@
 			isa = PBXTargetDependency;
 			target = 502CE8DB2EA1F638007F38E3 /* SlangTranslator */;
 			targetProxy = 502CE8F42EA1F639007F38E3 /* PBXContainerItemProxy */;
+		};
+		50FDB6932EB200AC004304A3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
+			targetProxy = 50FDB6922EB200AC004304A3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -738,6 +840,66 @@
 			};
 			name = Release;
 		};
+		50FDB6962EB200AC004304A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KeyboardSlangExtension/KeyboardSlangExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = KeyboardSlangExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		50FDB6972EB200AC004304A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KeyboardSlangExtension/KeyboardSlangExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = KeyboardSlangExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -786,6 +948,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		50FDB6952EB200AC004304A3 /* Build configuration list for PBXNativeTarget "KeyboardSlangExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50FDB6962EB200AC004304A3 /* Debug */,
+				50FDB6972EB200AC004304A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -806,6 +977,11 @@
 			productName = OpenAI;
 		};
 		502CEAE32EABD3A3007F38E3 /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+		50FDB6A62EB20700004304A3 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */;
 			productName = OpenAI;

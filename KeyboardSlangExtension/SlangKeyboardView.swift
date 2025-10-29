@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
- 
+import SwiftData
+
 struct SlangKeyboardView: View {
     var insertText: (String) -> Void
     var deleteText: () -> Void
@@ -15,145 +16,154 @@ struct SlangKeyboardView: View {
     var backgroundColor: Color
     var needsInputModeSwitchKey: Bool = false
     var nextKeyboardAction: Selector? = nil
-     
-    @StateObject private var vm = SlangKeyboardViewModel()
+    
+    @ObservedObject var vm: SlangKeyboardViewModel
     
     var body: some View {
         if vm.mode == .normal {
-            keyboardView
+            keyboardView(vm: vm)
         } else if vm.mode == .explain {
-            explainView
-        }
-    }
-    
-    private var explainView: some View {
-        VStack(alignment: .leading ,spacing: 4) {
-            HStack{
+            VStack(alignment: .leading, spacing: 8) {
+                // Leading keyboard button
                 Button {
                     vm.changeDisplayMode(.normal)
                 } label: {
                     Image(systemName: "keyboard")
+                        .foregroundStyle(.gray)
                         .font(.system(size: 17))
-                        .foregroundColor(.white)
+                        .frame(width: 34, height: 34)
+                        .background(.white)
+                        .clipShape(Circle())
+                        .shadow(radius: 0.5)
                 }
-                .frame(width: 35, height: 35)
-                .background(Color(red: 0.2, green: 0.2, blue: 0.2))
-                .cornerRadius(9999)
-            }
-            .padding(.leading, 12)
-           
-
-            Text("Slang detected (1)")
-                .foregroundColor(.black)
-                .font(.system(size: 14, weight: .medium))
-                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 12)
-            
-            VStack(alignment: .leading, spacing: 6) {
-                HStack {
-                    Text(vm.slangText)
-                        .font(.system(size: 26, weight: .bold))
-                        .foregroundColor(.black)
-                    Spacer()
-                    Image(systemName: "arrow.right")
-                        .foregroundColor(.black.opacity(0.8))
-                    Spacer()
-                    Text(vm.translationEN)
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
+                .padding(.top, 4)
+
+                // Scrollable explanation content
+                ZStack {
+                    ScrollView {
+                        explainView(vm: vm)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 12)
+                    }
+
+                    // Loading overlay
+                    if vm.isTranslating {
+                        VStack(spacing: 8) {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .gray))
+                                .scaleEffect(1.2)
+
+                            Text("Translating...")
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(20)
+                        .background(.thinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .shadow(radius: 2)
+                    }
                 }
-                
-                Divider().background(Color.white.opacity(0.4))
-                
-                Label("Context", systemImage: "info.circle")
-                    .foregroundColor(.black)
-                    .font(.system(size: 14, weight: .medium))
-                
-                Text(vm.contextEn)
-                    .foregroundColor(.black.opacity(0.9))
-                    .font(.system(size: 13))
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Example:")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(.black)
-                    Text(vm.exampleID)
-                        .italic()
-                        .foregroundColor(.black)
-                    Text(vm.exampleEN)
-                        .italic()
-                        .foregroundColor(.gray.opacity(0.6))
-                }
+                .animation(.easeInOut(duration: 0.2), value: vm.isTranslating)
             }
-            .padding()
-            .background(.white)
-            .cornerRadius(12)
-            .padding(.horizontal, 8)
-            
-            Spacer()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
     
-    private var keyboardView: some View {
-        VStack(spacing: 8) {
+    private func explainView(vm: SlangKeyboardViewModel) -> some View {
+        VStack(alignment: .leading ,spacing: 4) {
             
-            HStack {
-                HStack{
-                    HStack{
-                        Text("IS")
-                            .foregroundColor(Color.white)
-                            .font(.system(size: 10))
-                    }
-                    .frame(width: 21, height: 21)
-                    .background(Color.gray)
-                    .cornerRadius(9999)
-                    Image(systemName: "arrow.right")
-                        .foregroundColor(Color.gray)
-                        .font(.system(size: 10))
-                    HStack{
-                        Text("EN")
-                            .foregroundColor(.white)
-                            .font(.system(size: 10))
-                    }
-                    .frame(width: 21, height: 21)
-                    .background(Color(red: 0.5, green: 0.5, blue: 0.5))
-                    .cornerRadius(9999)
+            
+            Text(vm.getClipboardText())
+                .font(.system(.title, design: .serif, weight: .bold))
+                .lineLimit(4)
+                .minimumScaleFactor(0.6)
+                .allowsTightening(true)
+                .multilineTextAlignment(.leading)
+                .foregroundStyle(.primary)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Divider()
+                .foregroundStyle(.gray)
+                .padding(.horizontal, 6)
+                .padding(.vertical)
+            
+            Text(vm.translatedText)
+                .font(.system(.title, design: .serif, weight: .bold))
+                .foregroundStyle(.secondary)
+                .lineLimit(4)
+                .minimumScaleFactor(0.6)
+                .allowsTightening(true)
+                .multilineTextAlignment(.leading)
+                .padding(.horizontal, 6)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Text("Slang detected (\(vm.detectedSlangs.count))")
+                .foregroundColor(.black)
+                .font(.system(size: 14, weight: .medium))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 6)
+                .padding(.vertical, 14)
+            
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(vm.detectedSlangs, id: \.id) { slang in
+                    KeyboardSlangCardView(slangData: slang)
+                    Divider()
+                        .foregroundStyle(.primary)
+                        .padding(.horizontal, 16)
                 }
-                Spacer()
-                Text("Paste to translate to Indonesian Slang")
-                    .foregroundColor(.white)
-                    .font(Font.system(size: 12))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-                Spacer()
-                Button{
-                    Task{
-                        vm.translateFromClipboard()
+            }
+            .padding(.bottom, 12)
+            
+            Spacer()
+        }
+        .background(backgroundColor)
+    }
+    
+    private func keyboardView(vm: SlangKeyboardViewModel) -> some View {
+        VStack(spacing: 6) { // tighter, more Apple-like vertical spacing
+            HStack(spacing: 8) {
+                Button {
+                    Task {
+                        vm.isTranslating = true
+                        await vm.translateFromClipboard()
                         vm.changeDisplayMode(.explain)
                     }
-                    
-                }label:{
-                    Text("Explain")
-                        .foregroundColor(.white)
-                        .font(.system(size: 10))
+                } label: {
+                    Image(systemName: "document.on.document")
+                        .foregroundStyle(.gray)
+                        .font(.system(size: 17))
+                        .frame(width: 34, height: 34)
+                        .background(.white)
+                        .clipShape(Circle())
+                        .shadow(color: .black.opacity(0.1), radius: 0.5, y: 0.5)
                 }
-                .padding( 8.75)
-                .background(Color(red: 0.5, green: 0.5, blue: 0.5))
-                .cornerRadius(9999)
+
+                
+                Text("Copy that slang, paste it here")
+                    .foregroundColor(.secondary)
+                    .font(.system(size: 12))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                
+                Spacer()
             }
             .padding(.horizontal, 10)
-            .padding(.vertical, 4)
-            .cornerRadius(8)
-            
+            .padding(.vertical, 6)
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+
+            // MARK: - Key Rows
             ForEach(0..<vm.getRows().count, id: \.self) { rowIndex in
                 HStack(spacing: 6) {
                     if rowIndex == 2 {
-                        // Tombol kiri bawah
                         let label = vm.showNumbersShifted ? "123"
-                            : vm.showNumber ? "#+="
-                            : "⇧"
+                        : vm.showNumber ? "#+="
+                        : "⇧"
                         
-                        keyButton(label: label, width: 45, fontsize: vm.showNumber ? 14 : 22) {
+                        keyButton(label: label, width: 44, fontsize: vm.showNumber ? 14 : 22) {
                             withAnimation(.none) {
                                 if vm.showNumbersShifted {
                                     vm.showNumbersShifted.toggle()
@@ -163,14 +173,15 @@ struct SlangKeyboardView: View {
                                     vm.toggleShift()
                                 }
                             }
-                           
                         }
                     }
                     
                     ForEach(vm.getRows()[rowIndex], id: \.self) { key in
-                        keyButton(label: vm.isShifted ? key.uppercased() : key.lowercased(),
-                                  width: rowIndex == 2 && vm.showNumber ? 50 : nil) {
-                            insertText(vm.isShifted ? key.uppercased() : key.lowercased())
+                        keyButton(
+                            label: displayLabel(for: key),
+                            width: rowIndex == 2 && vm.showNumber ? 46 : nil
+                        ) {
+                            insertText(displayLabel(for: key))
                             if vm.isShifted && !vm.showNumber {
                                 vm.isShifted = false
                             }
@@ -178,15 +189,15 @@ struct SlangKeyboardView: View {
                     }
                     
                     if rowIndex == 2 {
-                        keyButton(systemName: "delete.left", width: 45) {
+                        keyButton(systemName: "delete.left", width: 44) {
                             deleteText()
                         }
                     }
                 }
-                .padding(.horizontal, rowIndex == 1 ? 10 : 4)
+                .padding(.horizontal, rowIndex == 1 ? 14 : 6) // mimic Apple row staggering
             }
 
-             
+            // MARK: - Bottom Function Row
             HStack(spacing: 6) {
                 if needsInputModeSwitchKey, let nextKeyboardAction {
                     NextKeyboardButtonOverlay(action: nextKeyboardAction)
@@ -195,63 +206,28 @@ struct SlangKeyboardView: View {
                         .cornerRadius(6)
                 }
                 
-                keyButton(label: vm.showNumber ? "ABC" : "123", width: 50) {
+                keyButton(label: vm.showNumber ? "ABC" : "123", width: 48) {
                     withAnimation(.none) {
                         if vm.showNumber {
                             vm.showNumber.toggle()
                             vm.showNumbersShifted = false
-                        
                         } else {
                             vm.showNumber.toggle()
                         }
                     }
-                  
-                   
                 }
-                keyButton(systemName: "face.smiling", width: 50) { }
-                keyButton(label: "    ", width: 120) { insertText(" ") }
                 
-                ZStack {
-                    keyButton(systemName: "translate", width: 50) {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 1.0)) {
-                            vm.showTranslationPopup.toggle()
-                        }
-                    }
-                    
-                    if vm.showTranslationPopup {
-                        VStack(spacing: 4) {
-                            Text("Indonesia → English")
-                                .font(.system(size: 10))
-                                .foregroundColor(.white)
-                                .multilineTextAlignment(.center)
-                            Text(vm.translatedText)
-                                .frame(maxWidth: .infinity)
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(Color(red: 0.302, green: 0.302, blue: 0.302))
-                                .cornerRadius(4)
-                        }
-                        .padding(6)
-                        .background(Color(red: 0.588, green: 0.604, blue: 0.627))
-                        .cornerRadius(8)
-                        .frame(width: 120)
-                        .offset(y: -50) // melayang di atas tombol
-                        .transition(.scale.combined(with: .opacity))
-                        .zIndex(10) // tetap di atas semua
-                    }
-                }
-                .frame(width: 50, height: 44)
+                keyButton(systemName: "face.smiling", width: 48) { }
                 
-                keyButton(label: "return", width: 70, fontsize: 18) { insertText("\n") }
+                keyButton(label: "space", width: 150, fontsize: 17) { insertText(" ") }
+                
+                keyButton(label: "return", width: 76, fontsize: 17) { insertText("\n") }
             }
-            .padding(.horizontal, 4)
+            .padding(.horizontal, 6)
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 8)
         .background(backgroundColor)
-        .cornerRadius(10)
-        .clipped(antialiased: false)
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         .frame(height: keyboardHeight)
     }
     
@@ -304,7 +280,6 @@ struct SlangKeyboardView: View {
         Color.black.opacity(0.00)
     }
     
-    // MARK: - Next Keyboard Button Overlay (system button)
     struct NextKeyboardButtonOverlay: UIViewRepresentable {
         let action: Selector
         func makeUIView(context: Context) -> UIButton {
@@ -317,16 +292,17 @@ struct SlangKeyboardView: View {
         func updateUIView(_ uiView: UIButton, context: Context) {}
     }
 }
-
-#Preview("Keyboard Preview (App Context)") {
-    SlangKeyboardView(
-        insertText: { print("inserted:", $0) },
-        deleteText: { print("deleted") },
-        keyboardHeight: 260,
-        backgroundColor: Color(UIColor.systemGray6),
-        needsInputModeSwitchKey: true,
-        nextKeyboardAction: nil
-    )
-    .previewLayout(.fixed(width: 390, height: 280))
-    .padding()
-}
+//
+//#Preview("Keyboard Preview (App Context)") {
+//    SlangKeyboardView(
+//        insertText: { print("inserted:", $0) },
+//        deleteText: { print("deleted") },
+//        keyboardHeight: 260,
+//        backgroundColor: Color(UIColor.systemGray6),
+//        needsInputModeSwitchKey: true,
+//        nextKeyboardAction: nil,
+//        vm:
+//    )
+//    .previewLayout(.fixed(width: 390, height: 280))
+//    .padding()
+//}

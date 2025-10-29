@@ -8,6 +8,7 @@ import Foundation
 import Combine
 import Translation
 import UIKit
+
 enum KeyboardMode {
     case normal
     case explain
@@ -34,9 +35,15 @@ final class SlangKeyboardViewModel: ObservableObject {
     @Published var exampleEN: String = ""
     
     @Published var detectedSlangs: [SlangData] = []
-    @Published var translationSession: TranslationSession.Configuration?
     @Published var isTranslating: Bool = false
     @Published var translationError: String?
+    @Published var result: TranslationResponse?
+    
+    private let useCase: TranslateSentenceUseCase
+    
+    init(useCase: TranslateSentenceUseCase) {
+        self.useCase = useCase
+    }
     
     private let defaultRows: [[String]] = [
         Array("qwertyuiop").map { String($0) },
@@ -99,7 +106,12 @@ final class SlangKeyboardViewModel: ObservableObject {
         self.mode = mode
     }
     
-    func translateFromClipboard() {
+    func getClipboardText() -> String {
+        guard let pasteboardString = UIPasteboard.general.string?.trimmingCharacters(in: .whitespacesAndNewlines) else { return "" }
+        return pasteboardString
+    }
+    
+    func translateFromClipboard() async {
         guard let clipboardText = UIPasteboard.general.string?.trimmingCharacters(in: .whitespacesAndNewlines),
               !clipboardText.isEmpty else {
             translationError = "Clipboard is empty."
@@ -107,59 +119,35 @@ final class SlangKeyboardViewModel: ObservableObject {
         }
         
         // Reset state
-        translatedText = clipboardText
-        detectedSlangs.removeAll()
         isTranslating = true
         translationError = nil
+        showTranslationPopup = false
+        translatedText = ""
+        detectedSlangs.removeAll()
         
-        // Cari slang dalam teks
-        let found = SlangDictionary.shared.findSlang(in: clipboardText)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.isTranslating = false
+        do {
+            let response = try await useCase.execute(clipboardText)
+            self.result = response
+            self.translatedText = response.englishTranslation
+            
+            let found = SlangDictionary.shared.findSlang(in: clipboardText, matching: response.sentiment)
             self.detectedSlangs = found
             
-            guard !found.isEmpty else {
+            if !found.isEmpty {
+                self.slangText = found.map { $0.slang }.joined(separator: "\n")
+                self.translationEN = found.map { $0.translationEN }.joined(separator: "\n")
+                self.contextEn = found.map { $0.contextEN }.joined(separator: "\n\n")
+                self.exampleID = found.map { $0.exampleID }.joined(separator: "\n\n")
+                self.exampleEN = found.map { $0.exampleEN }.joined(separator: "\n\n")
+                self.showTranslationPopup = true
+            } else {
                 self.translationError = "No slang detected."
-                self.translatedText = clipboardText
-                self.showTranslationPopup = false
-                return
             }
-            
-            // Gabungkan semua data yang ditemukan
-            self.translatedText = found
-                .map { "\($0.slang) → \($0.translationEN)" }
-                .joined(separator: "\n")
-            
-            self.slangText = found
-                .map { "\($0.slang)" }
-                .joined(separator: "\n")
-            
-            self.translationEN = found
-                .map { "\($0.translationEN)" }
-                .joined(separator: "\n")
-            
-            // Gabungan konteks dan contoh (jika ada lebih dari satu slang)
-            self.contextEn = found
-                .map { "\($0.contextEN)" }
-                .joined(separator: "\n\n")
-            
-            self.exampleID = found
-                .map { "\($0.exampleID)" }
-                .joined(separator: "\n\n")
-            
-            self.exampleEN = found
-                .map { "\($0.exampleEN)" }
-                .joined(separator: "\n\n")
-            
-            // Mode popup aktif
-            self.showTranslationPopup = true
-            
-            // Debug
-            print("Detected slangs:", found)
-            print("Translated text:\n\(self.translatedText)")
+        } catch {
+            self.translationError = error.localizedDescription
         }
+        
+        isTranslating = false
     }
-
 }
 
