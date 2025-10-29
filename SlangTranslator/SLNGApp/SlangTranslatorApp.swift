@@ -15,12 +15,15 @@ struct SlangTranslatorApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: $router.path) {
-                router.destination(for: router.root)
-                    .navigationDestination(for: Route.self) { route in
-                        router.destination(for: route)
-                    }
+            ZStack{
+                NavigationStack(path: $router.path) {
+                    router.destination(for: router.root)
+                        .navigationDestination(for: Route.self) { route in
+                            router.destination(for: route)
+                        }
+                }
             }
+            
         }
         .modelContainer(SharedModelContainer.shared.container)
     }
