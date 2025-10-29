@@ -5,7 +5,8 @@
 //  Created by Filza Rizki Ramadhan on 21/10/25.
 //
 import Foundation
-import Combine
+internal import Combine
+
 struct DictionaryItems: Identifiable {
     let id = UUID()
     let title: String
