@@ -18,24 +18,35 @@ struct ShareExtensionView: View {
     @State private var translationError: String?
     @State private var viewModel: ShareTranslateViewModel?
     
+    // Dynamic font size based on text length
+    private func dynamicFontSize(for text: String) -> Font {
+        let length = text.count
+        if length < 50 {
+            return .system(.largeTitle, design: .serif, weight: .bold)
+        } else if length < 100 {
+            return .system(.title, design: .serif, weight: .bold)
+        } else if length < 200 {
+            return .system(.title2, design: .serif, weight: .bold)
+        } else {
+            return .system(.title3, design: .serif, weight: .bold)
+        }
+    }
+    
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView {
                     VStack(spacing: 20) {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Original Text")
-                                .font(.caption)
-                                .foregroundStyle(.primary)
-                                .textCase(.uppercase)
-                            
                             Text(sharedText)
-                                .font(.body)
+                                .font(.system(.largeTitle, design: .serif, weight: .bold))
+                                .lineLimit(6)
+                                .minimumScaleFactor(0.3)
+                                .allowsTightening(true)
+                                .multilineTextAlignment(.leading)
                                 .foregroundStyle(.primary)
-                                .padding()
+                                .padding(.horizontal, 6)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(.gray.opacity(0.1))
-                                .cornerRadius(8)
                         }
                         .padding(.horizontal)
                         .padding(.top)
@@ -83,31 +94,35 @@ struct ShareExtensionView: View {
                             .padding()
                         } else if !translatedText.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("English Translation")
-                                    .font(.caption)
-                                    .foregroundStyle(.primary)
-                                    .textCase(.uppercase)
+                                Divider()
+                                    .foregroundStyle(.gray)
+                                    .padding(.horizontal, 6)
                                 
                                 Text(translatedText)
-                                    .font(.body)
-                                    .padding()
+                                    .font(.system(.largeTitle, design: .serif, weight: .bold))
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(6)
+                                    .minimumScaleFactor(0.2)
+                                    .allowsTightening(true)
+                                    .multilineTextAlignment(.leading)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 8)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(.gray.opacity(0.1))
-                                    .cornerRadius(8)
                             }
                             .padding(.horizontal)
                             
                             if !detectedSlangs.isEmpty {
                                 VStack(alignment: .leading, spacing: 8) {
                                     Text("Slang Detected (\(detectedSlangs.count))")
-                                        .font(.caption)
+                                        .font(.body)
                                         .foregroundStyle(.primary)
-                                        .textCase(.uppercase)
                                         .padding(.horizontal)
                                     
                                     ForEach(detectedSlangs.indices, id: \.self) { index in
                                         SlangCardView(slangData: detectedSlangs[index])
-                                            .padding(.horizontal)
+                                        Divider()
+                                            .foregroundStyle(.primary)
+                                            .padding(.horizontal, 16)
                                     }
                                 }
                             } else {
@@ -129,8 +144,16 @@ struct ShareExtensionView: View {
             .navigationTitle("Word Explanation")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Close") { onDismiss() }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        onDismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .resizable()
+                            .frame(width: 18, height: 18)
+                            .foregroundStyle(.secondary)
+                        
+                    }
                 }
             }
             .scrollIndicators(.hidden)

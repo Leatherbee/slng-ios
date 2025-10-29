@@ -62,6 +62,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				ExplainSlangIntent.swift,
+				Shared/Common/ColorsConstant.swift,
 				Shared/Core/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Core/Entities/SlangData.swift,
 				Shared/Core/Entities/slng_data_seeded.json,

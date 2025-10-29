@@ -96,7 +96,7 @@ final class TranslationRepositoryImpl: TranslationRepository {
         return response
     }
     
-    func saveTranslationToSwiftData(_ response: TranslationResponse) {
+    private func saveTranslationToSwiftData(_ response: TranslationResponse) {
         let cache = TranslationModel(
             originalText: response.originalText.lowercased(),
             englishTranslation: response.englishTranslation,
