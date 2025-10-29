@@ -78,6 +78,7 @@
 			membershipExceptions = (
 				SlangCardView.swift,
 				SlangData.swift,
+				tick.mp3,
 			);
 			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
 		};
@@ -101,6 +102,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				SlangData.swift,
+				tick.mp3,
 			);
 			target = 9A04EFCA2EA9EE8A004977FC /* KeyboardSlangExtension */;
 		};
