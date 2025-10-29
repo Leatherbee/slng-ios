@@ -86,117 +86,132 @@ struct TranslateView: View {
             .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         else if let translatedText = viewModel.translatedText{
-            VStack{
-                VStack(alignment: .leading){
-                    VStack(spacing: 24){
+            NavigationStack{
+                ScrollView{
+                    VStack{
                         VStack(alignment: .leading){
-                            Text(viewModel.inputText)
-                                .foregroundColor(colorScheme == .light ? DesignSystem.Colors.textPrimary : DesignSystem.Colors.textPrimaryDark)
-                                .textSelection(.enabled)
-                                .autocorrectionDisabled(true)
-                            
-                            Divider()
-                                .overlay(colorScheme == .light ? DesignSystem.Colors.textSecondary : DesignSystem.Colors.buttonDisable)
-                            
-                            Text(translatedText)
-                                .foregroundColor(.secondary)
-                                .textSelection(.enabled)
-                                
-                        }
-                        .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
-                        
-                        //Action Buttons Row
-                        HStack() {
-                            HStack(spacing: 10){
-                                Button {
-                                    viewModel.expandedView()
-                                    showExpanded = true
-                                } label: {
-                                    Image(systemName: "arrow.up.left.and.arrow.down.right")
+                            VStack(spacing: 24){
+                                VStack(alignment: .leading){
+                                    Text(viewModel.inputText)
+                                        .foregroundColor(colorScheme == .light ? DesignSystem.Colors.textPrimary : DesignSystem.Colors.textPrimaryDark)
+                                        .textSelection(.enabled)
+                                        .autocorrectionDisabled(true)
+                                    
+                                    Divider()
+                                        .overlay(colorScheme == .light ? DesignSystem.Colors.textSecondary : DesignSystem.Colors.buttonDisable)
+                                    
+                                    Text(translatedText)
+                                        .foregroundColor(.secondary)
+                                        .textSelection(.enabled)
+                                        
                                 }
+                                .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
                                 
-                                Button {
-                                    viewModel.copyToClipboard()
-                                } label: {
-                                    Image(systemName: "doc.on.doc")
-                                }
-                            }
-                            Spacer()
-                            Button{
-                                viewModel.showDetectedSlang()
-                            } label: {
-                                Text(viewModel.isDetectedSlangShown ? "Close Detected Slang (\(viewModel.slangDetected.count))" : "Show Detected Slang (\(viewModel.slangDetected.count))")
-                                    .padding(.vertical, 16)
-                                    .padding(.horizontal, 16)
-                                    .foregroundColor(colorScheme == .dark ? .black : .white)
-                                    .background(
-                                        inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?
-                                        Color(DesignSystem.Colors.buttonDisable) : (colorScheme == .light ? Color(DesignSystem.Colors.buttonPrimary) : .white)
-                                    )
-                                    .clipShape(Capsule())
-                            }
-
-                        }
-                        
-                        if viewModel.isDetectedSlangShown{
-                            VStack(alignment: .leading, spacing: 16){
-                                Text("Slang Detected (\(viewModel.slangDetected.count))")
-                                VStack(){
-                                    ForEach(viewModel.slangDetected, id: \.self) { slang in
-                                        HStack{
-                                            Text(slang)
-                                                .font(.title)
-                                            Spacer()
-                                            Image(systemName: "arrow.right")
+                                //Action Buttons Row
+                                HStack() {
+                                    HStack(spacing: 10){
+                                        Button {
+                                            viewModel.expandedView()
+                                            showExpanded = true
+                                        } label: {
+                                            Image(systemName: "arrow.up.left.and.arrow.down.right")
                                         }
-                                        Divider()
+                                        
+                                        Button {
+                                            viewModel.copyToClipboard()
+                                        } label: {
+                                            Image(systemName: "doc.on.doc")
+                                        }
+                                    }
+                                    Spacer()
+                                    Button{
+                                        viewModel.showDetectedSlang()
+                                    } label: {
+                                        Text(viewModel.isDetectedSlangShown ? "Close Detected Slang (\(viewModel.slangDetected.count))" : "Show Detected Slang (\(viewModel.slangDetected.count))")
+                                            .padding(.vertical, 16)
+                                            .padding(.horizontal, 16)
+                                            .foregroundColor(colorScheme == .dark ? .black : .white)
+                                            .background(
+                                                inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?
+                                                Color(DesignSystem.Colors.buttonDisable) : (colorScheme == .light ? Color(DesignSystem.Colors.buttonPrimary) : .white)
+                                            )
+                                            .clipShape(Capsule())
+                                    }
+
+                                }
+                                
+                                if viewModel.isDetectedSlangShown{
+                                    VStack(alignment: .leading, spacing: 16){
+                                        Text("Slang Detected (\(viewModel.slangDetected.count))")
+                                        VStack(spacing: 16){
+                                            ForEach(viewModel.slangDetected, id: \.self) { slang in
+                                                VStack(spacing: 0){
+                                                    HStack{
+                                                        Text(slang)
+                                                            .font(.system(.title, design: .serif, weight: .regular))
+                                                        Spacer()
+                                                        Image(systemName: "arrow.right")
+                                                    }
+                                                    Divider()
+                                                }
+                                            }
+                                        }
                                     }
                                 }
+                                
+                                Spacer()
                             }
+                            .font(.body)
+                            .frame(maxWidth: .infinity)
+                            .padding(.horizontal)
+                            
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding()
+                        .tint(colorScheme == .light ? DesignSystem.Colors.textPrimary : DesignSystem.Colors.textPrimaryDark)
+                        .alert("Copied!", isPresented: $viewModel.copiedToKeyboardAlert) {
+                            Button("OK", role: .cancel) { }
+                        } message: {
+                            Text("The translated text has been copied to the clipboard.")
                         }
                         
-                        Spacer()
+                        Button{
+                            viewModel.reset()
+                            print("reset")
+                        } label: {
+                            Label("Try Another", systemImage: "arrow.left")                        .padding(.vertical, 18)
+                                .font(Font.body.bold())
+                                .frame(maxWidth: 314, minHeight: 60)
+                                .foregroundColor(colorScheme == .dark ? .black : .white)
+                                .background(colorScheme == .light ? Color(DesignSystem.Colors.buttonPrimary) : .white
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 30))
+                        }
+                        .padding()
                     }
-                    .font(.body)
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal)
-                    
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding()
-                .padding(.top, 44)
-                .tint(colorScheme == .light ? DesignSystem.Colors.textPrimary : DesignSystem.Colors.textPrimaryDark)
-                .alert("Copied!", isPresented: $viewModel.copiedToKeyboardAlert) {
-                    Button("OK", role: .cancel) { }
-                } message: {
-                    Text("The translated text has been copied to the clipboard.")
-                }
-                
-                Button{
-                    viewModel.reset()
-                    print("reset")
-                } label: {
-                    Label("Try Another", systemImage: "arrow.left")                        .padding(.vertical, 18)
-                        .font(Font.body.bold())
-                        .frame(maxWidth: 314, minHeight: 60)
-                        .foregroundColor(colorScheme == .dark ? .black : .white)
-                        .background(colorScheme == .light ? Color(DesignSystem.Colors.buttonPrimary) : .white
+                    .fullScreenCover(isPresented: $showExpanded, content: {
+                        ExpandedTranslationView(
+                            text: translatedText,
+                            onClose: { showExpanded = false }
                         )
-                        .clipShape(RoundedRectangle(cornerRadius: 30))
+                        .toolbar(.hidden, for: .tabBar)
+                    })
                 }
-                .padding()
-            }
-            .background(
-                colorScheme == .light ?
-                Color(DesignSystem.Colors.backgroundSecondary).ignoresSafeArea() : Color(DesignSystem.Colors.backgroundSecondaryDark).ignoresSafeArea()
-            )
-            .fullScreenCover(isPresented: $showExpanded, content: {
-                ExpandedTranslationView(
-                    text: translatedText,
-                    onClose: { showExpanded = false }
+                .scrollEdgeEffectStyle(.soft, for: .vertical)
+                .navigationTitle(Text(""))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbarBackground(.clear, for: .navigationBar)
+                .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Color.clear.frame(height: 0)
+                    }
+                }
+                .background(
+                    colorScheme == .light ?
+                    Color(DesignSystem.Colors.backgroundSecondary) :Color(DesignSystem.Colors.backgroundSecondaryDark)
                 )
-                .toolbar(.hidden, for: .tabBar)
-            })
+            }
         }
         
     }
