@@ -12,16 +12,15 @@ struct KeyboardView: View {
         ZStack
         {
             VStack(alignment: .leading, spacing: 8){
-                //title
                 HStack
                 {
                     Text("Setup Keyboard")
-                        .font(.largeTitle)
-                        .bold()
+                        .font(.system(.largeTitle, design: .serif, weight: .bold))
                     Spacer()
                 }
                 Text("Follow the instruction bellow to setup keyboard translator")
                     .font(.footnote)
+                    .foregroundStyle(ColorsConstant.textSecondary)
        
                 //placeholder lottie
                 Image("lottiePlaceholder")

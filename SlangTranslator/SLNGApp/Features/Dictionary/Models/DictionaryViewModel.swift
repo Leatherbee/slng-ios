@@ -19,7 +19,6 @@ final class DictionaryViewModel: ObservableObject {
     }
     
     private func loadAllSlangs() {
-        // Ambil semua data dari SlangDictionary dan sort berdasarkan abjad
         allSlangs = SlangDictionary.shared.slangs
             .sorted { $0.slang.lowercased() < $1.slang.lowercased() }
     }
@@ -35,7 +34,6 @@ final class DictionaryViewModel: ObservableObject {
         }
     }
     
-    // Helper untuk mendapatkan slang berdasarkan index
     func getSlang(at index: Int) -> SlangData? {
         let filtered = getFilteredSlangs()
         guard index < filtered.count else { return nil }

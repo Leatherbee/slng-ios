@@ -132,7 +132,7 @@ struct TranslateView: View {
                                 .overlay(colorScheme == .light ? ColorsConstant.textSecondary : ColorsConstant.buttonDisable)
 
                             if let translatedText = viewModel.translatedText {
-                                Text(translatedText)
+                                Text(translatedText.capitalized)
                                     .foregroundColor(.secondary)
                                     .textSelection(.enabled)
                             }
@@ -201,7 +201,7 @@ struct TranslateView: View {
                         Text("The translated text has been copied to the clipboard.")
                     }
                     .fullScreenCover(isPresented: $showExpanded) {
-                        ExpandedTranslationView(text: viewModel.translatedText ?? "", onClose: { showExpanded = false })
+                        ExpandedTranslationView(text: viewModel.translatedText?.capitalized ?? "", onClose: { showExpanded = false })
                             .toolbar(.hidden, for: .tabBar)
                     }
                 }
