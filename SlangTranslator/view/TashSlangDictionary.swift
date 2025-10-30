@@ -10,7 +10,7 @@ import AudioToolbox
 
 struct TashSlangDictionary: View {
     // Ambil semua slang dan urutkan abjad
-    let allSlangs: [SlangData] = Array(SlangDictionary.shared.slangs.values)
+    let allSlangs: [SlangDataDummy] = Array(SlangDictionaryDummy.shared.slangs.values)
         .sorted { $0.slang.lowercased() < $1.slang.lowercased() }
     
     @State private var indexSelect: Int = 0
