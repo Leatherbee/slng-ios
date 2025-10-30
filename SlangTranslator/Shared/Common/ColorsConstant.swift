@@ -19,8 +19,6 @@ struct ColorsConstant {
     static let backgroundSecondaryDark = Color(hex: "#131212")
 }
 
-
-
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)

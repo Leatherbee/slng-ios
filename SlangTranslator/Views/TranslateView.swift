@@ -1,248 +1,266 @@
 //
 //  TranslateView.swift
-//  IndoSlangTrans
+//  SlangTranslator
 //
 //  Created by Cynthia Yapiter on 20/10/25.
 //
+
 import SwiftUI
+import SwiftData
 
 struct TranslateView: View {
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.colorScheme) var colorScheme
     @StateObject private var viewModel = TranslateViewModel()
-    @State private var inputText: String = ""
-    @State private var dynamicTextStyle: Font.TextStyle = .largeTitle  // largeTitle default
-    @State private var isTranslated: Bool = true
-    
-    @State private var textHeight: CGFloat = 100 // initial height
+
+    @State private var dynamicTextStyle: Font.TextStyle = .largeTitle
     @State private var showExpanded = false
-    
+
     var body: some View {
-        if viewModel.translatedText == nil{
-            GeometryReader { geometry in
-                VStack(){
-                    Spacer()
-                    ZStack(alignment: .leading) {
-                        if inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                            Text("Heard a slang you don't get? Type here")
-                                .foregroundColor(colorScheme == .dark ? ColorsConstant.textDisableDark : ColorsConstant.textDisable)
-                                .zIndex(1)
-                        }
-                        
-                        TextEditor(text: $inputText)
-                            .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
-                            .foregroundColor(.secondary)
-                            .frame(height: textHeight)
-                            .autocorrectionDisabled(true)
-                            .onChange(of: inputText) {
-                                adjustFontSize()
-                                recalcHeight(geometry: geometry)
-                            }
-                            .zIndex(0)
-                    }
-                    .font(.system(.largeTitle, design: .serif, weight: .bold))
-                    .padding(.horizontal)
-                    .simultaneousGesture(
-                        TapGesture().onEnded {
-                            UIApplication.shared.dismissKeyboard()
-                        }
-                    )
-                    .gesture(
-                        DragGesture().onChanged { _ in
-                            UIApplication.shared.dismissKeyboard()
-                        }
-                    )
-                    .frame(maxWidth: .infinity)
-                    
-                    Spacer()
-                    
+        ZStack {
+            if viewModel.isInitializing {
+                VStack(spacing: 12) {
+                    ProgressView("Preparing translator...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .font(.headline)
+                    Text("Warming up dictionary & translation engine…")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                 }
-                .frame(maxWidth: .infinity, maxHeight: geometry.size.height)
-                .padding()
-                .onAppear {
-                    recalcHeight(geometry: geometry)
-                }
-                
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.black.opacity(0.1))
+                .ignoresSafeArea()
             }
+            else if viewModel.isLoading {
+                VStack(spacing: 12) {
+                    ProgressView("Translating...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .font(.headline)
+                    Text("Please wait while we decode the slang...")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.black.opacity(0.1))
+                .ignoresSafeArea()
+            }
+            else if !viewModel.isTranslated {
+                inputSection
+                    .transition(.opacity.combined(with: .scale))
+            }
+            else {
+                resultSection
+                    .transition(.opacity.combined(with: .scale))
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: viewModel.isTranslated)
+    }
+
+    private var inputSection: some View {
+        VStack {
+            Spacer()
             
-            Button{
-                viewModel.translate(text: inputText)
-                print("Added to Keyboard")
+            ZStack(alignment: .topLeading) {
+                TextEditor(text: $viewModel.inputText)
+                    .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
+                    .foregroundColor(.secondary)
+                    .frame(minHeight: 100, maxHeight: 300)
+                    .scrollContentBackground(.hidden)
+                    .autocorrectionDisabled(true)
+                    .onChange(of: viewModel.inputText) { oldValue, newValue in
+                        adjustFontSizeDebounced()
+                    }
+                
+                if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Text("Heard a slang you don't get? Type here")
+                        .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
+                        .foregroundColor(colorScheme == .dark ? ColorsConstant.textDisableDark : ColorsConstant.textDisable)
+                        .padding(.horizontal, 5)
+                        .padding(.top, 8)
+                        .allowsHitTesting(false)
+                }
+            }
+            .padding(.horizontal)
+
+            Spacer()
+
+            Button {
+                UIApplication.shared.dismissKeyboard()
+                viewModel.translate(text: viewModel.inputText)
             } label: {
-                HStack(){
+                HStack {
                     Text("Translate")
                     Image(systemName: "arrow.right")
                 }
                 .padding(.vertical, 18)
                 .font(Font.body.bold())
                 .frame(maxWidth: 314, minHeight: 60)
-                .foregroundColor((colorScheme == .dark && (inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)==false) ? .black : .white)
+                .foregroundColor(
+                    (colorScheme == .dark && !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    ? .black : .white
+                )
                 .background(
-                    inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?
-                    Color(ColorsConstant.buttonDisable) : (colorScheme == .light ? Color(ColorsConstant.buttonPrimary) : .white)
+                    viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    ? Color(ColorsConstant.buttonDisable)
+                    : (colorScheme == .light ? Color(ColorsConstant.buttonPrimary) : .white)
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 30))
             }
             .padding()
-            .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
-        else if let translatedText = viewModel.translatedText{
-            NavigationStack{
-                ScrollView{
-                    VStack{
-                        VStack(alignment: .leading){
-                            VStack(spacing: 24){
-                                VStack(alignment: .leading){
-                                    Text(viewModel.inputText)
-                                        .foregroundColor(colorScheme == .light ? ColorsConstant.textPrimary : ColorsConstant.textPrimaryDark)
-                                        .textSelection(.enabled)
-                                        .autocorrectionDisabled(true)
-                                    
-                                    Divider()
-                                        .overlay(colorScheme == .light ? ColorsConstant.textSecondary : ColorsConstant.buttonDisable)
-                                    
-                                    Text(translatedText)
-                                        .foregroundColor(.secondary)
-                                        .textSelection(.enabled)
-                                        
-                                }
-                                .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
-                                
-                                //Action Buttons Row
-                                HStack() {
-                                    HStack(spacing: 10){
-                                        Button {
-                                            viewModel.expandedView()
-                                            showExpanded = true
-                                        } label: {
-                                            Image(systemName: "arrow.up.left.and.arrow.down.right")
-                                        }
-                                        
-                                        Button {
-                                            viewModel.copyToClipboard()
-                                        } label: {
-                                            Image(systemName: "doc.on.doc")
-                                        }
-                                    }
-                                    Spacer()
-                                    Button{
-                                        viewModel.showDetectedSlang()
-                                    } label: {
-                                        Text(viewModel.isDetectedSlangShown ? "Close Detected Slang (\(viewModel.slangDetected.count))" : "Show Detected Slang (\(viewModel.slangDetected.count))")
-                                            .padding(.vertical, 16)
-                                            .padding(.horizontal, 16)
-                                            .foregroundColor(colorScheme == .dark ? .black : .white)
-                                            .background(
-                                                inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?
-                                                Color(ColorsConstant.buttonDisable) : (colorScheme == .light ? Color(ColorsConstant.buttonPrimary) : .white)
-                                            )
-                                            .clipShape(Capsule())
-                                    }
+        .padding()
+        .contentShape(Rectangle())
+        .onTapGesture {
+            UIApplication.shared.dismissKeyboard()
+        }
+    }
 
+    private var resultSection: some View {
+        NavigationStack {
+            ZStack(alignment: .bottom) {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
+                        Spacer()
+                            .frame(height: 80)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(viewModel.inputText)
+                                .foregroundColor(colorScheme == .light ? ColorsConstant.textPrimary : ColorsConstant.textPrimaryDark)
+                                .textSelection(.enabled)
+
+                            Divider()
+                                .overlay(colorScheme == .light ? ColorsConstant.textSecondary : ColorsConstant.buttonDisable)
+
+                            if let translatedText = viewModel.translatedText {
+                                Text(translatedText)
+                                    .foregroundColor(.secondary)
+                                    .textSelection(.enabled)
+                            }
+                        }
+                        .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
+                        .padding(.horizontal, 24)
+
+                        // MARK: Action Buttons
+                        HStack {
+                            HStack(spacing: 10) {
+                                Button {
+                                    viewModel.expandedView()
+                                    showExpanded = true
+                                } label: {
+                                    Image(systemName: "arrow.up.left.and.arrow.down.right")
                                 }
+
+                                Button { viewModel.copyToClipboard() } label: {
+                                    Image(systemName: "doc.on.doc")
+                                }
+                            }
+                            Spacer()
+                            Button {
+                                viewModel.showDetectedSlang()
+                            } label: {
+                                Text(viewModel.isDetectedSlangShown
+                                     ? "Close Detected Slang (\(viewModel.slangDetected.count))"
+                                     : "Show Detected Slang (\(viewModel.slangDetected.count))")
+                                .padding(.vertical, 16)
+                                .padding(.horizontal, 16)
+                                .foregroundColor(colorScheme == .dark ? .black : .white)
+                                .background(
+                                    colorScheme == .light
+                                    ? Color(ColorsConstant.buttonPrimary)
+                                    : .white
+                                )
+                                .clipShape(Capsule())
+                            }
+                        }
+                        .padding(.horizontal, 24)
+
+                        if viewModel.isDetectedSlangShown {
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("Slang Detected (\(viewModel.slangDetected.count))")
+                                    .foregroundColor(.primary)
                                 
-                                if viewModel.isDetectedSlangShown{
-                                    VStack(alignment: .leading, spacing: 16){
-                                        Text("Slang Detected (\(viewModel.slangDetected.count))")
-                                        VStack(spacing: 16){
-                                            ForEach(viewModel.slangDetected, id: \.self) { slang in
-                                                VStack(spacing: 0){
-                                                    HStack{
-                                                        Text(slang)
-                                                            .font(.system(.title, design: .serif, weight: .regular))
-                                                        Spacer()
-                                                        Image(systemName: "arrow.right")
-                                                    }
-                                                    Divider()
-                                                }
-                                            }
-                                        }
+                                VStack(spacing: 14) {
+                                    ForEach(viewModel.slangData, id: \.slang) { slangData in
+                                        TranslateSlangCardView(
+                                            slangData: slangData,
+                                            backgroundColor: colorScheme == .light
+                                            ? ColorsConstant.backgroundSecondary
+                                            : ColorsConstant.backgroundSecondaryDark
+                                        )
                                     }
                                 }
-                                
-                                Spacer()
                             }
-                            .font(.body)
-                            .frame(maxWidth: .infinity)
-                            .padding(.horizontal)
-                            
+                            .padding(.horizontal, 24)
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .padding()
-                        .tint(colorScheme == .light ? ColorsConstant.textPrimary : ColorsConstant.textPrimaryDark)
-                        .alert("Copied!", isPresented: $viewModel.copiedToKeyboardAlert) {
-                            Button("OK", role: .cancel) { }
-                        } message: {
-                            Text("The translated text has been copied to the clipboard.")
-                        }
-                        
-                        Button{
-                            viewModel.reset()
-                            print("reset")
-                        } label: {
-                            Label("Try Another", systemImage: "arrow.left")                        .padding(.vertical, 18)
-                                .font(Font.body.bold())
-                                .frame(maxWidth: 314, minHeight: 60)
-                                .foregroundColor(colorScheme == .dark ? .black : .white)
-                                .background(colorScheme == .light ? Color(ColorsConstant.buttonPrimary) : .white
-                                )
-                                .clipShape(RoundedRectangle(cornerRadius: 30))
-                        }
-                        .padding()
+
+                        Spacer(minLength: 120)
                     }
-                    .fullScreenCover(isPresented: $showExpanded, content: {
-                        ExpandedTranslationView(
-                            text: translatedText,
-                            onClose: { showExpanded = false }
+                    .alert("Copied!", isPresented: $viewModel.copiedToKeyboardAlert) {
+                        Button("OK", role: .cancel) { }
+                    } message: {
+                        Text("The translated text has been copied to the clipboard.")
+                    }
+                    .fullScreenCover(isPresented: $showExpanded) {
+                        ExpandedTranslationView(text: viewModel.translatedText ?? "", onClose: { showExpanded = false })
+                            .toolbar(.hidden, for: .tabBar)
+                    }
+                }
+
+                Button {
+                    viewModel.reset()
+                } label: {
+                    Label("Try Another", systemImage: "arrow.left")
+                        .padding(.vertical, 18)
+                        .font(Font.body.bold())
+                        .frame(maxWidth: 314, minHeight: 60)
+                        .foregroundColor(colorScheme == .dark ? .black : .white)
+                        .background(
+                            colorScheme == .light
+                            ? Color(ColorsConstant.buttonPrimary)
+                            : .white
                         )
-                        .toolbar(.hidden, for: .tabBar)
-                    })
+                        .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
-//                .scrollEdgeEffectStyle(.soft, for: .vertical)
-                .navigationTitle(Text(""))
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbarBackground(.clear, for: .navigationBar)
-                .toolbarBackgroundVisibility(.visible, for: .navigationBar)
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        Color.clear.frame(height: 0)
-                    }
-                }
-                .background(
-                    colorScheme == .light ?
-                    Color(ColorsConstant.backgroundSecondary) :Color(ColorsConstant.backgroundSecondaryDark)
-                )
+                .padding(.bottom, 30)
             }
-        }
-        
-    }
-        
-        
-    private func adjustFontSize() {
-        let length = inputText.count
-        // simple heuristic for dynamic font scaling
-        withAnimation(.easeInOut(duration: 0.2)) {
-            switch length {
-            case 0...40: dynamicTextStyle = .largeTitle
-            case 41...100: dynamicTextStyle = .title
-            case 101...200: dynamicTextStyle = .title2
-            case 201...340: dynamicTextStyle = .title3
-            default: dynamicTextStyle = .headline
-            }
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.clear, for: .navigationBar)
+            .background(
+                colorScheme == .light
+                ? Color(ColorsConstant.backgroundSecondary)
+                : Color(ColorsConstant.backgroundSecondaryDark)
+            )
         }
     }
+
+    @State private var fontSizeWorkItem: DispatchWorkItem?
     
-    private func recalcHeight(geometry: GeometryProxy) {
-        // Measure text height dynamically
-        let width = geometry.size.width - 32
-        let estimatedHeight = inputText.boundingRect(
-            with: CGSize(width: width, height: .greatestFiniteMagnitude),
-            options: .usesLineFragmentOrigin,
-            attributes: [.font: UIFont.preferredFont(forTextStyle: .largeTitle)],
-            context: nil
-        ).height + 50
+    private func adjustFontSizeDebounced() {
+        fontSizeWorkItem?.cancel()
         
-        // Limit growth so it doesn’t exceed screen height
-        textHeight = min(estimatedHeight, geometry.size.height - 30)
+        let workItem = DispatchWorkItem { [inputText = viewModel.inputText] in
+            let length = inputText.count
+            let newStyle: Font.TextStyle = {
+                switch length {
+                case 0...40: return .largeTitle
+                case 41...100: return .title
+                case 101...200: return .title2
+                case 201...340: return .title3
+                default: return .headline
+                }
+            }()
+            
+            if newStyle != dynamicTextStyle {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    dynamicTextStyle = newStyle
+                }
+            }
+        }
+        
+        fontSizeWorkItem = workItem
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: workItem)
     }
 }
 
@@ -250,8 +268,6 @@ struct ExpandedTranslationView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     let text: String
     let onClose: () -> Void
-    
-//    @State private var isLandscape: Bool = false
     
     @Environment(\.dismiss) private var dismiss
 
@@ -263,8 +279,7 @@ struct ExpandedTranslationView: View {
 
             GeometryReader { geo in
                 ScrollView(.vertical, showsIndicators: true){
-                    VStack
-                    {
+                    VStack {
                         Spacer(minLength: geo.size.height / 4)
                         Text(text)
                             .font(.system(size: 64, weight: .bold, design: .serif))
@@ -299,7 +314,6 @@ struct ExpandedTranslationView: View {
 #Preview {
     TranslateView()
 }
-
 
 extension UIApplication {
     func dismissKeyboard() {
