@@ -9,7 +9,7 @@ import SwiftUI
 @Observable
 class PopupManager {
     var isPresented: Bool = false
-    var slangData: SlangDataDummy?
+    var slangData: SlangData?
     var popupContent: AnyView = AnyView(EmptyView())
 
     func show<Content: View>(_ view: Content) {
@@ -25,11 +25,20 @@ class PopupManager {
         }
     }
     
-    func setData(slangData: SlangDataDummy) {
+    func setSlangData(_ slangData: SlangData) {
         self.slangData = slangData
     }
     
-    func getData() -> SlangDataDummy? {
+    func getSlangData() -> SlangData? {
+        return slangData
+    }
+    
+    // Alternative method names untuk backward compatibility
+    func setData(slangData: SlangData) {
+        self.slangData = slangData
+    }
+    
+    func getData() -> SlangData? {
         return slangData
     }
 }

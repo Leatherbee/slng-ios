@@ -8,8 +8,9 @@ import SwiftUI
 
 struct DictionaryDetail: View {
     @Environment(PopupManager.self) private var popupManager
-    @State private var slangData: SlangDataDummy?
+    @State private var slangData: SlangData?
     @State private var showCloseButton: Bool = false
+    
     var body: some View {
         ZStack{
             VStack(spacing: 64){
@@ -30,28 +31,35 @@ struct DictionaryDetail: View {
                         .frame(width: 43, height: 43)
                         .background(.black)
                         .cornerRadius(9999)
-                        .transition(.opacity)  
+                        .transition(.opacity)
                     }
                     .frame(maxWidth: .infinity)
                 }
                 
                 VStack(spacing: 64){
                     VStack(spacing: 8){
-                        Text("\(slangData?.slang ?? "")")
-                            .font(.system(size: 64, design: .serif)).frame(maxWidth: .infinity, alignment: .leading)
-                        Text("/go-kil/")
-                            .font(.system(size: 17, weight: .bold, design: .serif)).frame(maxWidth: .infinity, alignment: .leading)
-                    }.frame(maxWidth: .infinity, alignment: .leading)
+                        Text(slangData?.slang ?? "")
+                            .font(.system(size: 64, design: .serif))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("/\(slangData?.slang.lowercased() ?? "")/")
+                            .font(.system(size: 17, weight: .bold, design: .serif))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     
                     VStack(spacing: 18){
                         VStack(spacing: 8){
                             Text("Meaning")
                                 .font(.system(size: 17, weight: .semibold, design: .serif))
-                                .italic().frame(maxWidth: .infinity, alignment: .leading)
-                            Text("\(slangData?.contextEN ?? "") ")
+                                .italic()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text(slangData?.translationEN ?? "")
                                 .font(.system(size: 15, design: .serif))
-                                .italic().frame(maxWidth: .infinity, alignment: .leading)
-                        }.frame(maxWidth: .infinity, alignment: .leading)
+                                .italic()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
                         VStack(spacing: 8){
                             HStack{
                                 Image(systemName: "info.circle")
@@ -60,34 +68,39 @@ struct DictionaryDetail: View {
                                 Text("Context")
                                     .font(.system(size: 17, weight: .semibold, design: .serif))
                                     .italic()
-                            }.frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            Text("\(slangData?.contextEN ?? "") ")
+                            Text(slangData?.contextEN ?? "")
                                 .font(.system(size: 15, design: .serif))
-                                .italic().frame(maxWidth: .infinity, alignment: .leading)
-                        }.frame(maxWidth: .infinity, alignment: .leading)
+                                .italic()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
                         VStack(spacing: 8){
                             Text("Example:")
                                 .font(.system(size: 17, weight: .semibold, design: .serif))
-                                .italic().frame(maxWidth: .infinity, alignment: .leading)
+                                .italic()
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             VStack{
-                                Text("“\(slangData?.exampleID ?? "")” ")
+                                Text("\(slangData?.exampleID ?? "")")
                                     .font(.system(size: 15, design: .serif))
-                                    .italic().frame(maxWidth: .infinity, alignment: .leading)
-                                Text("“\(slangData?.exampleEN ?? "")”")
+                                    .italic()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Text("\(slangData?.exampleEN ?? "")")
                                     .font(.system(size: 15, design: .serif))
-                                    .italic().frame(maxWidth: .infinity, alignment: .leading)
-                            }.frame(maxWidth: .infinity, alignment: .leading)
-                            
-                        }.frame(maxWidth: .infinity, alignment: .leading)
+                                    .italic()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-                
                 .frame(maxWidth: 331, alignment: .center)
                 
                 Spacer()
-                
-                
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -95,16 +108,15 @@ struct DictionaryDetail: View {
         }
         .frame(width: .infinity, height: .infinity)
         .onAppear() {
-            self.slangData = popupManager.getData()
+            self.slangData = popupManager.getSlangData()
              
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {                   withAnimation(.easeIn(duration: 0.3)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                withAnimation(.easeIn(duration: 0.3)) {
                     self.showCloseButton = true
                 }
             }
         }
-        
     }
-    
 }
 
 #Preview {

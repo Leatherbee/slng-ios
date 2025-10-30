@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SlangData: Codable, Identifiable {
+struct SlangData: Equatable, Codable, Identifiable {
     private enum CodingKeys: String, CodingKey {
         case slang
         case translationID

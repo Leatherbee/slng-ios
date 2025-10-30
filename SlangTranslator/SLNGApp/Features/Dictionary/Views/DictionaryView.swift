@@ -13,6 +13,7 @@ import AVFoundation
 struct DictionaryView: View {
     @State private var selectedIndex: Int = 0
     @State private var searchText: String = ""
+    @StateObject private var viewModel = DictionaryViewModel()
     
     // Ambil semua slang, urut abjad
     let allSlangs: [SlangDataDummy] = Array(SlangDictionaryDummy.shared.slangs.values)
@@ -25,108 +26,107 @@ struct DictionaryView: View {
     @State private var dragActiveLetter: String? = nil
     
     // Filtered array
-    var filteredSlangs: [SlangDataDummy] {
-        if searchText.isEmpty {
-            return allSlangs
-        } else {
-            return allSlangs.filter {
-                $0.slang.localizedCaseInsensitiveContains(searchText)
-            }
-        }
+    var filteredSlangs: [SlangData] {
+        viewModel.getFilteredSlangs()
     }
     
     var body: some View {
-        VStack {
-            VStack(spacing: 16) {
-                
-                // Wheel + Index letters
-                HStack(alignment: .center) {
-                    
-                    // Wheel Picker
-                    if !filteredSlangs.isEmpty {
-                        LargeWheelPickerWithButton(
-                            selection: $selectedIndex,
-                            data: filteredSlangs.map { $0.slang }
-                        ) {
-                            popupManager.setData(slangData: filteredSlangs[selectedIndex])
-                            popupManager.isPresented.toggle()
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 600)
-                    } else {
-                        Text("No results")
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity, maxHeight: 600)
-                    }
-                     
-                    VStack(spacing: 0) {
-                        ForEach(Array(indexWord), id: \.self) { letter in
-                            let stringLetter = String(letter)
-                            let isActive = filteredSlangs.indices.contains(selectedIndex) &&
-                                (filteredSlangs[selectedIndex].slang.lowercased().first == letter || dragActiveLetter == stringLetter)
+            NavigationStack {
+                VStack {
+                    VStack(spacing: 16) {
+                        
+                        // Wheel + Index letters
+                        HStack(alignment: .center) {
                             
-                            Text(stringLetter.uppercased())
-                                .font(.system(size: 11, design: .serif))
-                                .foregroundColor(isActive ? .white : .gray)
-                                .frame(width: 20, height: 18)
-                                .background(
-                                    Circle()
-                                        .fill(isActive ? Color.black.opacity(0.9) : .clear)
-                                )
-                                .scaleEffect(dragActiveLetter == stringLetter ? 2.0 : 1.0)
-                                .animation(.spring(response: 0.25, dampingFraction: 0.6), value: dragActiveLetter)
-                        }
-                    }
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                let y = value.location.y
-                                let letterHeight: CGFloat = 21 + 4
-                                let index = max(0, min(Int(y / letterHeight), indexWord.count - 1))
-                                let letter = Array(indexWord)[index]
-                                dragActiveLetter = String(letter)
-                                 
-                                if let newIndex = filteredSlangs.firstIndex(where: { $0.slang.lowercased().first == letter }) {
-                                    selectedIndex = newIndex
+                            // Wheel Picker
+                            if !filteredSlangs.isEmpty {
+                                LargeWheelPickerWithButton(
+                                    selection: $selectedIndex,
+                                    data: filteredSlangs.map { $0.slang }
+                                ) {
+                                    // Set data ke PopupManager saat arrow di-tap
+                                    if let slangData = viewModel.getSlang(at: selectedIndex) {
+                                        popupManager.setSlangData(slangData)
+                                        popupManager.isPresented.toggle()
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 600)
+                            } else {
+                                Text("No results")
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: .infinity, maxHeight: 600)
+                            }
+                            
+                            VStack(spacing: 0) {
+                                ForEach(Array(indexWord), id: \.self) { letter in
+                                    let stringLetter = String(letter)
+                                    let isActive = filteredSlangs.indices.contains(selectedIndex) &&
+                                    (filteredSlangs[selectedIndex].slang.lowercased().first == letter || dragActiveLetter == stringLetter)
+                                    
+                                    Text(stringLetter.uppercased())
+                                        .font(.system(size: 11, design: .serif))
+                                        .foregroundColor(isActive ? .white : .gray)
+                                        .frame(width: 20, height: 18)
+                                        .background(
+                                            Circle()
+                                                .fill(isActive ? Color.black.opacity(0.9) : .clear)
+                                        )
+                                        .scaleEffect(dragActiveLetter == stringLetter ? 2.0 : 1.0)
+                                        .animation(.spring(response: 0.25, dampingFraction: 0.6), value: dragActiveLetter)
                                 }
                             }
-                            .onEnded { _ in
-                                dragActiveLetter = nil
-                            }
-                    )
-
-                }
-                .padding(0)
-                .background(Color.white)
-                 
-                HStack(spacing: 8) {
-                    Image(systemName: "magnifyingglass")
-                        .frame(width: 17)
-                        .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
-                    
-                    TextField("Search", text: $searchText)
-                        .autocapitalization(.none)
-                        .padding()
-                        .font(.caption)
-                        .frame(height: 22)
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { value in
+                                        let y = value.location.y
+                                        let letterHeight: CGFloat = 21 + 4
+                                        let index = max(0, min(Int(y / letterHeight), indexWord.count - 1))
+                                        let letter = Array(indexWord)[index]
+                                        dragActiveLetter = String(letter)
+                                        
+                                        if let newIndex = filteredSlangs.firstIndex(where: { $0.slang.lowercased().first == letter }) {
+                                            selectedIndex = newIndex
+                                        }
+                                    }
+                                    .onEnded { _ in
+                                        dragActiveLetter = nil
+                                    }
+                            )
+                            
+                        }
+                        .padding(0)
+                        .background(Color.white)
+                        
+                        HStack(spacing: 8) {
+                            Image(systemName: "magnifyingglass")
+                                .frame(width: 17)
+                                .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
+                            
+                            TextField("Search", text: $viewModel.searchText)
+                                .autocapitalization(.none)
+                                .padding()
+                                .font(.caption)
+                                .frame(height: 22)
+                                .frame(maxWidth: .infinity)
+                                .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
+                        }
+                        .padding(11)
                         .frame(maxWidth: .infinity)
-                        .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
+                        .background(Color(red: 0.47, green: 0.47, blue: 0.5).opacity(0.16))
+                        .cornerRadius(100)
+                        
+                    }
+                    .padding()
                 }
-                .padding(11)
-                .frame(maxWidth: .infinity)
-                .background(Color(red: 0.47, green: 0.47, blue: 0.5).opacity(0.16))
-                .cornerRadius(100)
-                
-            }
-            .padding()
-        }
-        .padding(.top, -20)
-        .onChange(of: filteredSlangs) { oldValue, newValue in
-            if selectedIndex >= newValue.count {
-                selectedIndex = max(0, newValue.count - 1)
+                .padding(.top, -20)
+                .onChange(of: filteredSlangs) { oldValue, newValue in
+                    if selectedIndex >= newValue.count {
+                        selectedIndex = max(0, newValue.count - 1)
+                    }
+                }
             }
         }
-    }
      
     
     private func handleLetterTap(_ letter: Character) {

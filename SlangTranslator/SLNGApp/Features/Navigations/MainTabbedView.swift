@@ -4,7 +4,7 @@
 //
 //  Created by Filza Rizki Ramadhan on 21/10/25.
 //
-import SwiftUI 
+import SwiftUI
 
 enum TabSelection: Hashable {
     case translate
@@ -16,6 +16,7 @@ struct MainTabbedView: View {
     @State private var selectedTab: TabSelection = .translate
     @State private var popupManager = PopupManager()
     @State private var reveal = false
+    
     var body: some View{
         ZStack{
             TabView(selection: $selectedTab) {
@@ -31,26 +32,20 @@ struct MainTabbedView: View {
                     DictionaryView()
                         .environment(popupManager)
                 }
-                
             }
             .tint(.primary)
+            
             if popupManager.isPresented {
                 DictionaryDetail()
                     .environment(popupManager)
                     .zIndex(1)
                     .transition(.revealFromCenter)
             }
-            
-            
-            
         }
         .animation(.spring(response: 0.175, dampingFraction: 1.0), value: popupManager.isPresented)
-        
     }
-    
 }
 
-// MARK: - Custom Transition
 extension AnyTransition {
     static var revealFromCenter: AnyTransition {
         AnyTransition.modifier(
@@ -60,17 +55,16 @@ extension AnyTransition {
     }
 }
 
-// MARK: - Scale + Clip Modifier
 struct ScaleAndClipModifier: ViewModifier {
     var scale: CGFloat
     
     func body(content: Content) -> some View {
         GeometryReader { geo in
-                content
-                    .frame(width: geo.size.width, height: geo.size.height)
-                    .scaleEffect(y: scale, anchor: .center) // muncul dari tengah ke atas-bawah
-                    .opacity(scale > 0 ? 1 : 0)
-            }
+            content
+                .frame(width: geo.size.width, height: geo.size.height)
+                .scaleEffect(y: scale, anchor: .center) // muncul dari tengah ke atas-bawah
+                .opacity(scale > 0 ? 1 : 0)
+        }
     }
 }
 

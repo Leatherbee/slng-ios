@@ -4,32 +4,41 @@
 //
 //  Created by Filza Rizki Ramadhan on 21/10/25.
 //
+
 import Foundation
 internal import Combine
-
-struct DictionaryItems: Identifiable {
-    let id = UUID()
-    let title: String
-    let meaning: String
-}
 
 @MainActor
 final class DictionaryViewModel: ObservableObject {
     @Published var searchText: String = ""
     @Published var expandedItems: Set<UUID> = []
-    private let items: [DictionaryItems] = [
-        DictionaryItems(title: "Gabut", meaning: "Gabut adalah oke dan benar"),
-        DictionaryItems(title: "Gua", meaning: "Gua is meaning of aku")
-    ]
+    @Published var allSlangs: [SlangData] = []
+    
     init() {
-        
+        loadAllSlangs()
     }
     
-    func getItems() -> [DictionaryItems] {
-        if searchText.isEmpty { return items }
-        return items.filter {
-            $0.title.lowercased().contains(searchText.lowercased()) ||
-            $0.meaning.lowercased().contains(searchText.lowercased())
+    private func loadAllSlangs() {
+        // Ambil semua data dari SlangDictionary dan sort berdasarkan abjad
+        allSlangs = SlangDictionary.shared.slangs
+            .sorted { $0.slang.lowercased() < $1.slang.lowercased() }
+    }
+    
+    func getFilteredSlangs() -> [SlangData] {
+        if searchText.isEmpty {
+            return allSlangs
         }
+        return allSlangs.filter {
+            $0.slang.localizedCaseInsensitiveContains(searchText) ||
+            $0.translationEN.localizedCaseInsensitiveContains(searchText) ||
+            $0.translationID.localizedCaseInsensitiveContains(searchText)
+        }
+    }
+    
+    // Helper untuk mendapatkan slang berdasarkan index
+    func getSlang(at index: Int) -> SlangData? {
+        let filtered = getFilteredSlangs()
+        guard index < filtered.count else { return nil }
+        return filtered[index]
     }
 }
