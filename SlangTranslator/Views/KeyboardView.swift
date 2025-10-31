@@ -20,7 +20,7 @@ struct KeyboardView: View {
                 }
                 Text("Follow the instruction bellow to setup keyboard translator")
                     .font(.footnote)
-                    .foregroundStyle(ColorsConstant.textSecondary)
+                    .foregroundStyle(Color.txtSecondary)
        
                 //placeholder lottie
                 Image("lottiePlaceholder")

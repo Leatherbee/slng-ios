@@ -85,6 +85,7 @@
 				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
 				Shared/Core/Utils/SharedModelContainer.swift,
 				SlangCardView.swift,
+				SLNGApp/Helper/Color.swift,
 			);
 			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
 		};
@@ -116,6 +117,7 @@
 				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
 				Shared/Core/Utils/SharedModelContainer.swift,
 				SlangCardView.swift,
+				SLNGApp/Helper/Color.swift,
 			);
 			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
 		};

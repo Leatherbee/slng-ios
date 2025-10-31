@@ -1,42 +1,33 @@
-////
-////  Color.swift
-////  SlangTranslator
-////
-////  Created by Filza Rizki Ramadhan on 21/10/25.
-////
-//import SwiftUI
 //
-//extension Color {
-//    init?(hex: String) {
-//        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-//        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
+//  Color.swift
+//  SlangTranslator
 //
-//        var rgb: UInt64 = 0
-//        guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return nil }
+//  Created by Filza Rizki Ramadhan on 21/10/25.
 //
-//        let length = hexSanitized.count
-//        let r, g, b, a: Double
-//
-//        switch length {
-//        case 6:
-//            (r, g, b, a) = (
-//                Double((rgb & 0xFF0000) >> 16) / 255.0,
-//                Double((rgb & 0x00FF00) >> 8) / 255.0,
-//                Double(rgb & 0x0000FF) / 255.0,
-//                1.0
-//            )
-//        case 8:
-//            (r, g, b, a) = (
-//                Double((rgb & 0xFF000000) >> 24) / 255.0,
-//                Double((rgb & 0x00FF0000) >> 16) / 255.0,
-//                Double((rgb & 0x0000FF00) >> 8) / 255.0,
-//                Double(rgb & 0x000000FF) / 255.0
-//            )
-//        default:
-//            return nil
-//        }
-//
-//        self.init(.sRGB, red: r, green: g, blue: b, opacity: a)
-//    }
-//}
-//
+import SwiftUI
+
+extension Color {
+    // MARK: - background
+    static let bgPrimary = Color("backgroundPrimary")
+    static let bgSecondary = Color("backgroundSecondary")
+    
+    // MARK: - button
+    static let btnPrimary = Color("buttonPrimary")
+    static let btnSecondary = Color("buttonSecondary")
+    
+    // MARK: - button text
+    static let btnTextPrimary = Color("buttonTextPrimary")
+    
+    // MARK: - status bar
+    static let barStatus = Color("statusBar")
+    
+    // MARK: - stroke
+    static let strok = Color("stroke")
+    
+    // MARK: - text
+    static let txtPrimary = Color("textPrimary")
+    static let txtSecondary = Color("textSecondary")
+    static let txtDisable = Color("textDisable")
+    
+}
+

@@ -31,103 +31,103 @@ struct DictionaryView: View {
     }
     
     var body: some View {
-            NavigationStack {
-                VStack {
-                    VStack(spacing: 16) {
-                        
-                        // Wheel + Index letters
-                        HStack(alignment: .center) {
-                            
-                            // Wheel Picker
-                            if !filteredSlangs.isEmpty {
-                                LargeWheelPickerWithButton(
-                                    selection: $selectedIndex,
-                                    data: filteredSlangs.map { $0.slang }
-                                ) {
-                                    // Set data ke PopupManager saat arrow di-tap
-                                    if let slangData = viewModel.getSlang(at: selectedIndex) {
-                                        popupManager.setSlangData(slangData)
-                                        popupManager.isPresented.toggle()
-                                    }
-                                }
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 600)
-                            } else {
-                                Text("No results")
-                                    .foregroundColor(.gray)
-                                    .frame(maxWidth: .infinity, maxHeight: 600)
+        VStack {
+            VStack(spacing: 16) {
+                
+                // Wheel + Index letters
+                HStack(alignment: .center) {
+                    
+                    // Wheel Picker
+                    if !filteredSlangs.isEmpty {
+                        LargeWheelPickerWithButton(
+                            selection: $selectedIndex,
+                            data: filteredSlangs.map { $0.slang }
+                        ) {
+                            // Set data ke PopupManager saat arrow di-tap
+                            if let slangData = viewModel.getSlang(at: selectedIndex) {
+                                popupManager.setSlangData(slangData)
+                                popupManager.isPresented.toggle()
                             }
-                            
-                            VStack(spacing: 0) {
-                                ForEach(Array(indexWord), id: \.self) { letter in
-                                    let stringLetter = String(letter)
-                                    let isActive = filteredSlangs.indices.contains(selectedIndex) &&
-                                    (filteredSlangs[selectedIndex].slang.lowercased().first == letter || dragActiveLetter == stringLetter)
-                                    
-                                    Text(stringLetter.uppercased())
-                                        .font(.system(size: 11, design: .serif))
-                                        .foregroundColor(isActive ? .white : .gray)
-                                        .frame(width: 20, height: 18)
-                                        .background(
-                                            Circle()
-                                                .fill(isActive ? Color.black.opacity(0.9) : .clear)
-                                        )
-                                        .scaleEffect(dragActiveLetter == stringLetter ? 2.0 : 1.0)
-                                        .animation(.spring(response: 0.25, dampingFraction: 0.6), value: dragActiveLetter)
-                                }
-                            }
-                            .gesture(
-                                DragGesture(minimumDistance: 0)
-                                    .onChanged { value in
-                                        let y = value.location.y
-                                        let letterHeight: CGFloat = 21 + 4
-                                        let index = max(0, min(Int(y / letterHeight), indexWord.count - 1))
-                                        let letter = Array(indexWord)[index]
-                                        dragActiveLetter = String(letter)
-                                        
-                                        if let newIndex = filteredSlangs.firstIndex(where: { $0.slang.lowercased().first == letter }) {
-                                            selectedIndex = newIndex
-                                        }
-                                    }
-                                    .onEnded { _ in
-                                        dragActiveLetter = nil
-                                    }
-                            )
-                            
                         }
-                        .padding(0)
-                        .background(Color.white)
-                        
-                        HStack(spacing: 8) {
-                            Image(systemName: "magnifyingglass")
-                                .frame(width: 17)
-                                .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
-                            
-                            TextField("Search", text: $viewModel.searchText)
-                                .autocapitalization(.none)
-                                .padding()
-                                .font(.caption)
-                                .frame(height: 22)
-                                .frame(maxWidth: .infinity)
-                                .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
-                        }
-                        .padding(11)
                         .frame(maxWidth: .infinity)
-                        .background(Color(red: 0.47, green: 0.47, blue: 0.5).opacity(0.16))
-                        .cornerRadius(100)
-                        
+                        .frame(height: 600)
+                    } else {
+                        Text("No results")
+                            .foregroundColor(.gray)
+                            .frame(maxWidth: .infinity, maxHeight: 600)
                     }
-                    .padding()
-                }
-                .padding(.top, -20)
-                .onChange(of: filteredSlangs) { oldValue, newValue in
-                    if selectedIndex >= newValue.count {
-                        selectedIndex = max(0, newValue.count - 1)
+                    
+                    VStack(spacing: 0) {
+                        ForEach(Array(indexWord), id: \.self) { letter in
+                            let stringLetter = String(letter)
+                            let isActive = filteredSlangs.indices.contains(selectedIndex) &&
+                            (filteredSlangs[selectedIndex].slang.lowercased().first == letter || dragActiveLetter == stringLetter)
+                            
+                            Text(stringLetter.uppercased())
+                                .font(.system(size: 11, design: .serif))
+                                .foregroundColor(isActive ? Color.btnTextPrimary : Color.txtSecondary)
+                                .frame(width: 20, height: 18)
+                                .background(
+                                    Circle()
+                                        .fill(isActive ? Color.txtPrimary : .clear)
+                                )
+                                .scaleEffect(dragActiveLetter == stringLetter ? 2.0 : 1.0)
+                                .animation(.spring(response: 0.25, dampingFraction: 0.6), value: dragActiveLetter)
+                        }
                     }
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { value in
+                                let y = value.location.y
+                                let letterHeight: CGFloat = 21 + 4
+                                let index = max(0, min(Int(y / letterHeight), indexWord.count - 1))
+                                let letter = Array(indexWord)[index]
+                                dragActiveLetter = String(letter)
+                                
+                                if let newIndex = filteredSlangs.firstIndex(where: { $0.slang.lowercased().first == letter }) {
+                                    selectedIndex = newIndex
+                                }
+                            }
+                            .onEnded { _ in
+                                dragActiveLetter = nil
+                            }
+                    )
+                    
                 }
+                .padding(0)
+                
+                HStack(spacing: 8) {
+                    Image(systemName: "magnifyingglass")
+                        .frame(width: 17)
+                        .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
+                    
+                    TextField("Search", text: $viewModel.searchText)
+                        .autocapitalization(.none)
+                        .padding()
+                        .font(.caption)
+                        .frame(height: 22)
+                        .frame(maxWidth: .infinity)
+                        .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
+                }
+                .padding(11)
+                .frame(maxWidth: .infinity)
+                .background(Color(red: 0.47, green: 0.47, blue: 0.5).opacity(0.16))
+                .cornerRadius(100)
+                
+            }
+            .padding()
+        }
+        .padding(.top, -20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.bgPrimary)
+        .onChange(of: filteredSlangs) { oldValue, newValue in
+            if selectedIndex >= newValue.count {
+                selectedIndex = max(0, newValue.count - 1)
             }
         }
-     
+        
+    }
+    
     
     private func handleLetterTap(_ letter: Character) {
         guard !filteredSlangs.isEmpty else { return }
@@ -239,25 +239,25 @@ struct LargeWheelPicker: UIViewRepresentable {
                 if let descriptor = UIFont.systemFont(ofSize: 64).fontDescriptor.withDesign(.serif) {
                     label.font = UIFont(descriptor: descriptor, size: 64)
                 }
-                label.textColor = .black.withAlphaComponent(1.0)
+                label.textColor = .textPrimary.withAlphaComponent(1.0)
             } else if distance == 1 {
                 if let descriptor = UIFont.systemFont(ofSize: 48).fontDescriptor.withDesign(.serif) {
                     label.font = UIFont(descriptor: descriptor, size: 48)
                 }
-                label.textColor = .black.withAlphaComponent(0.8)
+                label.textColor = .textPrimary.withAlphaComponent(0.8)
             } else if distance == 2 {
                 if let descriptor = UIFont.systemFont(ofSize: 40).fontDescriptor.withDesign(.serif) {
                     label.font = UIFont(descriptor: descriptor, size: 40)
                 }
-                label.textColor = .black.withAlphaComponent(0.6)
+                label.textColor = .textPrimary.withAlphaComponent(0.6)
             } else {
                 if let descriptor = UIFont.systemFont(ofSize: 34).fontDescriptor.withDesign(.serif) {
                     label.font = UIFont(descriptor: descriptor, size: 34)
                 }
-                label.textColor = .black.withAlphaComponent(0.4)
+                label.textColor = .textPrimary.withAlphaComponent(0.4)
             }
             let arrowImage = UIImageView(image: UIImage(named: "arrowHome"))
-            arrowImage.tintColor = .black
+            arrowImage.tintColor = .textPrimary
             arrowImage.contentMode = .scaleAspectFit
             arrowImage.translatesAutoresizingMaskIntoConstraints = false
             arrowImage.widthAnchor.constraint(equalToConstant: 64).isActive = true
@@ -305,7 +305,7 @@ class Coordinator: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
     private func setupAudioSession() {
         do {
             let session = AVAudioSession.sharedInstance()
-             
+            
             try session.setCategory(.playback, mode: .default, options: [.mixWithOthers, .allowBluetooth, .allowAirPlay])
             try session.overrideOutputAudioPort(.none)
             try session.setActive(true, options: .notifyOthersOnDeactivation)
@@ -314,7 +314,7 @@ class Coordinator: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
             print("Audio session error: \(error.localizedDescription)")
         }
     }
-
+    
     private func prepareSound() {
         if let soundURL = Bundle.main.url(forResource: "wheel_click", withExtension: "mp3") {
             do {
@@ -326,9 +326,9 @@ class Coordinator: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
             }
         }
     }
-
-  
-
+    
+    
+    
     private func playSound() {
         guard let player = audioPlayer else { return }
         
@@ -342,15 +342,15 @@ class Coordinator: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
         } catch {
             print("Audio override error: \(error.localizedDescription)")
         }
-
+        
         player.play()
     }
-
-
+    
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int { parent.data.count }
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat { 75 }
-
+    
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let label = UILabel()
         label.text = parent.data[row]
@@ -361,31 +361,31 @@ class Coordinator: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
             if let descriptor = UIFont.systemFont(ofSize: 64).fontDescriptor.withDesign(.serif) {
                 label.font = UIFont(descriptor: descriptor, size: 64)
             }
-            label.textColor = .black.withAlphaComponent(1.0)
+            label.textColor = .textPrimary.withAlphaComponent(1.0)
         } else if distance == 1 {
             if let descriptor = UIFont.systemFont(ofSize: 48).fontDescriptor.withDesign(.serif) {
                 label.font = UIFont(descriptor: descriptor, size: 48)
             }
-            label.textColor = .black.withAlphaComponent(0.8)
+            label.textColor = .textPrimary.withAlphaComponent(0.8)
         } else if distance == 2 {
             if let descriptor = UIFont.systemFont(ofSize: 40).fontDescriptor.withDesign(.serif) {
                 label.font = UIFont(descriptor: descriptor, size: 40)
             }
-            label.textColor = .black.withAlphaComponent(0.6)
+            label.textColor = .textPrimary.withAlphaComponent(0.6)
         } else {
             if let descriptor = UIFont.systemFont(ofSize: 34).fontDescriptor.withDesign(.serif) {
                 label.font = UIFont(descriptor: descriptor, size: 34)
             }
-            label.textColor = .black.withAlphaComponent(0.4)
+            label.textColor = .textPrimary.withAlphaComponent(0.4)
         }
-
+        
         let arrowImage = UIImageView(image: UIImage(named: "arrowHome"))
         arrowImage.tintColor = .black
         arrowImage.contentMode = .scaleAspectFit
         arrowImage.translatesAutoresizingMaskIntoConstraints = false
         arrowImage.widthAnchor.constraint(equalToConstant: 64).isActive = true
         arrowImage.heightAnchor.constraint(equalToConstant: 18).isActive = true
-
+        
         let stackView = UIStackView(arrangedSubviews: [arrowImage])
         stackView.axis = .vertical
         stackView.spacing = 0
@@ -420,7 +420,7 @@ class Coordinator: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
     }
 }
 
- 
+
 
 
 // MARK: - TallPickerView

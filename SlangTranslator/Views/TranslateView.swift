@@ -52,6 +52,7 @@ struct TranslateView: View {
                     .transition(.opacity.combined(with: .scale))
             }
         }
+        .background(Color.backgroundPrimary)
         .animation(.easeInOut(duration: 0.25), value: viewModel.isTranslated)
     }
 
@@ -73,7 +74,7 @@ struct TranslateView: View {
                 if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     Text("Heard a slang you don't get? Type here")
                         .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
-                        .foregroundColor(colorScheme == .dark ? ColorsConstant.textDisableDark : ColorsConstant.textDisable)
+                        .foregroundColor(Color.textDisable)
                         .padding(.horizontal, 5)
                         .padding(.top, 8)
                         .allowsHitTesting(false)
@@ -96,12 +97,12 @@ struct TranslateView: View {
                 .frame(maxWidth: 314, minHeight: 60)
                 .foregroundColor(
                     (colorScheme == .dark && !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                    ? .black : .white
+                    ? Color.btnTextPrimary : Color.textPrimary
                 )
                 .background(
                     viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    ? Color(ColorsConstant.buttonDisable)
-                    : (colorScheme == .light ? Color(ColorsConstant.buttonPrimary) : .white)
+                    ? Color.btnSecondary
+                    : Color.btnPrimary
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 30))
             }
@@ -125,11 +126,11 @@ struct TranslateView: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text(viewModel.inputText)
-                                .foregroundColor(colorScheme == .light ? ColorsConstant.textPrimary : ColorsConstant.textPrimaryDark)
+                                .foregroundColor(Color.textPrimary)
                                 .textSelection(.enabled)
 
                             Divider()
-                                .overlay(colorScheme == .light ? ColorsConstant.textSecondary : ColorsConstant.buttonDisable)
+                                .overlay(Color.strok)
 
                             if let translatedText = viewModel.translatedText {
                                 Text(translatedText.capitalized)
@@ -165,9 +166,7 @@ struct TranslateView: View {
                                 .padding(.horizontal, 16)
                                 .foregroundColor(colorScheme == .dark ? .black : .white)
                                 .background(
-                                    colorScheme == .light
-                                    ? Color(ColorsConstant.buttonPrimary)
-                                    : .white
+                                    Color.btnPrimary
                                 )
                                 .clipShape(Capsule())
                             }
@@ -183,9 +182,7 @@ struct TranslateView: View {
                                     ForEach(viewModel.slangData, id: \.slang) { slangData in
                                         TranslateSlangCardView(
                                             slangData: slangData,
-                                            backgroundColor: colorScheme == .light
-                                            ? ColorsConstant.backgroundSecondary
-                                            : ColorsConstant.backgroundSecondaryDark
+                                            backgroundColor: Color.bgSecondary
                                         )
                                     }
                                 }
@@ -215,9 +212,7 @@ struct TranslateView: View {
                         .frame(maxWidth: 314, minHeight: 60)
                         .foregroundColor(colorScheme == .dark ? .black : .white)
                         .background(
-                            colorScheme == .light
-                            ? Color(ColorsConstant.buttonPrimary)
-                            : .white
+                            Color.btnPrimary
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
@@ -227,9 +222,7 @@ struct TranslateView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.clear, for: .navigationBar)
             .background(
-                colorScheme == .light
-                ? Color(ColorsConstant.backgroundSecondary)
-                : Color(ColorsConstant.backgroundSecondaryDark)
+                Color.bgSecondary
             )
         }
     }
@@ -273,8 +266,7 @@ struct ExpandedTranslationView: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Color(colorScheme == .light ?
-                  Color(ColorsConstant.backgroundSecondary): Color(ColorsConstant.backgroundSecondaryDark))
+            Color(Color.bgSecondary)
                 .ignoresSafeArea()
 
             GeometryReader { geo in
