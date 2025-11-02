@@ -38,6 +38,7 @@ struct KeyboardView: View {
                 VStack(spacing: 10){
                     Button{
                         print("Added to Keyboard")
+                        openKeyboardSettings()
                     } label: {
                         Text("Add Keyboard")
                             .padding(.vertical, 18)
@@ -61,9 +62,13 @@ struct KeyboardView: View {
                 .background(Color(.systemGray6))
                 
             }
-            
-            
-            
+        }
+    }
+    
+    private func openKeyboardSettings() {
+        if let url = URL(string: UIApplication.openSettingsURLString),
+           UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
 }

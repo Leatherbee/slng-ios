@@ -47,6 +47,7 @@ struct ShareExtensionView: View {
                                 .foregroundStyle(.primary)
                                 .padding(.horizontal, 6)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .textSelection(.enabled)
                         }
                         .padding(.horizontal)
                         .padding(.top)
@@ -95,7 +96,8 @@ struct ShareExtensionView: View {
                         } else if !translatedText.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
                                 Divider()
-                                    .foregroundStyle(.gray)
+                                    .frame(height: 1)
+                                    .overlay(Color.stroke)
                                     .padding(.horizontal, 6)
                                 
                                 Text(translatedText)
@@ -108,23 +110,24 @@ struct ShareExtensionView: View {
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 8)
                                     .frame(maxWidth: .infinity, alignment: .leading)
+                                    .textSelection(.enabled)
                             }
                             .padding(.horizontal)
                             
                             if !detectedSlangs.isEmpty {
-                                VStack(alignment: .leading, spacing: 8) {
+                                VStack(alignment: .leading, spacing: 14) {
                                     Text("Slang Detected (\(detectedSlangs.count))")
                                         .font(.body)
                                         .foregroundStyle(.primary)
-                                        .padding(.horizontal)
+//                                        .padding(.horizontal)
                                     
                                     ForEach(detectedSlangs.indices, id: \.self) { index in
-                                        SlangCardView(slangData: detectedSlangs[index])
-                                        Divider()
-                                            .foregroundStyle(.primary)
-                                            .padding(.horizontal, 16)
+                                        TranslateSlangCardView(slangData: detectedSlangs[index], backgroundColor: Color.primaryWhite)
                                     }
                                 }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 18)
+                                .textSelection(.enabled)
                             } else {
                                 VStack(spacing: 20) {
                                     Image(systemName: "questionmark.circle")
