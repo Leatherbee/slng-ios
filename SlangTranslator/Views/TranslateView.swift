@@ -134,6 +134,9 @@ struct TranslateView: View {
                             Text(viewModel.inputText)
                                 .foregroundColor(Color.textPrimary)
                                 .textSelection(.enabled)
+                                .onTapGesture {
+                                    viewModel.editText(text: viewModel.inputText)
+                                }
 
                             Divider()
                                 .overlay(Color.strok)
@@ -198,6 +201,7 @@ struct TranslateView: View {
 
                         Spacer(minLength: 120)
                     }
+                    .tint(Color.textPrimary)
                     .alert("Copied!", isPresented: $viewModel.copiedToKeyboardAlert) {
                         Button("OK", role: .cancel) { }
                     } message: {

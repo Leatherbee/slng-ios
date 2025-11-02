@@ -115,6 +115,19 @@ final class TranslateViewModel: ObservableObject {
         errorMessage = nil
     }
     
+    func editText(text: String) {
+        inputText = text
+        translatedText = nil
+        isTranslated = false
+        isDetectedSlangShown = false
+        isExpanded = false
+        slangDetected.removeAll()
+        slangData.removeAll() // Clear slang data
+        result = nil
+        isLoading = false
+        errorMessage = nil
+    }
+    
     func copyToClipboard() {
         guard let text = translatedText else { return }
         UIPasteboard.general.string = text
