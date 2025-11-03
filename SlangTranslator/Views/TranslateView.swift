@@ -16,14 +16,17 @@ struct TranslateView: View {
     @State private var textHeight: CGFloat = 0
     @State private var alignToInputPosition: Bool = true
     
+    // MARK: Animation states
     @State private var stage: Int = 0
     @State private var showBurst = false
     @State private var showPulse = false
-    @State private var moveUp = false
     @State private var dividerProgress: CGFloat = 0
     @State private var showTranslated = false
     @State private var showDetectedSlangButton = false
     @State private var showDetectedSlang = false
+    @State private var showBottomUI = false
+    @State private var shouldPlaySequentialAnimation = false
+    @State private var moveUp: Bool = false
     
     var body: some View {
         ZStack {
@@ -51,6 +54,7 @@ struct TranslateView: View {
         .animation(.easeInOut(duration: 0.25), value: viewModel.isTranslated)
     }
     
+    // MARK: Input Section
     private var inputSection: some View {
         VStack {
             Spacer()
@@ -68,7 +72,9 @@ struct TranslateView: View {
                     .frame(minHeight: 100, maxHeight: 300)
                     .scrollContentBackground(.hidden)
                     .autocorrectionDisabled(true)
-                    .onChange(of: viewModel.inputText) { _, _ in adjustFontSizeDebounced() }
+                    .onChange(of: viewModel.inputText) { _, _ in
+                        adjustFontSizeDebounced()
+                    }
                 
                 if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     Text("Heard a slang you don't get? Type here")
@@ -85,6 +91,7 @@ struct TranslateView: View {
             
             Button {
                 UIApplication.shared.dismissKeyboard()
+                shouldPlaySequentialAnimation = true
                 viewModel.translate(text: viewModel.inputText)
             } label: {
                 HStack {
@@ -113,13 +120,14 @@ struct TranslateView: View {
         .onTapGesture { UIApplication.shared.dismissKeyboard() }
     }
     
+    // MARK: Result Section
     private var resultSection: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
                 Color.bgSecondary.ignoresSafeArea()
                 
                 GeometryReader { screenGeo in
-                    SunburstView(trigger: $showBurst)  // ✅ Ganti dengan ini
+                    SunburstView(trigger: $showBurst)
                         .allowsHitTesting(false)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .position(x: screenGeo.size.width / 2,
@@ -129,12 +137,12 @@ struct TranslateView: View {
                 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
-                        Spacer()
-                            .frame(height: alignToInputPosition ? 150 : 100)
+                        Spacer().frame(height: alignToInputPosition ? 150 : 100)
                         
                         ZStack(alignment: .topLeading) {
                             VStack(alignment: .leading, spacing: 8) {
-                                // Original text
+                                
+                                // Original text (pulse only)
                                 Text(viewModel.inputText)
                                     .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
                                     .foregroundColor(Color.textPrimary)
@@ -142,21 +150,16 @@ struct TranslateView: View {
                                     .matchedGeometryEffect(
                                         id: "originalText",
                                         in: textNamespace,
-                                        properties: .position,
-                                        anchor: .topLeading,
-                                        isSource: viewModel.isTranslated
+                                        properties: .frame,
+                                        anchor: .topLeading
                                     )
-                                    .offset(y: moveUp ? -textHeight * 0.2 : 0) // kontrol naik-turun halus
-                                    .animation(.easeInOut(duration: 1.4), value: moveUp)
+                                    .scaleEffect(showPulse ? 0.80 : 1.0)
+                                    .offset(y: moveUp ? -textHeight * 0.2 : 0)
+                                    .animation(.easeInOut(duration: 0.4), value: showPulse)
+                                    .animation(.easeInOut(duration: 0.8), value: moveUp)
                                     .textSelection(.enabled)
                                     .fixedSize(horizontal: false, vertical: true)
-//                                    .background(
-//                                        GeometryReader { geo in
-//                                            Color.clear
-//                                                .onAppear { textHeight = geo.size.height }
-//                                        }
-//                                    )
-//                                    .scaleEffect(showPulse ? 1.05 : 1.0)
+
                                 
                                 // Divider
                                 GeometryReader { geo in
@@ -166,19 +169,22 @@ struct TranslateView: View {
                                         .position(x: geo.size.width / 2, y: geo.size.height / 2)
                                         .animation(.easeOut(duration: 0.6), value: dividerProgress)
                                 }
+                                .frame(height: 1)
                                 
-                                // Translated text fade-in
+                                // Translated text
                                 if showTranslated, let translatedText = viewModel.translatedText {
                                     Text(translatedText)
                                         .font(.system(dynamicTextStyle, design: .serif, weight: .semibold))
                                         .foregroundColor(.secondary)
                                         .textSelection(.enabled)
+                                        .transition(.opacity)
+                                        .animation(.easeIn(duration: 0.4), value: showTranslated)
                                 }
                             }
                         }
                         .padding(.horizontal, 32)
                         
-                        // Buttons - fade in after translated text
+                        // Buttons
                         if showDetectedSlangButton {
                             HStack {
                                 HStack(spacing: 10) {
@@ -208,10 +214,9 @@ struct TranslateView: View {
                                 }
                             }
                             .padding(.horizontal, 32)
-                            .transition(.opacity.combined(with: .move(edge: .bottom)))
                         }
                         
-                        // Detected Slang Animation
+                        // Detected slang
                         if viewModel.isDetectedSlangShown {
                             VStack(alignment: .leading, spacing: 16) {
                                 Text("Slang Detected (\(viewModel.slangDetected.count))")
@@ -229,35 +234,15 @@ struct TranslateView: View {
                                             .delay(Double(viewModel.slangData.firstIndex(where: { $0.slang == slangData.slang }) ?? 0) * 0.05),
                                             value: showDetectedSlang
                                         )
-//                                        .offset(y: showDetectedSlang ? 0 : 20)
-//                                        .animation(.spring(response: 0.6, dampingFraction: 0.7)
-//                                            .delay(Double(viewModel.slangData.firstIndex(where: { $0.slang == slangData.slang }) ?? 0) * 0.05),
-//                                                   value: showDetectedSlang)
                                     }
                                 }
                             }
                             .padding(.horizontal, 32)
-//                            .transition(.opacity.combined(with: .move(edge: .top)))
-                            .onAppear {
-//                                withAnimation(.spring(response: 0.8, dampingFraction: 0.8).delay(0.2)) {
-                                    showDetectedSlang = true
-//                                }
-                            }
-                            .onDisappear {
-                                showDetectedSlang = false
-                            }
+                            .onAppear { showDetectedSlang = true }
+                            .onDisappear { showDetectedSlang = false }
                         }
                         
                         Spacer(minLength: 120)
-                    }
-                    .alert("Copied!", isPresented: $viewModel.copiedToKeyboardAlert) {
-                        Button("OK", role: .cancel) { }
-                    } message: {
-                        Text("The translated text has been copied to the clipboard.")
-                    }
-                    .fullScreenCover(isPresented: $showExpanded) {
-                        ExpandedTranslationView(text: viewModel.translatedText ?? "", onClose: { showExpanded = false })
-                            .toolbar(.hidden, for: .tabBar)
                     }
                     .padding(.top, 1)
                 }
@@ -276,85 +261,103 @@ struct TranslateView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
                 .padding(.bottom, 30)
+                .opacity(showBottomUI ? 1 : 0)
+                .animation(.easeIn(duration: 0.5), value: showBottomUI)
             }
             .onAppear {
-                // Keep text in the same position as input on appear,
-                // then run the staged animation and introduce spacing.
-//                alignToInputPosition = true
-                playSequentialAnimation()
+                if shouldPlaySequentialAnimation {
+                    playSequentialAnimation()
+                    shouldPlaySequentialAnimation = false
+                }
             }
+            .toolbar(showBottomUI ? .visible : .hidden, for: .tabBar)
         }
     }
     
-    // MARK: Animation sequence
+    // MARK: Animation Logic
     private func resetAnimation() {
         stage = 0
         showBurst = false
         showPulse = false
-        moveUp = false
         dividerProgress = 0
         showTranslated = false
         showDetectedSlangButton = false
         showDetectedSlang = false
         alignToInputPosition = true
+        showBottomUI = false
     }
     
     private func playSequentialAnimation() {
-        // Stage 1: Show burst and pulse simultaneously
-        stage = 1
-        showBurst = true
-        
-        withAnimation(.easeInOut(duration: 0.5).repeatCount(3, autoreverses: true)) {
-            showPulse = true
-        }
-        
-        // Stage 2: Hide burst after 0.9s (sesuai durasi SunburstView)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
-            withAnimation(.easeOut(duration: 0.3)) {
-                showBurst = false
-                showPulse = false
-            }
+            stage = 1
+            showBurst = true
+            triggerBurstHaptic()
             
-            // Stage 3: Move text up SETELAH burst hilang
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                withAnimation(.easeInOut(duration: 0.8)) {
-                    alignToInputPosition = false
+            // Stage 1: Mulai burst dan pulse bersamaan
+            withAnimation(.easeInOut(duration: 0.35)) {
+                showPulse = true
+            }
+
+            // Stage 2: Burst & pulse selesai
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                withAnimation(.easeOut(duration: 0.2)) {
+                    showBurst = false
                 }
-                withAnimation(.easeInOut(duration: 0.8)) {
-                    moveUp = true
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    showPulse = false
                 }
                 
-                // Stage 4: Show divider after text moved up
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                    stage = 3
-                    withAnimation(.easeOut(duration: 0.6)) {
-                        dividerProgress = 1.0
+                // Stage 3: Teks naik setelah burst & pulse selesai
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                    withAnimation(.easeInOut(duration: 0.35)) {
+                        alignToInputPosition = false
+                        moveUp = true
                     }
                     
-                    // Stage 5: Show translated text
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                        stage = 4
-                        withAnimation(.easeIn(duration: 0.8)) {
-                            showTranslated = true
+                    // Stage 4: Divider muncul
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        withAnimation(.easeOut(duration: 0.35)) {
+                            dividerProgress = 1.0
                         }
                         
-                        // Stage 6: Show detected slang button
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                            stage = 5
-                            withAnimation(.easeIn(duration: 0.5)) {
-                                showDetectedSlangButton = true
+                        // Stage 5: Translated text
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                                showTranslated = true
                             }
                             
-                            // Stage 7: Show detected slang cards when button is pressed
-                            if viewModel.isDetectedSlangShown {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                        showDetectedSlang = true
+                            // Stage 6: Detected slang button
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                withAnimation(.easeIn(duration: 0.25)) {
+                                    showDetectedSlangButton = true
+                                }
+                                
+                                // Stage 7: Bottom UI
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                    withAnimation(.easeIn(duration: 0.3)) {
+                                        showBottomUI = true
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+
+
+    
+    // MARK: Haptic
+    func triggerBurstHaptic() {
+        let impact = UIImpactFeedbackGenerator(style: .heavy)
+        let notif = UINotificationFeedbackGenerator()
+        impact.prepare()
+        notif.prepare()
+        impact.impactOccurred(intensity: 1.0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            impact.impactOccurred(intensity: 1.0)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            notif.notificationOccurred(.success)
         }
     }
     
@@ -382,52 +385,6 @@ struct TranslateView: View {
         }
         fontSizeWorkItem = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: workItem)
-    }
-}
-
-struct ExpandedTranslationView: View {
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
-    let text: String
-    let onClose: () -> Void
-    
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color(Color.bgSecondary)
-                .ignoresSafeArea()
-
-            GeometryReader { geo in
-                ScrollView(.vertical, showsIndicators: true){
-                    VStack {
-                        Spacer(minLength: geo.size.height / 4)
-                        Text(text)
-                            .font(.system(size: 64, weight: .bold, design: .serif))
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 40)
-                            .padding(.vertical, 10)
-                        Spacer(minLength: geo.size.height / 4)
-                    }
-                    .frame(minWidth: geo.size.width, minHeight: geo.size.height)
-                }
-                .frame(minWidth: geo.size.width, minHeight: geo.size.height)
-            }
-            
-            Button {
-                UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
-                dismiss()
-                onClose()
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.largeTitle)
-                    .foregroundColor(colorScheme == .light ? .black : .white)
-                    .padding()
-            }
-        }
-        .onAppear {
-            UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
-        }
     }
 }
 
