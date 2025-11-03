@@ -6,433 +6,300 @@
 //
 
 import SwiftUI
-import UIKit
 import AVFoundation
 
-
 struct DictionaryView: View {
-    @State private var selectedIndex: Int = 0
-    @State private var searchText: String = ""
     @StateObject private var viewModel = DictionaryViewModel()
-    
-    // Ambil semua slang, urut abjad
-    let allSlangs: [SlangDataDummy] = Array(SlangDictionaryDummy.shared.slangs.values)
-        .sorted { $0.slang.lowercased() < $1.slang.lowercased() }
-    
     @Environment(PopupManager.self) private var popupManager
-    @State private var scrollTarget: String? = nil
-    @State private var currentIndexLetter: String? = nil
     private let indexWord = "abcdefghijklmnopqrstuvwxyz"
-    @State private var dragActiveLetter: String? = nil
-    
-    // Filtered array
-    var filteredSlangs: [SlangData] {
-        viewModel.getFilteredSlangs()
-    }
     
     var body: some View {
         VStack {
-            VStack(spacing: 16) {
+            HStack(alignment: .center) {
+                // MARK: - Picker Section
+                slangPickerView()
                 
-                // Wheel + Index letters
-                HStack(alignment: .center) {
-                    
-                    // Wheel Picker
-                    if !filteredSlangs.isEmpty {
-                        LargeWheelPickerWithButton(
-                            selection: $selectedIndex,
-                            data: filteredSlangs.map { $0.slang }
-                        ) {
-                            // Set data ke PopupManager saat arrow di-tap
-                            if let slangData = viewModel.getSlang(at: selectedIndex) {
-                                popupManager.setSlangData(slangData)
-                                popupManager.isPresented.toggle()
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 600)
-                    } else {
-                        Text("No results")
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity, maxHeight: 600)
-                    }
-                    
-                    VStack(spacing: 0) {
-                        ForEach(Array(indexWord), id: \.self) { letter in
-                            let stringLetter = String(letter)
-                            let isActive = filteredSlangs.indices.contains(selectedIndex) &&
-                            (filteredSlangs[selectedIndex].slang.lowercased().first == letter || dragActiveLetter == stringLetter)
-                            
-                            Text(stringLetter.uppercased())
-                                .font(.system(size: 11, design: .serif))
-                                .foregroundColor(isActive ? Color.btnTextPrimary : Color.txtSecondary)
-                                .frame(width: 20, height: 18)
-                                .background(
-                                    Circle()
-                                        .fill(isActive ? Color.txtPrimary : .clear)
-                                )
-                                .scaleEffect(dragActiveLetter == stringLetter ? 2.0 : 1.0)
-                                .animation(.spring(response: 0.25, dampingFraction: 0.6), value: dragActiveLetter)
-                        }
-                    }
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                let y = value.location.y
-                                let letterHeight: CGFloat = 21 + 4
-                                let index = max(0, min(Int(y / letterHeight), indexWord.count - 1))
-                                let letter = Array(indexWord)[index]
-                                dragActiveLetter = String(letter)
-                                
-                                if let newIndex = filteredSlangs.firstIndex(where: { $0.slang.lowercased().first == letter }) {
-                                    selectedIndex = newIndex
-                                }
-                            }
-                            .onEnded { _ in
-                                dragActiveLetter = nil
-                            }
-                    )
-                    
-                }
-                .padding(0)
-                
-                HStack(spacing: 8) {
-                    Image(systemName: "magnifyingglass")
-                        .frame(width: 17)
-                        .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
-                    
-                    TextField("Search", text: $viewModel.searchText)
-                        .autocapitalization(.none)
-                        .padding()
-                        .font(.caption)
-                        .frame(height: 22)
-                        .frame(maxWidth: .infinity)
-                        .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
-                }
-                .padding(11)
-                .frame(maxWidth: .infinity)
-                .background(Color(red: 0.47, green: 0.47, blue: 0.5).opacity(0.16))
-                .cornerRadius(100)
-                
+                // MARK: - Alphabet Sidebar
+                alphabetSidebar
             }
-            .padding()
+            
+            // MARK: - Search Bar
+            searchBar
+                .padding(.top, -80)
         }
         .padding(.top, -20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.bgPrimary)
-        .onChange(of: filteredSlangs) { oldValue, newValue in
-            if selectedIndex >= newValue.count {
-                selectedIndex = max(0, newValue.count - 1)
-            }
-        }
-        
-    }
-    
-    
-    private func handleLetterTap(_ letter: Character) {
-        guard !filteredSlangs.isEmpty else { return }
-        let targetLetter = String(letter).uppercased()
-        currentIndexLetter = String(letter)
-        
-        if let index = filteredSlangs.firstIndex(where: {
-            $0.slang.uppercased().hasPrefix(targetLetter)
-        }) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                selectedIndex = index
-            }
-        }
+        .background(AppColor.Background.primary)
     }
 }
 
-// MARK: - LargeWheelPickerWithButton
+// MARK: - Subviews
+extension DictionaryView {
+    
+    @ViewBuilder
+    private func slangPickerView() -> some View {
+        let slangs = viewModel.filteredSlangs.map { $0.slang }
+        
+        if !slangs.isEmpty {
+            LargeWheelPicker(
+                selection: $viewModel.selectedIndex,
+                viewModel: self.viewModel,
+                popupManager: self.popupManager,
+                data: slangs
+                
+            )
+            .frame(maxWidth: .infinity)
+            .frame(height: 800) 
+            
+        } else {
+            Text("No results")
+                .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, maxHeight: 800)
+        }
+    }
+    
+    private var alphabetSidebar: some View {
+        let letters: [String] = (97...122).compactMap { String(UnicodeScalar($0)) }
+        
+        return VStack(spacing: 0) {
+            ForEach(letters, id: \.self) { letter in
+                AlphabetLetterView(
+                    letter: letter,
+                    isActive: viewModel.isLetterActive(letter),
+                    isDragging: viewModel.dragActiveLetter == letter
+                )
+            }
+        }
+        .gesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { gesture in
+                    let y = gesture.location.y
+                    let index = Int((y / 18).rounded(.down))
+                    if index >= 0 && index < letters.count {
+                        viewModel.handleLetterDrag(letters[index])
+                    }
+                }
+                .onEnded { _ in
+                    viewModel.handleLetterDragEnd()
+                }
+        )
+        .padding(.trailing, 6)
+    }
+    
+    private struct AlphabetLetterView: View {
+        let letter: String
+        let isActive: Bool
+        let isDragging: Bool
+        
+        var body: some View {
+            Text(letter.uppercased())
+                .font(.system(size: 11, design: .serif))
+                .foregroundColor(isActive ? AppColor.Button.Text.primary : AppColor.Text.secondary)
+                .frame(width: 20, height: 18)
+                .background(
+                    Circle()
+                        .fill(isActive ? AppColor.Text.primary : .clear)
+                )
+                .scaleEffect(isDragging ? 2.0 : 1.0)
+                .animation(.spring(response: 0.25, dampingFraction: 0.6), value: isDragging)
+        }
+    }
+    
+    private var searchBar: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .frame(width: 17)
+                .foregroundColor(.gray)
+            
+            TextField("Search", text: $viewModel.searchText)
+                .autocapitalization(.none)
+                .padding(.vertical, 8)
+                .font(.caption)
+                .frame(height: 22)
+                .frame(maxWidth: .infinity)
+                .foregroundColor(.gray)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(Color.gray.opacity(0.16))
+        .cornerRadius(100)
+        .padding(.horizontal)
+        .padding(.bottom, 8)
+    }
+}
 
-struct LargeWheelPickerWithButton: View {
+struct LargeWheelPicker: View {
     @Binding var selection: Int
+    let viewModel: DictionaryViewModel
+    let popupManager: PopupManager
     let data: [String]
-    var onArrowTap: () -> Void
+    
+    @State private var scrollOffset: CGFloat = 0
+    @State private var audioPlayer: AVAudioPlayer?
+    
+    private let rowHeight: CGFloat = 75
+    private let visibleCount: Int = 5
     
     var body: some View {
-        ZStack {
-            if !data.isEmpty {
-                LargeWheelPicker(selection: $selection, data: data)
+        GeometryReader { geo in
+            ScrollViewReader { proxy in
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        Spacer().frame(height: (geo.size.height - rowHeight) / 2)
+                        ForEach(data.indices, id: \.self) { index in
+                            item(for: index, geometry: geo)
+                                .frame(height: rowHeight)
+                                .id(index)
+                        }
+                        Spacer().frame(height: (geo.size.height - rowHeight) / 2)
+                    }
+                    .background(
+                        GeometryReader { innerGeo in
+                            Color.clear.preference(
+                                key: ScrollOffsetKey.self,
+                                value: innerGeo.frame(in: .named("scroll")).minY
+                            )
+                        }
+                    )
+                }
+                .coordinateSpace(name: "scroll")
+                .onPreferenceChange(ScrollOffsetKey.self) { value in
+                    scrollOffset = value
+                    updateSelection(geometry: geo)
+                }
+                .onChange(of: selection) { newValue in
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        proxy.scrollTo(newValue, anchor: .center)
+                    }
+                }
+                .gesture(
+                    DragGesture()
+                        .onEnded { _ in
+                            let centerOffset = scrollOffset + (geo.size.height / 2)
+                            let targetIndex = Int((centerOffset / rowHeight).rounded(.down))
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                proxy.scrollTo(targetIndex, anchor: .center)
+                            }
+                            selection = max(0, min(targetIndex, data.count - 1))
+                            playClickSound()
+                        }
+                )
+                .onAppear {
+                    prepareSound()
+                    proxy.scrollTo(selection, anchor: .center)
+                }
             }
+        }
+        .frame(height: 620)
+    }
+    
+    // MARK: - Item Appearance
+    private func item(for index: Int, geometry: GeometryProxy) -> some View {
+        GeometryReader { itemGeo in
+            let itemCenter = itemGeo.frame(in: .global).midY
+            let viewCenter = geometry.frame(in: .global).midY
+            let distance = abs(itemCenter - viewCenter)
+            let maxDistance: CGFloat = 150
             
-            HStack {
-                Spacer()
-                Button(action: {
-                    onArrowTap()
-                }) {
-                    Color.clear
-                        .frame(width: 64, height: 64)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(PlainButtonStyle())
-                .padding(.trailing, 40)
-                .frame(maxWidth: .infinity)
-                .frame(height: 80)
-            }
-            .zIndex(9999)
-            .offset(x: 20, y: 0)
-        }
-    }
-}
-
-// MARK: - LargeWheelPicker
-
-struct LargeWheelPicker: UIViewRepresentable {
-    @Binding var selection: Int
-    let data: [String]
-    var onArrowTap: ((Int) -> Void)? = nil
-    
-    func makeUIView(context: Context) -> UIPickerView {
-        let picker = TallPickerView()
-        picker.delegate = context.coordinator
-        picker.dataSource = context.coordinator
-        
-        picker.subviews.forEach { $0.backgroundColor = .clear }
-        picker.setValue(UIColor.clear, forKey: "magnifierLineColor")
-        
-        DispatchQueue.main.async {
-            removeSelectionBar(from: picker)
-        }
-        
-        return picker
-    }
-    
-    private func removeSelectionBar(from picker: UIPickerView) {
-        for subview in picker.subviews {
-            if subview.frame.height <= 1 {
-                subview.isHidden = true
-            }
-            subview.backgroundColor = .clear
-        }
-        picker.layer.sublayers?.forEach { $0.backgroundColor = UIColor.clear.cgColor }
-    }
-    
-    func updateUIView(_ uiView: UIPickerView, context: Context) {
-        uiView.reloadAllComponents()
-        if selection < data.count {
-            uiView.selectRow(selection, inComponent: 0, animated: true)
-        }
-        DispatchQueue.main.async {
-            uiView.delegate?.pickerView?(uiView, didSelectRow: selection, inComponent: 0)
-        }
-    }
-    
-    func makeCoordinator() -> Coordinator { Coordinator(self) }
-    
-    class Coordinator: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
-        var parent: LargeWheelPicker
-        
-        init(_ parent: LargeWheelPicker) { self.parent = parent }
-        
-        func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
-        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int { parent.data.count }
-        func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat { 75 }
-        
-        func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-            let label = UILabel()
-            label.text = parent.data[row]
-            label.textAlignment = .center
-            let distance = abs(parent.selection - row)
-            if distance == 0 {
-                if let descriptor = UIFont.systemFont(ofSize: 64).fontDescriptor.withDesign(.serif) {
-                    label.font = UIFont(descriptor: descriptor, size: 64)
-                }
-                label.textColor = .textPrimary.withAlphaComponent(1.0)
-            } else if distance == 1 {
-                if let descriptor = UIFont.systemFont(ofSize: 48).fontDescriptor.withDesign(.serif) {
-                    label.font = UIFont(descriptor: descriptor, size: 48)
-                }
-                label.textColor = .textPrimary.withAlphaComponent(0.8)
-            } else if distance == 2 {
-                if let descriptor = UIFont.systemFont(ofSize: 40).fontDescriptor.withDesign(.serif) {
-                    label.font = UIFont(descriptor: descriptor, size: 40)
-                }
-                label.textColor = .textPrimary.withAlphaComponent(0.6)
+            // Scale and opacity based on distance
+            let normalized = min(distance / maxDistance, 1)
+            let scale = 1.0 - (normalized * 0.4)
+            let opacity = 1.0 - (normalized * 0.6)
+            if selection == index{
+                Button{
+                    if let slangData = viewModel.getSlang(at: viewModel.selectedIndex) {
+                        popupManager.setSlangData(slangData)
+                        popupManager.isPresented.toggle()
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Text(data[index])
+                            .font(.system(size: 64, weight: .medium))
+                            .scaleEffect(scale)
+                            .opacity(opacity)
+                            .foregroundColor(AppColor.Text.primary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                            .allowsTightening(true)
+                        
+                        if selection == index {
+                            Image("arrowHome")
+                                .resizable()
+                                .frame(width: 64, height: 18)
+                                .tint(AppColor.Text.primary)
+                                .transition(.opacity)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .contentShape(Rectangle())                }
+                
             } else {
-                if let descriptor = UIFont.systemFont(ofSize: 34).fontDescriptor.withDesign(.serif) {
-                    label.font = UIFont(descriptor: descriptor, size: 34)
+                HStack(spacing: 4) {
+                    Text(data[index])
+                        .font(.system(size: 64, weight: .medium))
+                        .scaleEffect(scale)
+                        .opacity(opacity)
+                        .foregroundColor(AppColor.Text.primary)
+                        .lineLimit(1)
+                    
+                    if selection == index {
+                        Image("arrowHome")
+                            .resizable()
+                            .frame(width: 64, height: 18)
+                            .tint(AppColor.Text.primary)
+                            .transition(.opacity)
+                    }
                 }
-                label.textColor = .textPrimary.withAlphaComponent(0.4)
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        selection = index
+                    }
+                    playClickSound()
+                }
             }
-            let arrowImage = UIImageView(image: UIImage(named: "arrowHome"))
-            arrowImage.tintColor = .textPrimary
-            arrowImage.contentMode = .scaleAspectFit
-            arrowImage.translatesAutoresizingMaskIntoConstraints = false
-            arrowImage.widthAnchor.constraint(equalToConstant: 64).isActive = true
-            arrowImage.heightAnchor.constraint(equalToConstant: 18).isActive = true
-            let stackView = UIStackView(arrangedSubviews: [arrowImage])
-            stackView.axis = .vertical
-            stackView.spacing = 0
-            stackView.isLayoutMarginsRelativeArrangement = true
-            stackView.layoutMargins = UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
-            if parent.selection == row {
-                let stackView = UIStackView(arrangedSubviews: [label, stackView])
-                stackView.axis = .horizontal
-                stackView.alignment = .center
-                stackView.spacing = 0
-                stackView.translatesAutoresizingMaskIntoConstraints = false
-                let container = UIView()
-                container.addSubview(stackView)
-                NSLayoutConstraint.activate([
-                    stackView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
-                    stackView.centerYAnchor.constraint(equalTo: container.centerYAnchor) ])
-                return container
-            } else { return label } }
+            
+        }
+        .frame(height: rowHeight)
+    }
+    
+    // MARK: - Selection Calculation
+    private func updateSelection(geometry: GeometryProxy) {
+        let centerOffset = scrollOffset + (geometry.size.height / 2)
+        let index = Int((centerOffset / rowHeight).rounded(.down))
+        guard index >= 0 && index < data.count else { return }
         
-        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-            parent.selection = row
-            pickerView.reloadAllComponents()
-            
-            UIDevice.current.playInputClick()
-            
-        }
-    }
-}
-
-class Coordinator: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
-    var parent: LargeWheelPicker
-    var audioPlayer: AVAudioPlayer?
-    
-    init(_ parent: LargeWheelPicker) {
-        self.parent = parent
-        super.init()
-        setupAudioSession()
-        prepareSound()
-    }
-    
-    private func setupAudioSession() {
-        do {
-            let session = AVAudioSession.sharedInstance()
-            
-            try session.setCategory(.playback, mode: .default, options: [.mixWithOthers, .allowBluetooth, .allowAirPlay])
-            try session.overrideOutputAudioPort(.none)
-            try session.setActive(true, options: .notifyOthersOnDeactivation)
-            
-        } catch {
-            print("Audio session error: \(error.localizedDescription)")
+        if index != selection {
+            selection = index
+            playClickSound()
         }
     }
     
+    // MARK: - Sound
     private func prepareSound() {
-        if let soundURL = Bundle.main.url(forResource: "wheel_click", withExtension: "mp3") {
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
-                audioPlayer?.prepareToPlay()
-                audioPlayer?.volume = 1.0 // Ubah volume di sini (0.0 - 1.0)
-            } catch {
-                print("Failed to load sound: \(error.localizedDescription)")
-            }
-        }
+        guard let url = Bundle.main.url(forResource: "wheel_click", withExtension: "mp3") else { return }
+        audioPlayer = try? AVAudioPlayer(contentsOf: url)
+        audioPlayer?.prepareToPlay()
+        audioPlayer?.volume = 1.0
     }
     
-    
-    
-    private func playSound() {
+    private func playClickSound() {
         guard let player = audioPlayer else { return }
-        
-        // Reset ke awal dan paksa volume maksimal
         player.currentTime = 0
-        player.volume = 1.0
-        
-        // Paksa output ke route aktif (misal AirPods/headset)
-        do {
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
-        } catch {
-            print("Audio override error: \(error.localizedDescription)")
-        }
-        
         player.play()
     }
-    
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int { parent.data.count }
-    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat { 75 }
-    
-    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let label = UILabel()
-        label.text = parent.data[row]
-        label.textAlignment = .center
-        
-        let distance = abs(parent.selection - row)
-        if distance == 0 {
-            if let descriptor = UIFont.systemFont(ofSize: 64).fontDescriptor.withDesign(.serif) {
-                label.font = UIFont(descriptor: descriptor, size: 64)
-            }
-            label.textColor = .textPrimary.withAlphaComponent(1.0)
-        } else if distance == 1 {
-            if let descriptor = UIFont.systemFont(ofSize: 48).fontDescriptor.withDesign(.serif) {
-                label.font = UIFont(descriptor: descriptor, size: 48)
-            }
-            label.textColor = .textPrimary.withAlphaComponent(0.8)
-        } else if distance == 2 {
-            if let descriptor = UIFont.systemFont(ofSize: 40).fontDescriptor.withDesign(.serif) {
-                label.font = UIFont(descriptor: descriptor, size: 40)
-            }
-            label.textColor = .textPrimary.withAlphaComponent(0.6)
-        } else {
-            if let descriptor = UIFont.systemFont(ofSize: 34).fontDescriptor.withDesign(.serif) {
-                label.font = UIFont(descriptor: descriptor, size: 34)
-            }
-            label.textColor = .textPrimary.withAlphaComponent(0.4)
-        }
-        
-        let arrowImage = UIImageView(image: UIImage(named: "arrowHome"))
-        arrowImage.tintColor = .black
-        arrowImage.contentMode = .scaleAspectFit
-        arrowImage.translatesAutoresizingMaskIntoConstraints = false
-        arrowImage.widthAnchor.constraint(equalToConstant: 64).isActive = true
-        arrowImage.heightAnchor.constraint(equalToConstant: 18).isActive = true
-        
-        let stackView = UIStackView(arrangedSubviews: [arrowImage])
-        stackView.axis = .vertical
-        stackView.spacing = 0
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.layoutMargins = UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
-        
-        if parent.selection == row {
-            let stackView = UIStackView(arrangedSubviews: [label, stackView])
-            stackView.axis = .horizontal
-            stackView.alignment = .center
-            stackView.spacing = 0
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            
-            let container = UIView()
-            container.addSubview(stackView)
-            NSLayoutConstraint.activate([
-                stackView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
-                stackView.centerYAnchor.constraint(equalTo: container.centerYAnchor)
-            ])
-            return container
-        } else {
-            return label
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        parent.selection = row
-        pickerView.reloadAllComponents()
-        
-        // Ganti dari UIDevice.current.playInputClick() ke custom sound
-        playSound()
+}
+
+// MARK: - Scroll Offset Key
+private struct ScrollOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
 
-
-
-// MARK: - TallPickerView
-
-class TallPickerView: UIPickerView {
-    var customHeight: CGFloat = 1200
-    override var intrinsicContentSize: CGSize {
-        CGSize(width: UIView.noIntrinsicMetric, height: customHeight)
-    }
-}
-
-// MARK: - Preview
 
 #Preview {
     DictionaryView()
