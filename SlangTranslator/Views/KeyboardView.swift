@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct KeyboardView: View {
+    var onReturnFromSettings: () -> Void = { }
     var body: some View {
         ZStack
         {
@@ -37,7 +38,7 @@ struct KeyboardView: View {
                 Spacer()
                 VStack(spacing: 10){
                     Button{
-                        print("Added to Keyboard")
+                        openSettings()
                     } label: {
                         Text("Add Keyboard")
                             .padding(.vertical, 18)
@@ -61,13 +62,21 @@ struct KeyboardView: View {
                 .background(Color(.systemGray6))
                 
             }
-            
-            
-            
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                    // When the app returns from Settings → move to next onboarding screen
+                    onReturnFromSettings()
+                }
+    }
+    
+    private func openSettings() {
+        if let url = URL(string: UIApplication.openSettingsURLString),
+           UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
         }
     }
 }
 
-#Preview {
-    KeyboardView()
-}
+//#Preview {
+//    KeyboardView()
+//}

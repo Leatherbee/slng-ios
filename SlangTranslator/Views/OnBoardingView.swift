@@ -8,14 +8,31 @@
 import SwiftUI
 
 struct OnBoardingView: View {
-    var isSecondPage: Bool = true
+    @Environment(\.colorScheme) var colorScheme
+    @State var isSecondPage: Bool = true
+    @State var pageNumber: Int = 1
+    @State var trialKeyboardText: String = ""
     
     var body: some View {
-        if isSecondPage {
+        if pageNumber==1 {
+            firstPage
+        }
+        else if pageNumber==2{
             secondPage
         }
-        else{
-            firstPage
+        else if pageNumber==3{
+            thirdPage
+        }
+        else if pageNumber==4{
+            KeyboardView{
+                withAnimation{pageNumber=5}
+            }
+        }
+        else if pageNumber==5{
+            fifthPage
+        }
+        else if pageNumber==6{
+            sixthPage
         }
     }
     
@@ -37,7 +54,7 @@ struct OnBoardingView: View {
             
             VStack(spacing: 16){
                 Button {
-                    print("hello")
+                    pageNumber+=1
                 } label: {
                     Text("Get Started")
                         .padding(.vertical, 18)
@@ -65,18 +82,94 @@ struct OnBoardingView: View {
     
     private var secondPage: some View {
         OnBoardingPage(
+            content: {Image(colorScheme == .light ?"OnBoardingIcon" : "OnBoardingIconDark")},
+            pageNumber: $pageNumber,
             onBoardingTitle: "Stay fluent in the ever-changing slang world",
-            onBoardingContent: "Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk."
+            onBoardingContent: "Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk.",
+        )
+    }
+    
+    private var thirdPage: some View {
+        OnBoardingPage(
+            content: {
+                Image("OnBoardingIcon")
+            },
+            pageNumber: $pageNumber,
+            onBoardingTitle: "Translate as you chat",
+            onBoardingContent: "SLNG works right inside your keyboard and share sheet, helping you understand conversations.",
+        )
+    }
+    
+    private var fifthPage: some View{
+        VStack{
+            VStack(spacing: 16){
+                VStack{
+                    VStack(alignment: .center, spacing:16){
+                        Text("Switch to SLNG")
+                            .font(.system(.largeTitle, design: .serif, weight: .bold))
+                        Text("Tap and hold 􀆪 key below. Select SLNG Keyboard.")
+                            .font(.subheadline)
+                            .foregroundColor(Color.txtSecondary)
+                    }
+                    Image("OnBoardingSwitchKeyboard")
+                        .frame(maxWidth: 312, maxHeight: 268)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                }
+                
+                TextField("Write Something", text: $trialKeyboardText)
+                    .foregroundColor(Color.txtDisable)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .frame(minHeight: 52)
+            }
+            .padding()
+            .padding(.horizontal, 10)
+            
+            Spacer()
+            Button {
+                pageNumber+=1
+            } label: {
+                HStack {
+                    Text("Continue")
+                    Image(systemName: "arrow.right")
+                }
+                    .padding(.vertical, 18)
+                    .font(Font.body.bold())
+                    .frame(maxWidth: .infinity, minHeight: 60)
+                    .foregroundColor(Color.btnTextPrimary)
+                    .background(
+                        Color.btnPrimary
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 30))
+            }
+            .padding(.horizontal, 33)
+        }
+    }
+    
+    private var sixthPage: some View {
+        OnBoardingPage(
+            content: {
+                Image("OnBoardingIcon")
+            },
+            pageNumber: $pageNumber,
+            onBoardingTitle: "You’re all set",
+            onBoardingContent: "Explore slang and abbreviations. Type to see what they mean.",
         )
     }
 }
 
-struct OnBoardingPage: View {
+struct OnBoardingPage<Content: View>: View {
+    @AppStorage("hasOnboarded") private var hasOnboarded = false
+    @ViewBuilder var content: () -> Content
+    @Binding var pageNumber: Int
     var onBoardingTitle: String
     var onBoardingContent: String
     
     var body: some View {
         VStack{
+            Spacer()
+            VStack{
+                content()
+            }
             Spacer()
             VStack(spacing: 32){
                 VStack(alignment: .leading, spacing: 16){
@@ -87,9 +180,15 @@ struct OnBoardingPage: View {
                         .font(.subheadline)
                         .foregroundColor(Color.txtSecondary)
                 }
+                .padding(.horizontal, 10)
                 
                 Button {
-                    print("hello")
+                    if pageNumber < 6 {
+                        pageNumber+=1
+                    }
+                    else{
+                        hasOnboarded = true
+                    }
                 } label: {
                     HStack {
                         Text("Continue")
@@ -97,15 +196,17 @@ struct OnBoardingPage: View {
                     }
                         .padding(.vertical, 18)
                         .font(Font.body.bold())
-                        .frame(maxWidth: 294, minHeight: 60)
+                        .frame(maxWidth: .infinity, minHeight: 60)
                         .foregroundColor(Color.btnTextPrimary)
                         .background(
                             Color.btnPrimary
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
+                .padding(.horizontal, 33)
             }
             .padding()
+            .padding(.bottom, 33)
         }
     }
 }

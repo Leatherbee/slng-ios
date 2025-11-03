@@ -15,13 +15,18 @@ struct SlangTranslatorApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ZStack{
-                NavigationStack(path: $router.path) {
-                    router.destination(for: router.root)
-                        .navigationDestination(for: Route.self) { route in
-                            router.destination(for: route)
-                        }
+            if hasOnboarded{
+                ZStack{
+                    NavigationStack(path: $router.path) {
+                        router.destination(for: router.root)
+                            .navigationDestination(for: Route.self) { route in
+                                router.destination(for: route)
+                            }
+                    }
                 }
+            }
+            else{
+                OnBoardingView()
             }
             
         }
