@@ -1,33 +1,44 @@
 //
-//  Color.swift
+//  AppColor.swift
 //  SlangTranslator
 //
 //  Created by Filza Rizki Ramadhan on 21/10/25.
 //
+
 import SwiftUI
 
-extension Color {
-    // MARK: - background
-    static let bgPrimary = Color("backgroundPrimary")
-    static let bgSecondary = Color("backgroundSecondary")
+enum AppColor {
     
-    // MARK: - button
-    static let btnPrimary = Color("buttonPrimary")
-    static let btnSecondary = Color("buttonSecondary")
+    // MARK: - Background
+    enum Background {
+        static let primary = Color("backgroundPrimary")
+        static let secondary = Color("backgroundSecondary")
+    }
     
-    // MARK: - button text
-    static let btnTextPrimary = Color("buttonTextPrimary")
+    // MARK: - Button
+    enum Button {
+        static let primary = Color("buttonPrimary")
+        static let secondary = Color("buttonSecondary")
+        
+        enum Text {
+            static let primary = Color("buttonTextPrimary")
+        }
+    }
     
-    // MARK: - status bar
-    static let barStatus = Color("statusBar")
+    // MARK: - Status Bar
+    enum StatusBar {
+        static let color = Color("statusBar")
+    }
     
-    // MARK: - stroke
-    static let strok = Color("stroke")
+    // MARK: - Stroke
+    enum Stroke {
+        static let color = Color("stroke")
+    }
     
-    // MARK: - text
-    static let txtPrimary = Color("textPrimary")
-    static let txtSecondary = Color("textSecondary")
-    static let txtDisable = Color("textDisable")
-    
+    // MARK: - Text
+    enum Text {
+        static let primary = Color("textPrimary")
+        static let secondary = Color("textSecondary")
+        static let disable = Color("textDisable")
+    }
 }
-
