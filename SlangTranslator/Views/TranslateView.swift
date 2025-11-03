@@ -5,6 +5,7 @@
 
 import SwiftUI
 import SwiftData
+import AVFoundation
 
 struct TranslateView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -27,6 +28,9 @@ struct TranslateView: View {
     @State private var showBottomUI = false
     @State private var shouldPlaySequentialAnimation = false
     @State private var moveUp: Bool = false
+    
+    // Sound
+    @State private var audioPlayer: AVAudioPlayer?
     
     var body: some View {
         ZStack {
@@ -155,11 +159,11 @@ struct TranslateView: View {
                                     )
                                     .scaleEffect(showPulse ? 0.80 : 1.0)
                                     .offset(y: moveUp ? -textHeight * 0.2 : 0)
-                                    .animation(.easeInOut(duration: 0.4), value: showPulse)
-                                    .animation(.easeInOut(duration: 0.8), value: moveUp)
+                                    .animation(.easeInOut(duration: 0.25), value: showPulse)
+                                    .animation(.easeInOut(duration: 0.5), value: moveUp)
                                     .textSelection(.enabled)
                                     .fixedSize(horizontal: false, vertical: true)
-
+                                
                                 
                                 // Divider
                                 GeometryReader { geo in
@@ -172,13 +176,22 @@ struct TranslateView: View {
                                 .frame(height: 1)
                                 
                                 // Translated text
-                                if showTranslated, let translatedText = viewModel.translatedText {
+                                if let translatedText = viewModel.translatedText {
                                     Text(translatedText)
                                         .font(.system(dynamicTextStyle, design: .serif, weight: .semibold))
                                         .foregroundColor(.secondary)
                                         .textSelection(.enabled)
-                                        .transition(.opacity)
-                                        .animation(.easeIn(duration: 0.4), value: showTranslated)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                        .opacity(showTranslated ? 1 : 0)
+                                        .scaleEffect(y: showTranslated ? 1.0 : 0.8, anchor: .top)
+                                        .offset(y: showTranslated ? 0 : -10)
+                                        .clipped(antialiased: true)
+                                        .mask(
+                                            Rectangle()
+                                                .frame(height: showTranslated ? 2000 : 0)
+                                                .animation(.easeOut(duration: 0.5), value: showTranslated)
+                                        )
+                                        .animation(.spring(response: 0.55, dampingFraction: 0.8), value: showTranslated)
                                 }
                             }
                         }
@@ -244,6 +257,16 @@ struct TranslateView: View {
                         
                         Spacer(minLength: 120)
                     }
+                    .tint(Color.textPrimary)
+                    .alert("Copied!", isPresented: $viewModel.copiedToKeyboardAlert) {
+                        Button("OK", role: .cancel) { }
+                    } message: {
+                        Text("The translated text has been copied to the clipboard.")
+                    }
+                    .fullScreenCover(isPresented: $showExpanded) {
+                        ExpandedTranslationView(text: viewModel.translatedText?.capitalized ?? "", onClose: { showExpanded = false })
+                            .toolbar(.hidden, for: .tabBar)
+                    }
                     .padding(.top, 1)
                 }
                 .safeAreaPadding(.top)
@@ -288,54 +311,54 @@ struct TranslateView: View {
     }
     
     private func playSequentialAnimation() {
-            stage = 1
-            showBurst = true
-            triggerBurstHaptic()
-            
-            // Stage 1: Mulai burst dan pulse bersamaan
-            withAnimation(.easeInOut(duration: 0.35)) {
-                showPulse = true
+        stage = 1
+        showBurst = true
+        triggerBurstHaptic()
+        
+        // Stage 1: Mulai burst dan pulse bersamaan
+        withAnimation(.easeInOut(duration: 0.2)) {
+            showPulse = true
+        }
+        
+        // Stage 2: Burst & pulse selesai
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            withAnimation(.easeOut(duration: 0.2)) {
+                showBurst = false
             }
-
-            // Stage 2: Burst & pulse selesai
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                withAnimation(.easeOut(duration: 0.2)) {
-                    showBurst = false
-                }
-                withAnimation(.easeInOut(duration: 0.25)) {
-                    showPulse = false
+            withAnimation(.easeInOut(duration: 0.08)) {
+                showPulse = false
+            }
+            
+            // Stage 3: Teks naik setelah burst & pulse selesai
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                withAnimation(.easeInOut(duration: 0.35)) {
+                    alignToInputPosition = false
+                    moveUp = true
                 }
                 
-                // Stage 3: Teks naik setelah burst & pulse selesai
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                    withAnimation(.easeInOut(duration: 0.35)) {
-                        alignToInputPosition = false
-                        moveUp = true
+                // Stage 4: Divider muncul
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    withAnimation(.easeOut(duration: 0.5)) {
+                        dividerProgress = 1.0
                     }
                     
-                    // Stage 4: Divider muncul
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        withAnimation(.easeOut(duration: 0.35)) {
-                            dividerProgress = 1.0
+                    // Stage 5: Translated text
+                    // di playSequentialAnimation()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) {
+                        withAnimation(.spring(response: 0.55, dampingFraction: 0.8)) {
+                            showTranslated = true
                         }
                         
-                        // Stage 5: Translated text
+                        // Stage 6: Detected slang button
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                                showTranslated = true
+                            withAnimation(.easeIn(duration: 0.25)) {
+                                showDetectedSlangButton = true
                             }
                             
-                            // Stage 6: Detected slang button
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                withAnimation(.easeIn(duration: 0.25)) {
-                                    showDetectedSlangButton = true
-                                }
-                                
-                                // Stage 7: Bottom UI
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                                    withAnimation(.easeIn(duration: 0.3)) {
-                                        showBottomUI = true
-                                    }
+                            // Stage 7: Bottom UI
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                                withAnimation(.easeIn(duration: 0.3)) {
+                                    showBottomUI = true
                                 }
                             }
                         }
@@ -343,11 +366,26 @@ struct TranslateView: View {
                 }
             }
         }
-
-
+    }
+    
+    private func playBurstSound() {
+        guard let url = Bundle.main.url(forResource: "whoosh", withExtension: "mp3") else { return }
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.volume = 0.9
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.play()
+        } catch {
+            fatalError()
+        }
+    }
+    
     
     // MARK: Haptic
     func triggerBurstHaptic() {
+        playBurstSound()
+        
         let impact = UIImpactFeedbackGenerator(style: .heavy)
         let notif = UINotificationFeedbackGenerator()
         impact.prepare()
@@ -385,6 +423,52 @@ struct TranslateView: View {
         }
         fontSizeWorkItem = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: workItem)
+    }
+}
+
+struct ExpandedTranslationView: View {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    let text: String
+    let onClose: () -> Void
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            Color(Color.bgSecondary)
+                .ignoresSafeArea()
+            
+            GeometryReader { geo in
+                ScrollView(.vertical, showsIndicators: true){
+                    VStack {
+                        Spacer(minLength: geo.size.height / 4)
+                        Text(text)
+                            .font(.system(size: 64, weight: .bold, design: .serif))
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                            .padding(.vertical, 10)
+                        Spacer(minLength: geo.size.height / 4)
+                    }
+                    .frame(minWidth: geo.size.width, minHeight: geo.size.height)
+                }
+                .frame(minWidth: geo.size.width, minHeight: geo.size.height)
+            }
+            
+            Button {
+                UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+                dismiss()
+                onClose()
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.largeTitle)
+                    .foregroundColor(colorScheme == .light ? .black : .white)
+                    .padding()
+            }
+        }
+        .onAppear {
+            UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
+        }
     }
 }
 
