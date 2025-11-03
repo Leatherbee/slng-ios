@@ -100,7 +100,7 @@ struct TranslateView: View {
                 }
                 .padding(.vertical, 18)
                 .font(Font.body.bold())
-                .frame(maxWidth: 314, minHeight: 60)
+                .frame(maxWidth: 294, minHeight: 60)
                 .foregroundColor(
                     (colorScheme == .dark && !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     ? Color.btnTextPrimary : Color.textPrimary
@@ -219,7 +219,7 @@ struct TranslateView: View {
                     Label("Try Another", systemImage: "arrow.left")
                         .padding(.vertical, 18)
                         .font(Font.body.bold())
-                        .frame(maxWidth: 314, minHeight: 60)
+                        .frame(maxWidth: 294, minHeight: 60)
                         .foregroundColor(colorScheme == .dark ? .black : .white)
                         .background(
                             Color.btnPrimary
