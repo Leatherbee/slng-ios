@@ -11,7 +11,6 @@ import SwiftData
 
 class KeyboardViewController: UIInputViewController {
     private var hostingController: UIHostingController<SlangKeyboardView>?
-     
     private var keyboardHeight: CGFloat = 270
     
     override func viewDidLoad() {
@@ -20,8 +19,12 @@ class KeyboardViewController: UIInputViewController {
         // Initialize vm
         let context = SharedModelContainer.shared.container.mainContext
         let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
-        let repository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
-        let useCase = TranslateSentenceUseCaseImpl(repository: repository)
+        
+        let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+        let slangRepository = SlangRepositoryImpl()
+        
+        let useCase = TranslateSentenceUseCaseImpl(translationRepository: translationRepository, slangRepository: slangRepository
+        )
         let viewModel = SlangKeyboardViewModel(useCase: useCase)
          
         let root = SlangKeyboardView(

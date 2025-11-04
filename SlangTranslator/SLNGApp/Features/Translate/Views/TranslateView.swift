@@ -29,7 +29,6 @@ struct TranslateView: View {
     @State private var shouldPlaySequentialAnimation = false
     @State private var moveUp: Bool = false
     
-    // Sound
     @State private var audioPlayer: AVAudioPlayer?
     
     var body: some View {
@@ -107,7 +106,7 @@ struct TranslateView: View {
                 .frame(maxWidth: 314, minHeight: 60)
                 .foregroundColor(
                     (colorScheme == .dark && !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                    ? AppColor.Button.Text.primary : AppColor.Text.primary
+                    ? AppColor.Button.Text.primary : .white
                 )
                 .background(
                     viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -128,7 +127,7 @@ struct TranslateView: View {
     private var resultSection: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
-                Color.bgSecondary.ignoresSafeArea()
+                Color.backgroundSecondary.ignoresSafeArea()
                 
                 GeometryReader { screenGeo in
                     SunburstView(trigger: $showBurst)
@@ -168,7 +167,7 @@ struct TranslateView: View {
                                 // Divider
                                 GeometryReader { geo in
                                     Rectangle()
-                                        .fill(Color.strok)
+                                        .fill(Color.stroke)
                                         .frame(width: geo.size.width * dividerProgress, height: 0.8)
                                         .position(x: geo.size.width / 2, y: geo.size.height / 2)
                                         .animation(.easeOut(duration: 0.6), value: dividerProgress)

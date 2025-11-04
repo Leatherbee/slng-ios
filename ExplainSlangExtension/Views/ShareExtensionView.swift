@@ -119,10 +119,9 @@ struct ShareExtensionView: View {
                                     Text("Slang Detected (\(detectedSlangs.count))")
                                         .font(.body)
                                         .foregroundStyle(.primary)
-//                                        .padding(.horizontal)
                                     
                                     ForEach(detectedSlangs.indices, id: \.self) { index in
-                                        TranslateSlangCardView(slangData: detectedSlangs[index], backgroundColor: Color.primaryWhite)
+                                        TranslateSlangCardView(slangData: detectedSlangs[index], backgroundColor: .clear)
                                     }
                                 }
                                 .padding(.horizontal, 16)
@@ -164,8 +163,9 @@ struct ShareExtensionView: View {
         .onAppear {
             let context = SharedModelContainer.shared.context
             let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
-            let repository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
-            let useCase = TranslateSentenceUseCaseImpl(repository: repository)
+            let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+            let slangRepository = SlangRepositoryImpl()
+            let useCase = TranslateSentenceUseCaseImpl(translationRepository: translationRepository, slangRepository: slangRepository)
             viewModel = ShareTranslateViewModel(useCase: useCase)
             
             Task {
@@ -173,12 +173,10 @@ struct ShareExtensionView: View {
                 isTranslating = true
                 vm.inputText = sharedText
                 await vm.translate()
-                translatedText = vm.result?.englishTranslation ?? ""
                 
-                if let sentiment = vm.result?.sentiment {
-                    detectedSlangs = SlangDictionary.shared.findSlang(in: sharedText, matching: sentiment)
-                } else {
-                    detectedSlangs = SlangDictionary.shared.findSlang(in: sharedText, matching: nil)
+                if let result = vm.result {
+                    translatedText = result.translation.englishTranslation
+                    detectedSlangs = result.detectedSlangs
                 }
                 
                 if let vmError = vm.errorMessage, !vmError.isEmpty {

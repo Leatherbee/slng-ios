@@ -37,7 +37,7 @@ final class SlangKeyboardViewModel: ObservableObject {
     @Published var detectedSlangs: [SlangData] = []
     @Published var isTranslating: Bool = false
     @Published var translationError: String?
-    @Published var result: TranslationResponse?
+    @Published var result: TranslationResult?
     
     private let useCase: TranslateSentenceUseCase
     
@@ -126,19 +126,21 @@ final class SlangKeyboardViewModel: ObservableObject {
         detectedSlangs.removeAll()
         
         do {
-            let response = try await useCase.execute(clipboardText)
-            self.result = response
-            self.translatedText = response.englishTranslation
+            let result = try await useCase.execute(clipboardText)
+            self.result = result
             
-            let found = SlangDictionary.shared.findSlang(in: clipboardText, matching: response.sentiment)
-            self.detectedSlangs = found
+            let translation = result.translation
+            let slangs = result.detectedSlangs
             
-            if !found.isEmpty {
-                self.slangText = found.map { $0.slang }.joined(separator: "\n")
-                self.translationEN = found.map { $0.translationEN }.joined(separator: "\n")
-                self.contextEn = found.map { $0.contextEN }.joined(separator: "\n\n")
-                self.exampleID = found.map { $0.exampleID }.joined(separator: "\n\n")
-                self.exampleEN = found.map { $0.exampleEN }.joined(separator: "\n\n")
+            self.translatedText = translation.englishTranslation
+            self.detectedSlangs = slangs
+            
+            if !slangs.isEmpty {
+                self.slangText = slangs.map { $0.slang }.joined(separator: "\n")
+                self.translationEN = slangs.map { $0.translationEN }.joined(separator: "\n")
+                self.contextEn = slangs.map { $0.contextEN }.joined(separator: "\n\n")
+                self.exampleID = slangs.map { $0.exampleID }.joined(separator: "\n\n")
+                self.exampleEN = slangs.map { $0.exampleEN }.joined(separator: "\n\n")
                 self.showTranslationPopup = true
             } else {
                 self.translationError = "No slang detected."

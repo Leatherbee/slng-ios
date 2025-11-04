@@ -20,24 +20,25 @@ struct ExplainSlangIntent: AppIntent {
         let (useCase, _): (TranslateSentenceUseCaseImpl, String) = await MainActor.run {
             let context = SharedModelContainer.shared.context
             let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
-            let repository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
-            let useCase = TranslateSentenceUseCaseImpl(repository: repository)
+            let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+            let slangRepository = SlangRepositoryImpl()
+            let useCase = TranslateSentenceUseCaseImpl(translationRepository: translationRepository, slangRepository: slangRepository)
             return (useCase, "")
         }
 
-        let translation: TranslationResponse
+        let result: TranslationResult
         do {
-            translation = try await useCase.execute(text)
+            result = try await useCase.execute(text)
         } catch {
             return .result(value: [], dialog: "Failed to analyze text: \(error.localizedDescription)")
         }
 
+        let translation = result.translation
+        let slangs = result.detectedSlangs
         let sentiment = translation.sentiment ?? .neutral
         let fullTranslation = translation.englishTranslation
 
-        let wordFound = await SlangDictionary.shared.findSlang(in: text, matching: sentiment)
-
-        let results = wordFound.map {
+        let results = slangs.map {
             SlangResult(
                 slang: $0.slang,
                 translationID: $0.translationID,

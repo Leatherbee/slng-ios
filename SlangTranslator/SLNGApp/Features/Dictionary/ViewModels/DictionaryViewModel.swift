@@ -10,7 +10,6 @@ internal import Combine
 import AVFoundation
 import SwiftUI
 
-@MainActor
 final class DictionaryViewModel: ObservableObject {
     // MARK: - Published States
     @Published var searchText: String = ""
@@ -25,13 +24,18 @@ final class DictionaryViewModel: ObservableObject {
     private let letters = (97...122).compactMap { String(UnicodeScalar($0)) } // a-z
     private var audioPlayer: AVAudioPlayer?
     
+    // MARK: - Dependencies
+    private let slangRepository: SlangRepository
+    
     // MARK: - Init
-    init() {
+    init(slangRepository: SlangRepository = SlangRepositoryImpl()) {
+        self.slangRepository = slangRepository
         loadAllSlangs()
         setupSearchListener()
         prepareSound()
     }
     
+    // MARK: - Refresh after search
     func refreshAfterSearch() {
         if searchText.isEmpty {
             filteredSlangs = allSlangs
@@ -48,10 +52,10 @@ final class DictionaryViewModel: ObservableObject {
         }
     }
 
-    
     // MARK: - Data Load
     private func loadAllSlangs() {
-        allSlangs = SlangDictionary.shared.slangs
+        allSlangs = slangRepository
+            .loadAll()
             .sorted { $0.slang.lowercased() < $1.slang.lowercased() }
         filteredSlangs = allSlangs
     }
@@ -59,7 +63,7 @@ final class DictionaryViewModel: ObservableObject {
     // MARK: - Search Filtering
     private func setupSearchListener() {
         $searchText
-            .debounce(for: .milliseconds(100), scheduler: RunLoop.main)
+            .debounce(for: .milliseconds(120), scheduler: RunLoop.main)
             .sink { [weak self] text in
                 guard let self = self else { return }
                 

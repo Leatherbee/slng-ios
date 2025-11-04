@@ -28,7 +28,7 @@ final class TranslateViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     
     // Backend Result
-    @Published var result: TranslationResponse? = nil
+    @Published var result: TranslationResult? = nil
     
     // MARK: - Dependencies
     private var useCase: TranslateSentenceUseCase?
@@ -46,8 +46,11 @@ final class TranslateViewModel: ObservableObject {
             // Run heavy setup asynchronously off the main render path
             let context = SharedModelContainer.shared.container.mainContext
             let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
-            let repository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
-            let useCase = TranslateSentenceUseCaseImpl(repository: repository)
+//            let repository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+            let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+            let slangRepository = SlangRepositoryImpl()
+            
+            let useCase = TranslateSentenceUseCaseImpl(translationRepository: translationRepository, slangRepository: slangRepository)
             
             await MainActor.run {
                 self.useCase = useCase
@@ -79,17 +82,17 @@ final class TranslateViewModel: ObservableObject {
         
         Task {
             do {
-                let response = try await useCase.execute(inputText)
+                let result = try await useCase.execute(inputText)
                 
                 await MainActor.run {
-                    self.result = response
-                    self.translatedText = response.englishTranslation
+                    self.result = result
+                    self.translatedText = result.translation.englishTranslation
                     self.isTranslated = true
                     
                     // Get matched slangs from dictionary
-                    let matchedSlangs = SlangDictionary.shared.findSlang(in: inputText, matching: response.sentiment)
-                    self.slangDetected = matchedSlangs.map { $0.slang }
-                    self.slangData = matchedSlangs // Store the full SlangData objects
+//                    let matchedSlangs = SlangDictionary.shared.findSlang(in: inputText, matching: response.sentiment)
+                    self.slangData = result.detectedSlangs
+                    self.slangDetected = result.detectedSlangs.map { $0.slang }
                     self.isLoading = false
                 }
             } catch {
