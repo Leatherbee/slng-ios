@@ -17,7 +17,6 @@ struct TranslateView: View {
     @State private var textHeight: CGFloat = 0
     @State private var alignToInputPosition: Bool = true
     
-    // MARK: Animation states
     @State private var stage: Int = 0
     @State private var showBurst = false
     @State private var showPulse = false
@@ -92,7 +91,7 @@ struct TranslateView: View {
                     
                     if !isKeyboardActive {
                         BlinkingCursor()
-                            .padding(.horizontal, -4)
+                            .padding(.horizontal, -3)
                     }
                 }
             }
