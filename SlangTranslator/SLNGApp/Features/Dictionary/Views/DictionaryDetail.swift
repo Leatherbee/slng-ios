@@ -26,10 +26,10 @@ struct DictionaryDetail: View {
                         } label: {
                             Image(systemName: "xmark")
                                 .font(.system(size: 17, weight: .medium))
-                                .foregroundColor(.white)
+                                .foregroundColor(AppColor.Button.Text.primary)
                         }
                         .frame(width: 43, height: 43)
-                        .background(.black)
+                        .background(AppColor.Button.primary)
                         .cornerRadius(9999)
                         .transition(.opacity)
                     }
@@ -40,9 +40,11 @@ struct DictionaryDetail: View {
                     VStack(spacing: 8){
                         Text(slangData?.slang ?? "")
                             .font(.system(size: 64, design: .serif))
+                            .foregroundColor(AppColor.Text.primary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         Text("/\(slangData?.slang.lowercased() ?? "")/")
                             .font(.system(size: 17, weight: .bold, design: .serif))
+                            .foregroundColor(AppColor.Text.primary)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -51,10 +53,12 @@ struct DictionaryDetail: View {
                         VStack(spacing: 8){
                             Text("Meaning")
                                 .font(.system(size: 17, weight: .semibold, design: .serif))
+                                .foregroundColor(AppColor.Text.primary)
                                 .italic()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             Text(slangData?.translationEN ?? "")
                                 .font(.system(size: 15, design: .serif))
+                                .foregroundColor(AppColor.Text.primary)
                                 .italic()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
@@ -64,29 +68,37 @@ struct DictionaryDetail: View {
                             HStack{
                                 Text("Context")
                                     .font(.system(size: 17, weight: .semibold, design: .serif))
+                                    .foregroundColor(AppColor.Text.primary)
                                     .italic()
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             
                             Text(slangData?.contextEN ?? "")
                                 .font(.system(size: 15, design: .serif))
+                                .foregroundColor(AppColor.Text.primary)
                                 .italic()
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .lineLimit(nil)
+                                .multilineTextAlignment(.leading)
+
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
                         VStack(spacing: 8){
                             Text("Example:")
                                 .font(.system(size: 17, weight: .semibold, design: .serif))
+                                .foregroundColor(AppColor.Text.primary)
                                 .italic()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             VStack{
                                 Text("\(slangData?.exampleID ?? "")")
                                     .font(.system(size: 15, design: .serif))
+                                    .foregroundColor(AppColor.Text.primary)
                                     .italic()
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                 Text("\(slangData?.exampleEN ?? "")")
                                     .font(.system(size: 15, design: .serif))
+                                    .foregroundColor(AppColor.Text.primary)
                                     .italic()
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
@@ -101,9 +113,8 @@ struct DictionaryDetail: View {
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(red: 0.99, green: 0.96, blue: 0.92))
+            .background(AppColor.Background.secondary)
         }
-        .frame(width: .infinity, height: .infinity)
         .onAppear() {
             self.slangData = popupManager.getSlangData()
              

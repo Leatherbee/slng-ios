@@ -107,12 +107,12 @@ struct TranslateView: View {
                 .frame(maxWidth: 314, minHeight: 60)
                 .foregroundColor(
                     (colorScheme == .dark && !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                    ? Color.textPrimary : Color.buttonTextPrimary
+                    ? AppColor.Button.Text.primary : AppColor.Text.primary
                 )
                 .background(
                     viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    ? Color.btnSecondary
-                    : Color.btnPrimary
+                    ? AppColor.Button.secondary
+                    : AppColor.Button.primary
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 30))
             }
@@ -222,7 +222,7 @@ struct TranslateView: View {
                                     .padding(.vertical, 16)
                                     .padding(.horizontal, 16)
                                     .foregroundColor(colorScheme == .dark ? .black : .white)
-                                    .background(Color.btnPrimary)
+                                    .background(AppColor.Button.primary)
                                     .clipShape(Capsule())
                                 }
                             }
@@ -239,7 +239,7 @@ struct TranslateView: View {
                                     ForEach(viewModel.slangData, id: \.slang) { slangData in
                                         TranslateSlangCardView(
                                             slangData: slangData,
-                                            backgroundColor: Color.bgSecondary
+                                            backgroundColor: AppColor.Background.secondary
                                         )
                                         .opacity(showDetectedSlang ? 1 : 0)
                                         .animation(
@@ -280,7 +280,9 @@ struct TranslateView: View {
                         .font(Font.body.bold())
                         .frame(maxWidth: 314, minHeight: 60)
                         .foregroundColor(colorScheme == .dark ? .black : .white)
-                        .background(Color.btnPrimary)
+                        .background(
+                            AppColor.Button.primary
+                        )
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
                 .padding(.bottom, 30)
@@ -435,7 +437,7 @@ struct ExpandedTranslationView: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Color(Color.bgSecondary)
+            Color(AppColor.Background.secondary)
                 .ignoresSafeArea()
             
             GeometryReader { geo in
