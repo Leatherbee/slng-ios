@@ -47,6 +47,7 @@ struct ShareExtensionView: View {
                                 .foregroundStyle(.primary)
                                 .padding(.horizontal, 6)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .textSelection(.enabled)
                         }
                         .padding(.horizontal)
                         .padding(.top)
@@ -95,7 +96,8 @@ struct ShareExtensionView: View {
                         } else if !translatedText.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
                                 Divider()
-                                    .foregroundStyle(.gray)
+                                    .frame(height: 1)
+                                    .overlay(Color.stroke)
                                     .padding(.horizontal, 6)
                                 
                                 Text(translatedText)
@@ -108,23 +110,23 @@ struct ShareExtensionView: View {
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 8)
                                     .frame(maxWidth: .infinity, alignment: .leading)
+                                    .textSelection(.enabled)
                             }
                             .padding(.horizontal)
                             
                             if !detectedSlangs.isEmpty {
-                                VStack(alignment: .leading, spacing: 8) {
+                                VStack(alignment: .leading, spacing: 14) {
                                     Text("Slang Detected (\(detectedSlangs.count))")
                                         .font(.body)
                                         .foregroundStyle(.primary)
-                                        .padding(.horizontal)
                                     
                                     ForEach(detectedSlangs.indices, id: \.self) { index in
-                                        SlangCardView(slangData: detectedSlangs[index])
-                                        Divider()
-                                            .foregroundStyle(.primary)
-                                            .padding(.horizontal, 16)
+                                        TranslateSlangCardView(slangData: detectedSlangs[index], backgroundColor: .clear)
                                     }
                                 }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 18)
+                                .textSelection(.enabled)
                             } else {
                                 VStack(spacing: 20) {
                                     Image(systemName: "questionmark.circle")
@@ -161,8 +163,9 @@ struct ShareExtensionView: View {
         .onAppear {
             let context = SharedModelContainer.shared.context
             let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
-            let repository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
-            let useCase = TranslateSentenceUseCaseImpl(repository: repository)
+            let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+            let slangRepository = SlangRepositoryImpl()
+            let useCase = TranslateSentenceUseCaseImpl(translationRepository: translationRepository, slangRepository: slangRepository)
             viewModel = ShareTranslateViewModel(useCase: useCase)
             
             Task {
@@ -170,12 +173,10 @@ struct ShareExtensionView: View {
                 isTranslating = true
                 vm.inputText = sharedText
                 await vm.translate()
-                translatedText = vm.result?.englishTranslation ?? ""
                 
-                if let sentiment = vm.result?.sentiment {
-                    detectedSlangs = SlangDictionary.shared.findSlang(in: sharedText, matching: sentiment)
-                } else {
-                    detectedSlangs = SlangDictionary.shared.findSlang(in: sharedText, matching: nil)
+                if let result = vm.result {
+                    translatedText = result.translation.englishTranslation
+                    detectedSlangs = result.detectedSlangs
                 }
                 
                 if let vmError = vm.errorMessage, !vmError.isEmpty {

@@ -214,7 +214,7 @@ struct LargeWheelPicker: View {
                 } label: {
                     HStack(spacing: 4) {
                         Text(data[index])
-                            .font(.system(size: 64, weight: .medium))
+                            .font(.system(size: 64, weight: .medium, design: .serif))
                             .scaleEffect(scale)
                             .opacity(opacity)
                             .foregroundColor(AppColor.Text.primary)
@@ -236,7 +236,7 @@ struct LargeWheelPicker: View {
             } else {
                 HStack(spacing: 4) {
                     Text(data[index])
-                        .font(.system(size: 64, weight: .medium))
+                        .font(.system(size: 64, weight: .medium, design: .serif))
                         .scaleEffect(scale)
                         .opacity(opacity)
                         .foregroundColor(AppColor.Text.primary)

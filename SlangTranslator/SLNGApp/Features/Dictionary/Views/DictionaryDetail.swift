@@ -66,9 +66,6 @@ struct DictionaryDetail: View {
                         
                         VStack(spacing: 8){
                             HStack{
-                                Image(systemName: "info.circle")
-                                    .font(.system(size: 15))
-                                    .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
                                 Text("Context")
                                     .font(.system(size: 17, weight: .semibold, design: .serif))
                                     .foregroundColor(AppColor.Text.primary)

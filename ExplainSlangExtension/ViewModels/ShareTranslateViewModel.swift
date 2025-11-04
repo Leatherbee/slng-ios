@@ -13,7 +13,7 @@ import SwiftData
 @MainActor
 final class ShareTranslateViewModel: ObservableObject {
     @Published var inputText: String = ""
-    @Published var result: TranslationResponse?
+    @Published var result: TranslationResult?
     @Published var detectedSlang: [SlangData] = []
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
@@ -30,11 +30,9 @@ final class ShareTranslateViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            let response = try await useCase.execute(inputText)
-            self.result = response
-            
-            let matchedSlangs = SlangDictionary.shared.findSlang(in: inputText, matching: response.sentiment)
-            self.detectedSlang = matchedSlangs
+            let result = try await useCase.execute(inputText)
+            self.result = result
+            self.detectedSlang = result.detectedSlangs
         } catch {
             self.errorMessage = error.localizedDescription
         }

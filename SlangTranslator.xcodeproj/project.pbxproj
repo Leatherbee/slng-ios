@@ -72,20 +72,22 @@
 		502CE9262EA1FA0E007F38E3 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Assets/Assets.xcassets,
-				ExplainSlangIntent.swift,
-				Shared/Common/ColorsConstant.swift,
+				AppIntents/ExplainSlangIntent.swift,
+				Resources/Assets/Assets.xcassets,
+				Resources/Data/slng_data_seeded.json,
+				Shared/Common/Colors.swift,
+				Shared/Core/DataSources/SlangRepositoryImpl.swift,
 				Shared/Core/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Core/Entities/SlangData.swift,
-				Shared/Core/Entities/slng_data_seeded.json,
 				Shared/Core/Entities/TranslationData.swift,
+				Shared/Core/Entities/TranslationResult.swift,
 				"Shared/Core/Extensions/String+SlangNormalization.swift",
 				Shared/Core/Model/TranslationModel.swift,
+				Shared/Core/Repositories/SlangRepository.swift,
 				Shared/Core/Repositories/TranslationRepository.swift,
 				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
 				Shared/Core/Utils/SharedModelContainer.swift,
-				SlangCardView.swift,
-				SLNGApp/Helper/Color.swift,
+				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
 			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
 		};
@@ -106,18 +108,20 @@
 		50FDB69E2EB200CC004304A3 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Assets/Assets.xcassets,
+				Resources/Assets/Assets.xcassets,
+				Resources/Data/slng_data_seeded.json,
+				Shared/Core/DataSources/SlangRepositoryImpl.swift,
 				Shared/Core/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Core/Entities/SlangData.swift,
-				Shared/Core/Entities/slng_data_seeded.json,
 				Shared/Core/Entities/TranslationData.swift,
+				Shared/Core/Entities/TranslationResult.swift,
 				"Shared/Core/Extensions/String+SlangNormalization.swift",
 				Shared/Core/Model/TranslationModel.swift,
+				Shared/Core/Repositories/SlangRepository.swift,
 				Shared/Core/Repositories/TranslationRepository.swift,
 				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
 				Shared/Core/Utils/SharedModelContainer.swift,
-				SlangCardView.swift,
-				SLNGApp/Helper/Color.swift,
+				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
 			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
 		};
@@ -636,7 +640,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -679,7 +684,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
