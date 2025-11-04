@@ -110,6 +110,7 @@
 			membershipExceptions = (
 				Resources/Assets/Assets.xcassets,
 				Resources/Data/slng_data_seeded.json,
+				Shared/Common/Colors.swift,
 				Shared/Core/DataSources/SlangRepositoryImpl.swift,
 				Shared/Core/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Core/Entities/SlangData.swift,
