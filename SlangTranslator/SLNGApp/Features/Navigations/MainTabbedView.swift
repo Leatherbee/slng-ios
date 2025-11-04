@@ -25,7 +25,7 @@ struct MainTabbedView: View {
                 }
                 
                 Tab("Keyboard", systemImage: "keyboard", value: .keyboard) {
-                    KeyboardView()
+                    KeyboardView(onReturnFromSettings: {})
                 }
                 
                 Tab("Dictionary", systemImage: "text.book.closed", value: .dictionary) {

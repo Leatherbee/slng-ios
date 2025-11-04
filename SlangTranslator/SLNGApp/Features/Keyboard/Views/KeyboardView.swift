@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct KeyboardView: View {
+    var onReturnFromSettings: () -> Void
     var body: some View {
         ZStack
         {
@@ -63,6 +64,9 @@ struct KeyboardView: View {
                 
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            onReturnFromSettings()
+        }
     }
     
     private func openKeyboardSettings() {
@@ -72,7 +76,7 @@ struct KeyboardView: View {
         }
     }
 }
-
-#Preview {
-    KeyboardView()
-}
+//
+//#Preview {
+//    KeyboardView()
+//}

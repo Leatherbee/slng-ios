@@ -31,6 +31,8 @@ struct TranslateView: View {
     
     @State private var audioPlayer: AVAudioPlayer?
     
+    @FocusState private var isKeyboardActive: Bool
+    
     var body: some View {
         ZStack {
             if viewModel.isInitializing {
@@ -78,6 +80,7 @@ struct TranslateView: View {
                     .onChange(of: viewModel.inputText) { _, _ in
                         adjustFontSizeDebounced()
                     }
+                    .focused($isKeyboardActive)
                 
                 if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     Text("Heard a slang you don't get? Type here")
@@ -86,6 +89,11 @@ struct TranslateView: View {
                         .padding(.horizontal, 5)
                         .padding(.top, 8)
                         .allowsHitTesting(false)
+                    
+                    if !isKeyboardActive {
+                        BlinkingCursor()
+                            .padding(.horizontal, -4)
+                    }
                 }
             }
             .padding(.horizontal)
@@ -469,6 +477,20 @@ struct ExpandedTranslationView: View {
         }
         .onAppear {
             UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
+        }
+    }
+}
+
+struct BlinkingCursor: View {
+    @State private var isVisible: Bool = true
+    
+    var body: some View {
+        Text("|")
+            .font(.system(size: 46, weight: .regular, design: .serif))
+        .opacity(isVisible ? 1 : 0)
+        .animation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true), value: isVisible)
+        .onAppear {
+            isVisible.toggle()
         }
     }
 }

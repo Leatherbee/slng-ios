@@ -19,7 +19,7 @@ struct HomeView: View {
 
 
             Tab("Keyboard", systemImage: "keyboard", value: 1) {
-                KeyboardView() //keyboard
+                KeyboardView(onReturnFromSettings: {}) //keyboard
             }
 
 

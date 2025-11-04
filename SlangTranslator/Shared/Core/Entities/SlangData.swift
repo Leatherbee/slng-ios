@@ -62,16 +62,3 @@ struct SlangData: Equatable, Codable, Identifiable {
         self.sentiment = try container.decode(SentimentType.self, forKey: .sentiment)
     }
 }
-
-//final class SlangDictionary {
-//    static let shared = SlangDictionary()
-//    
-//
-//    private init() {
-//        loadFromJSON()
-//    }
-//
-//    func findSlang(in text: String, matching sentiment: SentimentType?) -> [SlangData] {
-//        
-//    }
-//}
