@@ -63,7 +63,6 @@ final class SlangKeyboardViewModel: ObservableObject {
         Array(".,?!'").map { String($0) }
     ]
     
-    // MARK: - Computed keyboard rows
     func getRows() -> [[String]] {
         if showNumbersShifted {
             return rowsNumbersShifted
@@ -74,7 +73,6 @@ final class SlangKeyboardViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Actions
     func toggleShift() {
         if showNumber {
             toggleSymbol()

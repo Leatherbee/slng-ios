@@ -20,6 +20,7 @@ struct TranslateSlangCardView: View {
                 Text(slangData.slang.capitalized)
                     .font(.system(.title, design: .serif, weight: .regular))
                     .foregroundColor(.primary)
+                    .textSelection(.enabled)
                 
                 Spacer()
                 
@@ -40,34 +41,41 @@ struct TranslateSlangCardView: View {
                         .foregroundStyle(.primary)
                         .padding(.top, 12)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .textSelection(.enabled)
                     
-                    Text("Explanation")
+                    Text("Context")
                         .font(.system(.body, design: .serif, weight: .semibold))
                         .padding(.top, 10)
                         .italic()
                         .foregroundStyle(.primary)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .textSelection(.enabled)
                     
                     Text(slangData.contextEN)
                         .font(.system(.body, design: .serif, weight: .regular))
                         .foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .textSelection(.enabled)
                     
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Example")
                             .font(.system(.body, design: .serif, weight: .semibold))
                             .foregroundStyle(.primary)
+                            .textSelection(.enabled)
                         
                         VStack(alignment: .leading, spacing: 4) {
                             Text("\(slangData.exampleID)")
                                 .font(.system(.body, design: .serif))
                                 .italic()
                                 .foregroundColor(.primary)
+                                .textSelection(.enabled)
+                            
                             Text("\(slangData.exampleEN)")
                                 .font(.system(.body, design: .serif))
                                 .italic()
                                 .foregroundColor(.secondary)
+                                .textSelection(.enabled)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }

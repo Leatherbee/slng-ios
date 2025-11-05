@@ -78,9 +78,11 @@ struct OnboardingView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
                 
-                Text("By starting, you accept our Terms of Use and Privacy Policy")
-                    .foregroundColor(AppColor.Text.secondary)
-                    .font(Font.caption)
+                Text("By starting, you accept our [Terms of Use](https://slng.space/terms/) and [Privacy Policy](https://slng.space/privacy/).")
+                    .tint(AppColor.Button.primary)
+                    .foregroundStyle(AppColor.Text.secondary)
+                    .font(.caption)
+                    .multilineTextAlignment(.center)
                     .padding(.horizontal)
                     
             }

@@ -122,7 +122,6 @@ struct TranslateView: View {
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 30))
             }
-            .padding()
             .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         .padding()
@@ -130,7 +129,6 @@ struct TranslateView: View {
         .onTapGesture { UIApplication.shared.dismissKeyboard() }
     }
     
-    // MARK: Result Section
     private var resultSection: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
@@ -152,7 +150,6 @@ struct TranslateView: View {
                         ZStack(alignment: .topLeading) {
                             VStack(alignment: .leading, spacing: 8) {
                                 
-                                // Original text (pulse only)
                                 Text(viewModel.inputText)
                                     .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
                                     .foregroundColor(Color.textPrimary)
@@ -174,7 +171,6 @@ struct TranslateView: View {
                                         resetAnimation()
                                     }
                                 
-                                // Divider
                                 GeometryReader { geo in
                                     Rectangle()
                                         .fill(Color.stroke)
@@ -184,7 +180,6 @@ struct TranslateView: View {
                                 }
                                 .frame(height: 1)
                                 
-                                // Translated text
                                 if let translatedText = viewModel.translatedText {
                                     Text(translatedText)
                                         .font(.system(dynamicTextStyle, design: .serif, weight: .semibold))
@@ -206,9 +201,8 @@ struct TranslateView: View {
                         }
                         .padding(.horizontal, 32)
                         
-                        // Buttons
                         if showDetectedSlangButton {
-                            HStack {
+                            if viewModel.slangDetected.isEmpty {
                                 HStack(spacing: 10) {
                                     Button {
                                         viewModel.expandedView()
@@ -221,24 +215,57 @@ struct TranslateView: View {
                                         Image(systemName: "doc.on.doc")
                                     }
                                 }
-                                Spacer()
-                                Button {
-                                    viewModel.showDetectedSlang()
-                                } label: {
-                                    Text(viewModel.isDetectedSlangShown
-                                         ? "Close Detected Slang (\(viewModel.slangDetected.count))"
-                                         : "Show Detected Slang (\(viewModel.slangDetected.count))")
-                                    .padding(.vertical, 16)
-                                    .padding(.horizontal, 16)
-                                    .foregroundColor(colorScheme == .dark ? .black : .white)
-                                    .background(AppColor.Button.primary)
-                                    .clipShape(Capsule())
+                                .padding(.horizontal, 32)
+                                
+                                VStack {
+                                    Spacer()
+                                    Image(systemName: "questionmark.circle")
+                                        .resizable()
+                                        .frame(width: 42, height: 42)
+                                        .foregroundStyle(.secondary)
+                                    
+                                    Text("No slang detected")
+                                        .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                                        .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.bottom, 120)
+                                        .transition(.opacity.combined(with: .move(edge: .bottom)))
+                                        .animation(.easeInOut(duration: 0.4), value: viewModel.slangDetected)
                                 }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            } else {
+                                HStack {
+                                    HStack(spacing: 10) {
+                                        Button {
+                                            viewModel.expandedView()
+                                            showExpanded = true
+                                        } label: {
+                                            Image(systemName: "arrow.up.left.and.arrow.down.right")
+                                        }
+                                        
+                                        Button { viewModel.copyToClipboard() } label: {
+                                            Image(systemName: "doc.on.doc")
+                                        }
+                                    }
+                                    Spacer()
+                                    Button {
+                                        viewModel.showDetectedSlang()
+                                    } label: {
+                                        Text(viewModel.isDetectedSlangShown
+                                             ? "Close Detected Slang (\(viewModel.slangDetected.count))"
+                                             : "Show Detected Slang (\(viewModel.slangDetected.count))")
+                                        .padding(.vertical, 16)
+                                        .padding(.horizontal, 16)
+                                        .foregroundColor(colorScheme == .dark ? .black : .white)
+                                        .background(AppColor.Button.primary)
+                                        .clipShape(Capsule())
+                                    }
+                                }
+                                .padding(.horizontal, 32)
                             }
-                            .padding(.horizontal, 32)
                         }
                         
-                        // Detected slang
                         if viewModel.isDetectedSlangShown {
                             VStack(alignment: .leading, spacing: 16) {
                                 Text("Slang Detected (\(viewModel.slangDetected.count))")
@@ -294,7 +321,7 @@ struct TranslateView: View {
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
-                .padding(.bottom, 30)
+                .padding(.bottom)
                 .opacity(showBottomUI ? 1 : 0)
                 .animation(.easeIn(duration: 0.5), value: showBottomUI)
             }
@@ -308,7 +335,6 @@ struct TranslateView: View {
         }
     }
     
-    // MARK: Animation Logic
     private func resetAnimation() {
         stage = 0
         showBurst = false

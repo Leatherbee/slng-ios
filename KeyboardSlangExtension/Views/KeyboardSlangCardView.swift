@@ -16,7 +16,7 @@ struct KeyboardSlangCardView: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .center) {
                 Text(slangData.slang.capitalized)
-                    .font(.system(.largeTitle, design: .serif, weight: .regular))
+                    .font(.system(.title, design: .serif, weight: .regular))
                     .foregroundColor(.primary)
                 
                 Spacer()
@@ -39,7 +39,7 @@ struct KeyboardSlangCardView: View {
                         .font(.system(.body, design: .serif, weight: .bold))
                         .foregroundStyle(.primary)
                     
-                    Text("Explanation")
+                    Text("Context")
                         .font(.system(.body, design: .serif, weight: .semibold))
                         .padding(.top, 10)
                         .italic()
@@ -53,6 +53,7 @@ struct KeyboardSlangCardView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Example")
                             .font(.system(.body, design: .serif, weight: .semibold))
+                            .italic()
                             .foregroundStyle(.primary)
                         
                         VStack(alignment: .leading, spacing: 4) {
@@ -74,13 +75,13 @@ struct KeyboardSlangCardView: View {
                 ))
             }
         }
-        .padding(16)
+        .padding(10)
         .background(
             RoundedRectangle(cornerRadius: 14)
                 .fill(Color(.clear))
         )
         .scaleEffect(isExpanded ? 1.02 : 1.0)
-        .contentShape(Rectangle()) // Make whole card tappable
+        .contentShape(Rectangle())
         .onTapGesture {
             toggleCard()
         }
@@ -95,7 +96,6 @@ struct KeyboardSlangCardView: View {
             isExpanded.toggle()
         }
         
-        // Give distinct feel for expand vs collapse
         if isExpanded {
             generator.impactOccurred(intensity: 0.7)
         } else {
