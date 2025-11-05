@@ -37,13 +37,13 @@ class KeyboardViewController: UIInputViewController {
                 self.textDocumentProxy.deleteBackward()
             },
             keyboardHeight: keyboardHeight,
-            backgroundColor: .keyboardBackground, needsInputModeSwitchKey: self.needsInputModeSwitchKey,
+            backgroundColor: .clear, needsInputModeSwitchKey: self.needsInputModeSwitchKey,
             nextKeyboardAction: #selector(self.handleInputModeList(from:with:)),
             vm: viewModel
         )
         
         let hosting = UIHostingController(rootView: root)
-        hosting.view.backgroundColor = .keyboardBackground
+        hosting.view.backgroundColor = .clear
          
         addChild(hosting)
         view.addSubview(hosting.view)
@@ -67,3 +67,4 @@ class KeyboardViewController: UIInputViewController {
         super.viewWillLayoutSubviews()
     }
 }
+

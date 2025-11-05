@@ -12,7 +12,8 @@ struct OnboardingView: View {
     @State var isSecondPage: Bool = true
     @State var pageNumber: Int = 1
     @State var trialKeyboardText: String = ""
-    
+    @AppStorage("hasSetupKeyboard") private var hasSetupKeyboard = false
+
     @FocusState private var focusedField: Bool
     
     var body: some View {
@@ -27,7 +28,13 @@ struct OnboardingView: View {
         }
         else if pageNumber==4{
             KeyboardView {
-                withAnimation{pageNumber=5}
+                if hasSetupKeyboard {
+                    withAnimation {
+                        pageNumber = 5
+                    }
+                } else {
+                    print("Keyboard belum diaktifkan di Settings.")
+                }
             }
         }
         else if pageNumber==5{
@@ -69,9 +76,11 @@ struct OnboardingView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
                 
-                Text("By starting, you accept our Terms of Use and Privacy Policy")
-                    .foregroundColor(AppColor.Text.secondary)
-                    .font(Font.caption)
+                Text("By starting, you accept our [Terms of Use](https://slng.space/terms/) and [Privacy Policy](https://slng.space/privacy/).")
+                    .tint(AppColor.Button.primary)
+                    .foregroundStyle(AppColor.Text.secondary)
+                    .font(.caption)
+                    .multilineTextAlignment(.center)
                     .padding(.horizontal)
                     
             }
@@ -158,7 +167,7 @@ struct OnboardingView: View {
                 Image("OnBoardingIcon")
             },
             pageNumber: $pageNumber,
-            onBoardingTitle: "You’re all set",
+            onBoardingTitle: "You're all set",
             onBoardingContent: "Explore slang and abbreviations. Type to see what they mean.",
         )
     }

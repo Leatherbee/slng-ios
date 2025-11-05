@@ -143,7 +143,7 @@ struct ShareExtensionView: View {
                     .padding(.bottom)
                 }
             }
-            .navigationTitle("Word Explanation")
+            .navigationTitle("Explanation")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
