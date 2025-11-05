@@ -28,8 +28,6 @@ struct OnboardingView: View {
         }
         else if pageNumber==4{
             KeyboardView {
-                // Callback dari KeyboardView ketika user kembali dari Settings
-                // Cek apakah keyboard sudah diaktifkan
                 if hasSetupKeyboard {
                     withAnimation {
                         pageNumber = 5
