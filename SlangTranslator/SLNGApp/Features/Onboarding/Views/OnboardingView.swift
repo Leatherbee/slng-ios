@@ -9,7 +9,6 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Environment(\.colorScheme) var colorScheme
-    @State var isSecondPage: Bool = true
     @State var pageNumber: Int = 1
     @State var trialKeyboardText: String = ""
     
@@ -26,15 +25,18 @@ struct OnboardingView: View {
             thirdPage
         }
         else if pageNumber==4{
-            KeyboardView {
-                withAnimation{pageNumber=5}
-            }
+            fourthPage
         }
         else if pageNumber==5{
-            fifthPage
+            KeyboardView {
+                withAnimation{pageNumber=6}
+            }
         }
         else if pageNumber==6{
             sixthPage
+        }
+        else if pageNumber==7{
+            seventhPage
         }
     }
     
@@ -84,10 +86,14 @@ struct OnboardingView: View {
     
     private var secondPage: some View {
         OnBoardingPage(
-            content: {Image(colorScheme == .light ?"OnBoardingIcon" : "OnBoardingIconDark")},
+            content: {
+                Image(colorScheme == .light ? "OnboardingIcon1" : "OnboardingIcon1Dark")
+                    .resizable()
+                    .frame(maxWidth: 182,maxHeight: 288)
+            },
             pageNumber: $pageNumber,
-            onBoardingTitle: "Stay fluent in the ever-changing slang world",
-            onBoardingContent: "Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk.",
+            onBoardingTitle: "Everyday Indonesian translator",
+            onBoardingContent: "Translate indonesian sentences, even when they mix slang, abbreviation, and everyday expressions",
         )
     }
     
@@ -96,7 +102,7 @@ struct OnboardingView: View {
             content: {
                 Image("OnBoardingIcon2")
                     .resizable()
-                    .frame(width: 300,height: 340)
+                    .frame(maxWidth: 300,maxHeight: 340)
             },
             pageNumber: $pageNumber,
             onBoardingTitle: "Translate as you chat",
@@ -104,7 +110,16 @@ struct OnboardingView: View {
         )
     }
     
-    private var fifthPage: some View{
+    private var fourthPage: some View {
+        OnBoardingPage(
+            content: {Image(colorScheme == .light ?"OnBoardingIcon" : "OnBoardingIconDark")},
+            pageNumber: $pageNumber,
+            onBoardingTitle: "Stay fluent in the ever-changing slang world",
+            onBoardingContent: "Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk.",
+        )
+    }
+    
+    private var sixthPage: some View{
         VStack{
             VStack(spacing: 16){
                 VStack{
@@ -152,7 +167,7 @@ struct OnboardingView: View {
         }
     }
     
-    private var sixthPage: some View {
+    private var seventhPage: some View {
         OnBoardingPage(
             content: {
                 Image("OnBoardingIcon")
@@ -190,7 +205,7 @@ struct OnBoardingPage<Content: View>: View {
                 .padding(.horizontal, 10)
                 
                 Button {
-                    if pageNumber < 6 {
+                    if pageNumber < 7 {
                         pageNumber+=1
                     }
                     else{
