@@ -6,14 +6,15 @@
 //
 import Foundation
 import AVFoundation
+internal import Combine
 @MainActor
-final class DictionaryDetailViewModel {
+final class DictionaryDetailViewModel: ObservableObject {
     private let synthesizer = AVSpeechSynthesizer()
     
-    private func speak(_ text: String, language: String = "id-ID") {
+    func speak(_ text: String, language: String = "id-ID") {
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: language)
-        utterance.rate = 0.5
+        utterance.rate = 0.2
         utterance.pitchMultiplier = 1.0
         utterance.volume = 1.0
         

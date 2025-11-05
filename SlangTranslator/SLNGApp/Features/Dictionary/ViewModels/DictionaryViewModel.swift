@@ -6,142 +6,109 @@
 //
 
 import Foundation
+import SwiftData
 internal import Combine
-import AVFoundation
-import SwiftUI
 
+@MainActor
 final class DictionaryViewModel: ObservableObject {
-    // MARK: - Published States
+    @Published var allSlangs: [SlangModel] = []      // semua data
+    @Published var slangs: [SlangModel] = []         // data paginated
+    @Published var filteredSlangs: [SlangModel] = [] // hasil filter (yang ditampilkan)
     @Published var searchText: String = ""
     @Published var selectedIndex: Int = 0
     @Published var dragActiveLetter: String? = nil
-    @Published var currentIndexLetter: String? = nil
-    @Published var filteredSlangs: [SlangData] = []
-    
-    // MARK: - Private Data
-    private var allSlangs: [SlangData] = []
+
+    private let slangRepo: SlangSwiftDataImpl
     private var cancellables = Set<AnyCancellable>()
-    private let letters = (97...122).compactMap { String(UnicodeScalar($0)) } // a-z
-    private var audioPlayer: AVAudioPlayer?
-    
-    // MARK: - Dependencies
-    private let slangRepository: SlangRepository
-    
-    // MARK: - Init
-    init(slangRepository: SlangRepository = SlangRepositoryImpl()) {
-        self.slangRepository = slangRepository
-        loadAllSlangs()
-        setupSearchListener()
-        prepareSound()
+    private var isLoading: Bool = false
+
+    private var offset: Int = 0
+    private var totalCount: Int = 0
+    private let pageSize: Int = 100
+
+    init(context: ModelContext) {
+        self.slangRepo = SlangSwiftDataImpl(context: context, pageSize: pageSize)
+        setupSearch()
+        Task { await loadInitial() }
     }
-    
-    // MARK: - Refresh after search
-    func refreshAfterSearch() {
-        if searchText.isEmpty {
-            filteredSlangs = allSlangs
-        } else {
-            filteredSlangs = allSlangs.filter {
-                $0.slang.localizedCaseInsensitiveContains(searchText) ||
-                $0.translationEN.localizedCaseInsensitiveContains(searchText) ||
-                $0.translationID.localizedCaseInsensitiveContains(searchText)
+
+    func loadInitial() async {
+        guard !isLoading else { return }
+        isLoading = true
+        offset = 0
+ 
+        allSlangs = slangRepo.fetchAll()
+        totalCount = allSlangs.count
+ 
+        slangs = Array(allSlangs)
+        applyFilter()
+        isLoading = false
+    }
+ 
+
+    func getSlang(at index: Int) -> SlangData? {
+        guard index >= 0, index < filteredSlangs.count else { return nil }
+        let s = filteredSlangs[index]
+        return SlangData(
+            id: s.id,
+            slang: s.slang,
+            translationID: s.translationID,
+            translationEN: s.translationEN,
+            contextID: s.contextID,
+            contextEN: s.contextEN,
+            exampleID: s.exampleID,
+            exampleEN: s.exampleEN,
+            sentiment: s.sentiment
+        )
+        print(filteredSlangs)
+    }
+
+    func isLetterActive(_ letter: String) -> Bool {
+        guard selectedIndex < filteredSlangs.count else { return false }
+        return filteredSlangs[selectedIndex].slang.lowercased().hasPrefix(letter.lowercased())
+    }
+
+    func handleLetterDrag(_ letter: String) {
+        dragActiveLetter = letter
+        if let index = allSlangs.firstIndex(where: {
+            $0.slang.lowercased().hasPrefix(letter.lowercased())
+        }) {
+            selectedIndex = index
+            // Jika belum terload sampai huruf ini, muat datanya
+            if index >= slangs.count {
+                let nextOffset = min(index + pageSize, allSlangs.count)
+                slangs = Array(allSlangs.prefix(nextOffset))
+                applyFilter()
             }
-        }
-        
-        if selectedIndex >= filteredSlangs.count {
-            selectedIndex = max(0, filteredSlangs.count - 1)
         }
     }
 
-    // MARK: - Data Load
-    private func loadAllSlangs() {
-        allSlangs = slangRepository
-            .loadAll()
-            .sorted { $0.slang.lowercased() < $1.slang.lowercased() }
-        filteredSlangs = allSlangs
-    }
-    
-    // MARK: - Search Filtering
-    private func setupSearchListener() {
-        $searchText
-            .debounce(for: .milliseconds(120), scheduler: RunLoop.main)
-            .sink { [weak self] text in
-                guard let self = self else { return }
-                
-                if text.isEmpty {
-                    self.filteredSlangs = self.allSlangs
-                } else {
-                    self.filteredSlangs = self.allSlangs.filter {
-                        $0.slang.localizedCaseInsensitiveContains(text) ||
-                        $0.translationEN.localizedCaseInsensitiveContains(text) ||
-                        $0.translationID.localizedCaseInsensitiveContains(text)
-                    }
-                }
-                
-                if self.selectedIndex >= self.filteredSlangs.count {
-                    self.selectedIndex = max(0, self.filteredSlangs.count - 1)
-                }
-            }
-            .store(in: &cancellables)
-    }
-    
-    // MARK: - Interaction (untuk DictionaryView)
-    func handleLetterDrag(_ letter: String) {
-        dragActiveLetter = letter
-        
-        if let newIndex = filteredSlangs.firstIndex(where: {
-            $0.slang.lowercased().hasPrefix(letter.lowercased())
-        }) {
-            withAnimation(.easeInOut(duration: 0.15)) {
-                selectedIndex = newIndex
-            }
-            playClickSound()
-        }
-    }
-    
     func handleLetterDragEnd() {
         dragActiveLetter = nil
     }
-    
-    func handleLetterTap(_ letter: String) {
-        guard !filteredSlangs.isEmpty else { return }
-        currentIndexLetter = letter
-        
-        if let index = filteredSlangs.firstIndex(where: {
-            $0.slang.lowercased().hasPrefix(letter.lowercased())
-        }) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                selectedIndex = index
+
+    private func setupSearch() {
+        $searchText
+            .debounce(for: .milliseconds(250), scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                self?.applyFilter()
             }
-            playClickSound()
+            .store(in: &cancellables)
+    }
+
+    private func applyFilter() {
+        let keyword = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if keyword.isEmpty {
+            filteredSlangs = slangs
+        } else {
+            // Cari dari semua data
+            filteredSlangs = allSlangs.filter {
+                $0.slang.localizedCaseInsensitiveContains(keyword) ||
+                $0.translationID.localizedCaseInsensitiveContains(keyword) ||
+                $0.translationEN.localizedCaseInsensitiveContains(keyword)
+            }
         }
-    }
-    
-    func isLetterActive(_ letter: String) -> Bool {
-        guard filteredSlangs.indices.contains(selectedIndex) else { return false }
-        let current = filteredSlangs[selectedIndex].slang.lowercased()
-        return current.first?.description == letter || dragActiveLetter == letter
-    }
-    
-    func getSlang(at index: Int) -> SlangData? {
-        guard index < filteredSlangs.count else { return nil }
-        return filteredSlangs[index]
-    }
-    
-    // MARK: - Sound
-    private func prepareSound() {
-        guard let soundURL = Bundle.main.url(forResource: "wheel_click", withExtension: "mp3") else { return }
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.volume = 1.0
-        } catch {
-            print("Failed to load sound: \(error.localizedDescription)")
-        }
-    }
-    
-    func playClickSound() {
-        guard let player = audioPlayer else { return }
-        player.currentTime = 0
-        player.play()
     }
 }
+
