@@ -8,9 +8,17 @@
 import SwiftUI
 
 struct KeyboardSettingView: View {
-    @State private var autoCorrect: Bool = true
-    @State private var autoCapslock: Bool = true
-    @State private var selectedLayout: LayoutType = .qwerty
+    @AppStorage("settings.autoCorrect", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
+    private var autoCorrect: Bool = true
+    @AppStorage("settings.autoCaps", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
+    private var autoCapslock: Bool = true
+    @AppStorage("settings.keyboardLayout", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
+    private var keyboardLayoutRaw: String = LayoutType.qwerty.rawValue
+
+    private var selectedLayout: LayoutType {
+        get { LayoutType(rawValue: keyboardLayoutRaw) ?? .qwerty }
+        set { keyboardLayoutRaw = newValue.rawValue }
+    }
     
     var body: some View {
         ZStack {
@@ -84,7 +92,7 @@ struct KeyboardSettingView: View {
                                         .shadow(radius: 1)
                                         .onTapGesture {
                                             withAnimation(.easeInOut) {
-                                                selectedLayout = layout
+                                                keyboardLayoutRaw = layout.rawValue
                                             }
                                         }
                                     Text(layout.rawValue)

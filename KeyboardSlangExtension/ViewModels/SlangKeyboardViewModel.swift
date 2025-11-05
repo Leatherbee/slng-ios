@@ -9,6 +9,12 @@ import Combine
 import Translation
 import UIKit
 
+enum KeyboardLayoutType: String, CaseIterable {
+    case qwerty = "QWERTY"
+    case qwertz = "QWERTZ"
+    case azerty = "AZERTY"
+}
+
 enum KeyboardMode {
     case normal
     case explain
@@ -23,6 +29,7 @@ extension String {
 @MainActor
 final class SlangKeyboardViewModel: ObservableObject {
     @Published var isShifted: Bool = false
+    @Published var isCapsLockOn: Bool = false
     @Published var showTranslationPopup: Bool = false
     @Published var showNumber: Bool = false
     @Published var showNumbersShifted: Bool = false
@@ -38,18 +45,40 @@ final class SlangKeyboardViewModel: ObservableObject {
     @Published var isTranslating: Bool = false
     @Published var translationError: String?
     @Published var result: TranslationResult?
-    
+
     private let useCase: TranslateSentenceUseCase
+
+    // Settings
+    @Published var autoCorrectEnabled: Bool = true
+    @Published var autoCapsEnabled: Bool = true
+    private var layoutType: KeyboardLayoutType = .qwerty
     
     init(useCase: TranslateSentenceUseCase) {
         self.useCase = useCase
     }
     
-    private let defaultRows: [[String]] = [
-        Array("qwertyuiop").map { String($0) },
-        Array("asdfghjkl").map { String($0) },
-        Array("zxcvbnm").map { String($0) }
-    ]
+    private var rowsAlphabetic: [[String]] {
+        switch layoutType {
+        case .qwerty:
+            return [
+                Array("qwertyuiop").map { String($0) },
+                Array("asdfghjkl").map { String($0) },
+                Array("zxcvbnm").map { String($0) }
+            ]
+        case .qwertz:
+            return [
+                Array("qwertzuiop").map { String($0) },
+                Array("asdfghjkl").map { String($0) },
+                Array("yxcvbnm").map { String($0) }
+            ]
+        case .azerty:
+            return [
+                Array("azertyuiop").map { String($0) },
+                Array("qsdfghjklm").map { String($0) },
+                Array("wxcvbn").map { String($0) }
+            ]
+        }
+    }
     
     private let rowsNumbers: [[String]] = [
         Array("1234567890").map { String($0) },
@@ -69,7 +98,7 @@ final class SlangKeyboardViewModel: ObservableObject {
         } else if showNumber {
             return rowsNumbers
         } else {
-            return defaultRows
+            return rowsAlphabetic
         }
     }
     
@@ -77,8 +106,19 @@ final class SlangKeyboardViewModel: ObservableObject {
         if showNumber {
             toggleSymbol()
         } else {
-            isShifted.toggle()
+            if isCapsLockOn {
+                // Single tap while caps lock is on disables caps lock and unshifts
+                isCapsLockOn = false
+                isShifted = false
+            } else {
+                isShifted.toggle()
+            }
         }
+    }
+
+    func setCapsLock(on: Bool) {
+        isCapsLockOn = on
+        isShifted = on
     }
     
     func toggleNumber() {
@@ -130,5 +170,11 @@ final class SlangKeyboardViewModel: ObservableObject {
         } catch {
             self.translationError = error.localizedDescription
         }
+    }
+
+    func applySettings(autoCorrect: Bool, autoCaps: Bool, layoutRaw: String) {
+        self.autoCorrectEnabled = autoCorrect
+        self.autoCapsEnabled = autoCaps
+        self.layoutType = KeyboardLayoutType(rawValue: layoutRaw) ?? .qwerty
     }
 }
