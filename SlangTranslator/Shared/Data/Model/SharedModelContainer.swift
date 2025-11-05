@@ -16,7 +16,8 @@ final class SharedModelContainer {
     
     private init() {
         let schema = Schema([
-            TranslationModel.self
+            TranslationModel.self,
+            SlangModel.self
         ])
         
         let appGroupID = "group.prammmoe.SLNG" 

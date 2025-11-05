@@ -84,9 +84,11 @@
 			membershipExceptions = (
 				Resources/Data/slng_data_seeded.json,
 				Shared/Common/Colors.swift,
+				Shared/Data/DataSources/SlagnSwiftDataImpl.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Data/Model/SharedModelContainer.swift,
+				Shared/Data/Model/SlangModel.swift,
 				Shared/Data/Model/TranslationModel.swift,
 				Shared/Domain/Entities/SlangData.swift,
 				Shared/Domain/Entities/TranslationData.swift,
@@ -104,9 +106,11 @@
 			membershipExceptions = (
 				Resources/Data/slng_data_seeded.json,
 				Shared/Common/Colors.swift,
+				Shared/Data/DataSources/SlagnSwiftDataImpl.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Data/Model/SharedModelContainer.swift,
+				Shared/Data/Model/SlangModel.swift,
 				Shared/Data/Model/TranslationModel.swift,
 				Shared/Domain/Entities/SlangData.swift,
 				Shared/Domain/Entities/TranslationData.swift,
