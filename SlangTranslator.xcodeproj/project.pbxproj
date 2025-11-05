@@ -72,29 +72,6 @@
 			);
 			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
 		};
-		502CE9262EA1FA0E007F38E3 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				AppIntents/ExplainSlangIntent.swift,
-				Resources/Assets/Assets.xcassets,
-				Resources/Data/slng_data_seeded.json,
-				Shared/Common/Colors.swift,
-				Shared/Data/DataSources/SlangRepositoryImpl.swift,
-				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
-				Shared/Data/Model/SharedModelContainer.swift,
-				Shared/Data/Model/TranslationModel.swift,
-				Shared/Domain/Entities/SlangData.swift,
-				Shared/Domain/Entities/TranslationData.swift,
-				Shared/Domain/Entities/TranslationResult.swift,
-				Shared/Domain/Repositories/SlangRepository.swift,
-				Shared/Domain/Repositories/TranslationRepository.swift,
-				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
-				"Shared/Extensions/String+SlangNormalization.swift",
-				Shared/Utils/Lottie.swift,
-				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
-			);
-			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
-		};
 		502CEB662EAE54ED007F38E3 /* Exceptions for "SlangTranslator" folder in "SlangTranslator" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -102,18 +79,9 @@
 			);
 			target = 502CE8DB2EA1F638007F38E3 /* SlangTranslator */;
 		};
-		50FDB6982EB200AC004304A3 /* Exceptions for "KeyboardSlangExtension" folder in "KeyboardSlangExtension" target */ = {
+		50FCF2072EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
-			);
-			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
-		};
-		50FDB69E2EB200CC004304A3 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Resources/Assets/Assets.xcassets,
-				Resources/Data/slng_data_seeded.json,
 				Shared/Common/Colors.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
@@ -126,8 +94,35 @@
 				Shared/Domain/Repositories/TranslationRepository.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
-				Shared/Utils/Lottie.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
+                Resources/Data/slng_data_seeded.json,
+			);
+			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
+		};
+		50FCF2082EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Shared/Common/Colors.swift,
+				Shared/Data/DataSources/SlangRepositoryImpl.swift,
+				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
+				Shared/Data/Model/SharedModelContainer.swift,
+				Shared/Data/Model/TranslationModel.swift,
+				Shared/Domain/Entities/SlangData.swift,
+				Shared/Domain/Entities/TranslationData.swift,
+				Shared/Domain/Entities/TranslationResult.swift,
+				Shared/Domain/Repositories/SlangRepository.swift,
+				Shared/Domain/Repositories/TranslationRepository.swift,
+				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
+				"Shared/Extensions/String+SlangNormalization.swift",
+				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
+                Resources/Data/slng_data_seeded.json,
+			);
+			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
+		};
+		50FDB6982EB200AC004304A3 /* Exceptions for "KeyboardSlangExtension" folder in "KeyboardSlangExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
 			);
 			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
 		};
@@ -138,8 +133,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				502CEB662EAE54ED007F38E3 /* Exceptions for "SlangTranslator" folder in "SlangTranslator" target */,
-				502CE9262EA1FA0E007F38E3 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */,
-				50FDB69E2EB200CC004304A3 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */,
+				50FCF2072EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */,
+				50FCF2082EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */,
 			);
 			path = SlangTranslator;
 			sourceTree = "<group>";
