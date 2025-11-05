@@ -4,6 +4,7 @@
 //
 //  Created by Filza Rizki Ramadhan on 21/10/25.
 //
+
 import SwiftUI
 
 enum TabSelection: Hashable {
@@ -20,7 +21,7 @@ struct MainTabbedView: View {
     var body: some View{
         ZStack{
             TabView(selection: $selectedTab) {
-                Tab("Translate", systemImage: "translate", value: .translate) {
+                Tab("Translate", systemImage: "bubbles.and.sparkles", value: .translate) {
                     TranslateView()
                 }
                 
@@ -62,7 +63,7 @@ struct ScaleAndClipModifier: ViewModifier {
         GeometryReader { geo in
             content
                 .frame(width: geo.size.width, height: geo.size.height)
-                .scaleEffect(y: scale, anchor: .center) // muncul dari tengah ke atas-bawah
+                .scaleEffect(y: scale, anchor: .center)
                 .opacity(scale > 0 ? 1 : 0)
         }
     }
