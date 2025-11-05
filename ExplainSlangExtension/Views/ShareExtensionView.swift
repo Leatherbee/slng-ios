@@ -97,7 +97,7 @@ struct ShareExtensionView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 Divider()
                                     .frame(height: 1)
-                                    .overlay(Color.stroke)
+                                    .overlay(AppColor.Stroke.color)
                                     .padding(.horizontal, 6)
                                 
                                 Text(translatedText)
