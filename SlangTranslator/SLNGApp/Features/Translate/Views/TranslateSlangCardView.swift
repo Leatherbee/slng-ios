@@ -61,6 +61,7 @@ struct TranslateSlangCardView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Example")
                             .font(.system(.body, design: .serif, weight: .semibold))
+                            .italic()
                             .foregroundStyle(.primary)
                             .textSelection(.enabled)
                         
