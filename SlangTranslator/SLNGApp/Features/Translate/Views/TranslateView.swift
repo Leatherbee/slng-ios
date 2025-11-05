@@ -169,7 +169,10 @@ struct TranslateView: View {
                                     .animation(.easeInOut(duration: 0.5), value: moveUp)
                                     .textSelection(.enabled)
                                     .fixedSize(horizontal: false, vertical: true)
-                                
+                                    .onTapGesture {
+                                        viewModel.editText(text: viewModel.inputText)
+                                        resetAnimation()
+                                    }
                                 
                                 // Divider
                                 GeometryReader { geo in

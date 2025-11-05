@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		500E39352EBAF669009955BF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 500E39342EBAF669009955BF /* Lottie */; };
 		502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		502CEAE22EABD37D007F38E3 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 502CEAE12EABD37D007F38E3 /* OpenAI */; };
-		502CEAE42EABD3A3007F38E3 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 502CEAE32EABD3A3007F38E3 /* OpenAI */; };
+		50FCF1352EBB197D00B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF1342EBB197D00B2C472 /* OpenAI */; };
+		50FCF1372EBB198F00B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF1362EBB198F00B2C472 /* OpenAI */; };
+		50FCF1392EBB199A00B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF1382EBB199A00B2C472 /* OpenAI */; };
+		50FCF13D2EBB19E800B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF13C2EBB19E800B2C472 /* Lottie */; };
+		50FCF13F2EBB19F400B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF13E2EBB19F400B2C472 /* Lottie */; };
+		50FCF1412EBB19F900B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF1402EBB19F900B2C472 /* Lottie */; };
 		50FDB6942EB200AC004304A3 /* KeyboardSlangExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		50FDB6A72EB20700004304A3 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FDB6A62EB20700004304A3 /* OpenAI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,18 +79,18 @@
 				Resources/Assets/Assets.xcassets,
 				Resources/Data/slng_data_seeded.json,
 				Shared/Common/Colors.swift,
-				Shared/Core/DataSources/SlangRepositoryImpl.swift,
-				Shared/Core/DataSources/TranslationRepositoryImpl.swift,
-				Shared/Core/Entities/SlangData.swift,
-				Shared/Core/Entities/TranslationData.swift,
-				Shared/Core/Entities/TranslationResult.swift,
-				"Shared/Core/Extensions/String+SlangNormalization.swift",
-				Shared/Core/Model/TranslationModel.swift,
-				Shared/Core/Repositories/SlangRepository.swift,
-				Shared/Core/Repositories/TranslationRepository.swift,
-				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
-				Shared/Core/Utils/Lottie.swift,
-				Shared/Core/Utils/SharedModelContainer.swift,
+				Shared/Data/DataSources/SlangRepositoryImpl.swift,
+				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
+				Shared/Data/Model/SharedModelContainer.swift,
+				Shared/Data/Model/TranslationModel.swift,
+				Shared/Domain/Entities/SlangData.swift,
+				Shared/Domain/Entities/TranslationData.swift,
+				Shared/Domain/Entities/TranslationResult.swift,
+				Shared/Domain/Repositories/SlangRepository.swift,
+				Shared/Domain/Repositories/TranslationRepository.swift,
+				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
+				"Shared/Extensions/String+SlangNormalization.swift",
+				Shared/Utils/Lottie.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
 			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
@@ -113,18 +115,18 @@
 				Resources/Assets/Assets.xcassets,
 				Resources/Data/slng_data_seeded.json,
 				Shared/Common/Colors.swift,
-				Shared/Core/DataSources/SlangRepositoryImpl.swift,
-				Shared/Core/DataSources/TranslationRepositoryImpl.swift,
-				Shared/Core/Entities/SlangData.swift,
-				Shared/Core/Entities/TranslationData.swift,
-				Shared/Core/Entities/TranslationResult.swift,
-				"Shared/Core/Extensions/String+SlangNormalization.swift",
-				Shared/Core/Model/TranslationModel.swift,
-				Shared/Core/Repositories/SlangRepository.swift,
-				Shared/Core/Repositories/TranslationRepository.swift,
-				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
-				Shared/Core/Utils/Lottie.swift,
-				Shared/Core/Utils/SharedModelContainer.swift,
+				Shared/Data/DataSources/SlangRepositoryImpl.swift,
+				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
+				Shared/Data/Model/SharedModelContainer.swift,
+				Shared/Data/Model/TranslationModel.swift,
+				Shared/Domain/Entities/SlangData.swift,
+				Shared/Domain/Entities/TranslationData.swift,
+				Shared/Domain/Entities/TranslationResult.swift,
+				Shared/Domain/Repositories/SlangRepository.swift,
+				Shared/Domain/Repositories/TranslationRepository.swift,
+				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
+				"Shared/Extensions/String+SlangNormalization.swift",
+				Shared/Utils/Lottie.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
 			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
@@ -175,8 +177,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				502CEAE22EABD37D007F38E3 /* OpenAI in Frameworks */,
-				500E39352EBAF669009955BF /* Lottie in Frameworks */,
+				50FCF1352EBB197D00B2C472 /* OpenAI in Frameworks */,
+				50FCF1412EBB19F900B2C472 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,7 +200,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				502CEAE42EABD3A3007F38E3 /* OpenAI in Frameworks */,
+				50FCF1372EBB198F00B2C472 /* OpenAI in Frameworks */,
+				50FCF13F2EBB19F400B2C472 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,7 +209,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50FDB6A72EB20700004304A3 /* OpenAI in Frameworks */,
+				50FCF1392EBB199A00B2C472 /* OpenAI in Frameworks */,
+				50FCF13D2EBB19E800B2C472 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,6 +225,7 @@
 				502CE8F62EA1F639007F38E3 /* SlangTranslatorUITests */,
 				502CE9112EA1F8F2007F38E3 /* ExplainSlangExtension */,
 				50FDB68E2EB200AC004304A3 /* KeyboardSlangExtension */,
+				50FCF13B2EBB19E800B2C472 /* Frameworks */,
 				502CE8DD2EA1F638007F38E3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -235,6 +240,13 @@
 				50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		50FCF13B2EBB19E800B2C472 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,8 +271,8 @@
 			);
 			name = SlangTranslator;
 			packageProductDependencies = (
-				502CEAE12EABD37D007F38E3 /* OpenAI */,
-				500E39342EBAF669009955BF /* Lottie */,
+				50FCF1342EBB197D00B2C472 /* OpenAI */,
+				50FCF1402EBB19F900B2C472 /* Lottie */,
 			);
 			productName = SlangTranslator;
 			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
@@ -329,7 +341,8 @@
 			);
 			name = ExplainSlangExtension;
 			packageProductDependencies = (
-				502CEAE32EABD3A3007F38E3 /* OpenAI */,
+				50FCF1362EBB198F00B2C472 /* OpenAI */,
+				50FCF13E2EBB19F400B2C472 /* Lottie */,
 			);
 			productName = ExplainSlangExtension;
 			productReference = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */;
@@ -352,7 +365,8 @@
 			);
 			name = KeyboardSlangExtension;
 			packageProductDependencies = (
-				50FDB6A62EB20700004304A3 /* OpenAI */,
+				50FCF1382EBB199A00B2C472 /* OpenAI */,
+				50FCF13C2EBB19E800B2C472 /* Lottie */,
 			);
 			productName = KeyboardSlangExtension;
 			productReference = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */;
@@ -396,9 +410,9 @@
 			mainGroup = 502CE8D32EA1F638007F38E3;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */,
-				500E39332EBAF669009955BF /* XCRemoteSwiftPackageReference "lottie-spm" */,
 				500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */,
+				50FCF13A2EBB19BD00B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 502CE8DD2EA1F638007F38E3 /* Products */;
@@ -976,14 +990,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		500E39332EBAF669009955BF /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.5.2;
-			};
-		};
 		500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
@@ -992,36 +998,54 @@
 				minimumVersion = 4.5.2;
 			};
 		};
-		502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+		50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MacPaw/OpenAI.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.4.6;
+				minimumVersion = 0.4.7;
+			};
+		};
+		50FCF13A2EBB19BD00B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		500E39342EBAF669009955BF /* Lottie */ = {
+		50FCF1342EBB197D00B2C472 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 500E39332EBAF669009955BF /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			package = 50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+		50FCF1362EBB198F00B2C472 /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+		50FCF1382EBB199A00B2C472 /* OpenAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+		50FCF13C2EBB19E800B2C472 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
 		};
-		502CEAE12EABD37D007F38E3 /* OpenAI */ = {
+		50FCF13E2EBB19F400B2C472 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */;
-			productName = OpenAI;
+			package = 500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
-		502CEAE32EABD3A3007F38E3 /* OpenAI */ = {
+		50FCF1402EBB19F900B2C472 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */;
-			productName = OpenAI;
-		};
-		50FDB6A62EB20700004304A3 /* OpenAI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */;
-			productName = OpenAI;
+			package = 500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

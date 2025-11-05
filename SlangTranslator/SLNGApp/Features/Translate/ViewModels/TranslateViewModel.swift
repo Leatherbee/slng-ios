@@ -112,7 +112,20 @@ final class TranslateViewModel: ObservableObject {
         isDetectedSlangShown = false
         isExpanded = false
         slangDetected.removeAll()
-        slangData.removeAll() // Clear slang data
+        slangData.removeAll()
+        result = nil
+        isLoading = false
+        errorMessage = nil
+    }
+    
+    func editText(text: String) {
+        inputText = text
+        translatedText = nil
+        isTranslated = false
+        isDetectedSlangShown = false
+        isExpanded = false
+        slangDetected.removeAll()
+        slangData.removeAll()
         result = nil
         isLoading = false
         errorMessage = nil
