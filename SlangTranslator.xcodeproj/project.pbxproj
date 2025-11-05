@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		500E39352EBAF669009955BF /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 500E39342EBAF669009955BF /* Lottie */; };
 		502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		502CEAE22EABD37D007F38E3 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 502CEAE12EABD37D007F38E3 /* OpenAI */; };
 		502CEAE42EABD3A3007F38E3 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 502CEAE32EABD3A3007F38E3 /* OpenAI */; };
@@ -86,6 +87,7 @@
 				Shared/Core/Repositories/SlangRepository.swift,
 				Shared/Core/Repositories/TranslationRepository.swift,
 				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
+				Shared/Core/Utils/Lottie.swift,
 				Shared/Core/Utils/SharedModelContainer.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
@@ -121,6 +123,7 @@
 				Shared/Core/Repositories/SlangRepository.swift,
 				Shared/Core/Repositories/TranslationRepository.swift,
 				Shared/Core/UseCases/TranslateSentenceUseCase.swift,
+				Shared/Core/Utils/Lottie.swift,
 				Shared/Core/Utils/SharedModelContainer.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
@@ -173,6 +176,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				502CEAE22EABD37D007F38E3 /* OpenAI in Frameworks */,
+				500E39352EBAF669009955BF /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +260,7 @@
 			name = SlangTranslator;
 			packageProductDependencies = (
 				502CEAE12EABD37D007F38E3 /* OpenAI */,
+				500E39342EBAF669009955BF /* Lottie */,
 			);
 			productName = SlangTranslator;
 			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
@@ -392,6 +397,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */,
+				500E39332EBAF669009955BF /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 502CE8DD2EA1F638007F38E3 /* Products */;
@@ -969,6 +976,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		500E39332EBAF669009955BF /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
+		500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
 		502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MacPaw/OpenAI.git";
@@ -980,6 +1003,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		500E39342EBAF669009955BF /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 500E39332EBAF669009955BF /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
 		502CEAE12EABD37D007F38E3 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 502CEAE02EABD37D007F38E3 /* XCRemoteSwiftPackageReference "OpenAI" */;

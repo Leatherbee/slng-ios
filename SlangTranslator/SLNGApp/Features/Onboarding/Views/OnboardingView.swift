@@ -12,7 +12,8 @@ struct OnboardingView: View {
     @State var isSecondPage: Bool = true
     @State var pageNumber: Int = 1
     @State var trialKeyboardText: String = ""
-    
+    @AppStorage("hasSetupKeyboard") private var hasSetupKeyboard = false
+
     @FocusState private var focusedField: Bool
     
     var body: some View {
@@ -27,7 +28,15 @@ struct OnboardingView: View {
         }
         else if pageNumber==4{
             KeyboardView {
-                withAnimation{pageNumber=5}
+                // Callback dari KeyboardView ketika user kembali dari Settings
+                // Cek apakah keyboard sudah diaktifkan
+                if hasSetupKeyboard {
+                    withAnimation {
+                        pageNumber = 5
+                    }
+                } else {
+                    print("Keyboard belum diaktifkan di Settings.")
+                }
             }
         }
         else if pageNumber==5{
@@ -158,7 +167,7 @@ struct OnboardingView: View {
                 Image("OnBoardingIcon")
             },
             pageNumber: $pageNumber,
-            onBoardingTitle: "You’re all set",
+            onBoardingTitle: "You're all set",
             onBoardingContent: "Explore slang and abbreviations. Type to see what they mean.",
         )
     }

@@ -77,28 +77,23 @@ final class SlangKeyboardViewModel: ObservableObject {
     // MARK: - Actions
     func toggleShift() {
         if showNumber {
-            // Jika sedang mode angka → toggle simbol
             toggleSymbol()
         } else {
-            // Jika huruf → toggle kapital
             isShifted.toggle()
         }
     }
     
     func toggleNumber() {
         if showNumber || showNumbersShifted {
-            // Kembali ke huruf
             showNumber = false
             showNumbersShifted = false
         } else {
-            // Masuk ke mode angka
             showNumber = true
             showNumbersShifted = false
         }
     }
     
     func toggleSymbol() {
-        // Toggle antara angka dan simbol
         showNumbersShifted.toggle()
     }
     
@@ -114,42 +109,28 @@ final class SlangKeyboardViewModel: ObservableObject {
     func translateFromClipboard() async {
         guard let clipboardText = UIPasteboard.general.string?.trimmingCharacters(in: .whitespacesAndNewlines),
               !clipboardText.isEmpty else {
-            translationError = "Clipboard is empty."
+            self.translationError = "Clipboard is empty."
             return
         }
         
-        // Reset state
-        isTranslating = true
-        translationError = nil
-        showTranslationPopup = false
-        translatedText = ""
-        detectedSlangs.removeAll()
+        self.translationError = nil
+        self.translatedText = ""
+        self.detectedSlangs.removeAll()
         
         do {
-            let result = try await useCase.execute(clipboardText)
+            let result = try await Task.detached(priority: .userInitiated) { [useCase] in
+                try await useCase.execute(clipboardText)
+            }.value
+            
             self.result = result
+            self.translatedText = result.translation.englishTranslation
+            self.detectedSlangs = result.detectedSlangs
             
-            let translation = result.translation
-            let slangs = result.detectedSlangs
-            
-            self.translatedText = translation.englishTranslation
-            self.detectedSlangs = slangs
-            
-            if !slangs.isEmpty {
-                self.slangText = slangs.map { $0.slang }.joined(separator: "\n")
-                self.translationEN = slangs.map { $0.translationEN }.joined(separator: "\n")
-                self.contextEn = slangs.map { $0.contextEN }.joined(separator: "\n\n")
-                self.exampleID = slangs.map { $0.exampleID }.joined(separator: "\n\n")
-                self.exampleEN = slangs.map { $0.exampleEN }.joined(separator: "\n\n")
-                self.showTranslationPopup = true
-            } else {
+            if result.detectedSlangs.isEmpty {
                 self.translationError = "No slang detected."
             }
         } catch {
             self.translationError = error.localizedDescription
         }
-        
-        isTranslating = false
     }
 }
-
