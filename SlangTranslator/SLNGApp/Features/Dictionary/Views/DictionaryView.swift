@@ -22,30 +22,45 @@ struct DictionaryView: View {
     private let indexWord = "abcdefghijklmnopqrstuvwxyz"
     
     var body: some View {
-        VStack(spacing: 0){
-          
-            VStack {
-                HStack(alignment: .center) {
-                    slangPickerView()
-                    alphabetSidebar
+        ZStack(alignment: .topLeading){
+            VStack(spacing: 0){
+              
+                VStack {
+                    HStack(alignment: .center) {
+                        slangPickerView()
+                        alphabetSidebar
+                    }
+                    
                 }
                 
-            }
-            
-            VStack {
-                VStack{
-                    searchBar
+                VStack {
+                    VStack{
+                        searchBar
+                            .keyboardAdaptive()
+                    }
+                    .background(AppColor.Background.primary)
+                    .padding(.top, -200)
+                    
                 }
-                .background(AppColor.Background.primary)
-                .padding(.top, -200)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.clear)
                 
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(.clear)
-            
+            .background(AppColor.Background.primary)
+            VStack{
+                Text(activeLetter) .font(.system(size: 64, design: .serif))
+                   
+                    .foregroundColor(AppColor.Text.secondary)
+                    .id(activeLetter)
+                    .transition(.opacity.combined(with: .scale))
+                    .animation(.easeInOut(duration: 0.25), value: activeLetter)
+            }
+            .padding(.top, 150)
+            .padding(.leading)
+          
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppColor.Background.primary)
+        
   
     }
 }
@@ -208,7 +223,7 @@ struct LargeWheelPicker: View {
                 }
             }
         }
-        .frame(height: 800)
+        .frame(height: 700)
     }
     
     private func updateSelection(geometry: GeometryProxy) {
@@ -243,17 +258,17 @@ struct LargeWheelPicker: View {
             let dynamicHeight: CGFloat = {
                 switch scale {
                 case ..<0.6:
-                    return 120
+                    return 0
                 case 0.6..<0.7:
-                    return 120
+                    return 0
                 case 0.7..<0.9:
-                    return 120
+                    return 0
                 default:
-                    return 120
+                    return 0
                 }
             }()
             
-            if distance < 500 {
+            if distance < 400 {
                 Button {
                     if isFocused {
                         if let slangData = viewModel.getSlang(at: index) {
@@ -271,13 +286,12 @@ struct LargeWheelPicker: View {
                         Text(data[index])
                             .font(.system(size: {
                                 switch scale {
-                                case ...0.6: return 38
-                                case 0.61...0.7: return 40
-                                case 0.8...0.9: return 48
-                                default: return 64
+                                case ...0.6: return 33
+                                case 0.61...0.7: return 34
+                                case 0.8...0.9: return 38
+                                default: return 48
                                 }
                             }(), weight: .medium, design: .serif))
-                            .scaleEffect(scale)
                             .opacity(opacity)
                             .foregroundColor(AppColor.Text.primary)
                             .lineLimit(1)
