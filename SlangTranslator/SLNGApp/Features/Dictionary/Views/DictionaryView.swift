@@ -39,7 +39,7 @@ struct DictionaryView: View {
                             .keyboardAdaptive()
                     }
                     .background(AppColor.Background.primary)
-                    .padding(.top, -200)
+                    .padding(.top, -220)
                     
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
