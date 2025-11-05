@@ -60,7 +60,6 @@ final class DictionaryViewModel: ObservableObject {
             exampleEN: s.exampleEN,
             sentiment: s.sentiment
         )
-        print(filteredSlangs)
     }
 
     func isLetterActive(_ letter: String) -> Bool {
@@ -111,4 +110,3 @@ final class DictionaryViewModel: ObservableObject {
         }
     }
 }
-
