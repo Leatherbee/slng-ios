@@ -50,7 +50,7 @@ extension Router {
         case .mainTab:
             MainTabbedView()
         case .onboarding:
-            Text("Onboarding View")
+            OnboardingView()
         }
     }
 }

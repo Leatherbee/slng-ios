@@ -30,6 +30,14 @@ struct SlangTranslatorApp: App {
                         .navigationDestination(for: Route.self) { route in
                             router.destination(for: route)
                         }
+                        .onAppear {
+                            // Decide initial route based on onboarding flag
+                            router.root = hasOnboarded ? .mainTab : .onboarding
+                        }
+                        .onChange(of: hasOnboarded) { oldValue, newValue in
+                            // When onboarding completes, switch root to main tab
+                            router.root = newValue ? .mainTab : .onboarding
+                        }
                 }
             }
         }
