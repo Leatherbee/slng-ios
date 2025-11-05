@@ -9,7 +9,7 @@ import SwiftUI
 import Lottie
 
 struct SetupKeyboardView: View {
-    @AppStorage("hasSetupKeyboard") private var hasSetupKeyboard: Bool = false
+    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
     var onReturnFromSettings: () -> Void
 
     var body: some View {

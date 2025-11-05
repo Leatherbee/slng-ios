@@ -9,7 +9,7 @@ import SwiftUI
 
 struct KeyboardView: View {
     var onReturnFromSettings: () -> Void
-    @AppStorage("hasSetupKeyboard") private var hasSetupKeyboard: Bool = false
+    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
     var body: some View {
         if hasSetupKeyboard {
             KeyboardSettingView()

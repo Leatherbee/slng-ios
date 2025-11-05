@@ -178,7 +178,7 @@ struct KeyRowView: View {
                 vm.toggleShift()
             }
         }
-        .simultaneousGesture(TapGesture(count: 2).onEnded {
+        .highPriorityGesture(TapGesture(count: 2).onEnded {
             if !(vm.showNumbersShifted || vm.showNumber) {
                 vm.setCapsLock(on: !vm.isCapsLockOn)
             }

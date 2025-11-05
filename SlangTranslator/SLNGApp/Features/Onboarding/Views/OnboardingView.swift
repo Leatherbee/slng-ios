@@ -10,38 +10,56 @@ import SwiftUI
 struct OnboardingView: View {
     @Environment(\.colorScheme) var colorScheme
     @State var isSecondPage: Bool = true
-    @State var pageNumber: Int = 1
+    @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 1
     @State var trialKeyboardText: String = ""
-    @AppStorage("hasSetupKeyboard") private var hasSetupKeyboard = false
+    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
 
     @FocusState private var focusedField: Bool
     
     var body: some View {
-        if pageNumber==1 {
-            firstPage
-        }
-        else if pageNumber==2{
-            secondPage
-        }
-        else if pageNumber==3{
-            thirdPage
-        }
-        else if pageNumber==4{
-            KeyboardView {
-                if hasSetupKeyboard {
-                    withAnimation {
-                        pageNumber = 5
+        Group {
+            if pageNumber==1 {
+                firstPage
+            }
+            else if pageNumber==2{
+                secondPage
+            }
+            else if pageNumber==3{
+                thirdPage
+            }
+            else if pageNumber==4{
+                KeyboardView {
+                    if hasSetupKeyboard {
+                        withAnimation {
+                            pageNumber = 5
+                        }
+                    } else {
+                        print("Keyboard belum diaktifkan di Settings.")
                     }
-                } else {
-                    print("Keyboard belum diaktifkan di Settings.")
                 }
             }
+            else if pageNumber==5{
+                fifthPage
+            }
+            else if pageNumber==6{
+                sixthPage
+            }
         }
-        else if pageNumber==5{
-            fifthPage
+        .onAppear {
+            // If the keyboard has already been set up, fast-forward to the test page.
+            if hasSetupKeyboard && pageNumber < 5 {
+                pageNumber = 5
+            } else if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") && pageNumber < 5 {
+                // Fallback: if we returned from Settings and the view was recreated,
+                // mark setup as done and jump to test page.
+                hasSetupKeyboard = true
+                pageNumber = 5
+            }
         }
-        else if pageNumber==6{
-            sixthPage
+        .onChange(of: hasSetupKeyboard) { newValue in
+            if newValue && pageNumber < 5 {
+                pageNumber = 5
+            }
         }
     }
     
