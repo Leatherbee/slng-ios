@@ -409,7 +409,6 @@
 			packageReferences = (
 				500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */,
-				50FCF13A2EBB19BD00B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 502CE8DD2EA1F638007F38E3 /* Products */;
@@ -650,7 +649,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlangTranslator/Info.plist;
@@ -668,7 +667,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
+				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator;
 				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -694,7 +693,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlangTranslator/Info.plist;
@@ -712,7 +711,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
+				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator;
 				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -815,7 +814,7 @@
 				CODE_SIGN_ENTITLEMENTS = ExplainSlangExtension/ExplainSlangExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Explain Slang";
@@ -826,7 +825,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -844,7 +843,7 @@
 				CODE_SIGN_ENTITLEMENTS = ExplainSlangExtension/ExplainSlangExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Explain Slang";
@@ -855,7 +854,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -874,7 +873,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = KeyboardSlangExtension;
@@ -885,7 +884,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -904,7 +903,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = KeyboardSlangExtension;
@@ -915,7 +914,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1001,14 +1000,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.4.7;
-			};
-		};
-		50FCF13A2EBB19BD00B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.5.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
