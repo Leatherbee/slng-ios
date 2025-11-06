@@ -28,37 +28,40 @@ struct OnboardingView: View {
                 thirdPage
             }
             else if pageNumber==4{
+                fourthPage
+            }
+            else if pageNumber==5{
                 KeyboardView {
                     if hasSetupKeyboard {
                         withAnimation {
-                            pageNumber = 5
+                            pageNumber = 6
                         }
                     } else {
                         print("Keyboard belum diaktifkan di Settings.")
                     }
                 }
             }
-            else if pageNumber==5{
-                fifthPage
-            }
             else if pageNumber==6{
                 sixthPage
+            }
+            else if pageNumber==7{
+                seventhPage
             }
         }
         .onAppear {
             // If the keyboard has already been set up, fast-forward to the test page.
-            if hasSetupKeyboard && pageNumber < 5 {
-                pageNumber = 5
-            } else if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") && pageNumber < 5 {
+            if hasSetupKeyboard && pageNumber < 6 {
+                pageNumber = 6
+            } else if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") && pageNumber < 6 {
                 // Fallback: if we returned from Settings and the view was recreated,
                 // mark setup as done and jump to test page.
                 hasSetupKeyboard = true
-                pageNumber = 5
+                pageNumber = 6
             }
         }
         .onChange(of: hasSetupKeyboard) { newValue in
-            if newValue && pageNumber < 5 {
-                pageNumber = 5
+            if newValue && pageNumber < 6 {
+                pageNumber = 6
             }
         }
     }
@@ -111,19 +114,23 @@ struct OnboardingView: View {
     
     private var secondPage: some View {
         OnBoardingPage(
-            content: {Image(colorScheme == .light ?"OnBoardingIcon" : "OnBoardingIconDark")},
+            content: {
+                Image(colorScheme == .light ?"SecondOnboardingIllustration" : "SecondOnboardingIllustrationDark")
+                    .resizable()
+                    .frame(width: 182, height: 288)
+            },
             pageNumber: $pageNumber,
-            onBoardingTitle: "Stay fluent in the ever-changing slang world",
-            onBoardingContent: "Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk.",
+            onBoardingTitle: "Everyday Indonesian Translator",
+            onBoardingContent: "Translate indonesian sentences, even when they mix slang, abbreviation, and everyday expressions.",
         )
     }
     
     private var thirdPage: some View {
         OnBoardingPage(
             content: {
-                Image("OnBoardingIcon2")
+                Image(colorScheme == .light ? "ThirdOnboardingIllustration" : "ThirdOnboardingIllustrationDark")
                     .resizable()
-                    .frame(width: 300,height: 340)
+                    .frame(width: 318, height: 339)
             },
             pageNumber: $pageNumber,
             onBoardingTitle: "Translate as you chat",
@@ -131,7 +138,20 @@ struct OnboardingView: View {
         )
     }
     
-    private var fifthPage: some View{
+    private var fourthPage: some View {
+        OnBoardingPage(
+            content: {
+                Image(colorScheme == .light ? "FourthOnboardingIllustration" : "FourthOnboardingIllustrationDark")
+                    .resizable()
+                    .frame(width: 339, height: 262)
+            },
+            pageNumber: $pageNumber,
+            onBoardingTitle: "Stay fluent in the ever-changing slang world",
+            onBoardingContent: "Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk.",
+        )
+    }
+    
+    private var sixthPage: some View{
         VStack{
             VStack(spacing: 16){
                 VStack{
@@ -179,10 +199,10 @@ struct OnboardingView: View {
         }
     }
     
-    private var sixthPage: some View {
+    private var seventhPage: some View {
         OnBoardingPage(
             content: {
-                Image("OnBoardingIcon")
+                Image("")
             },
             pageNumber: $pageNumber,
             onBoardingTitle: "You're all set",
