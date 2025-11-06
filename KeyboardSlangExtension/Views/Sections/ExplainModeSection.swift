@@ -22,10 +22,11 @@ struct ExplainModeSection: View {
                 if vm.isTranslating {
                     loadingView
                 } else {
-                    ScrollView {
+                    ScrollView(.vertical, showsIndicators: false) {
                         ExplainContentView(vm: vm, style: style)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal, 12)
+                            .padding(.bottom, 12)
                     }
                     .transition(.opacity)
                 }
@@ -69,14 +70,33 @@ struct ExplainModeSection: View {
     }
 }
 
+// MARK: - Explain Content
+
 struct ExplainContentView: View {
     @ObservedObject var vm: SlangKeyboardViewModel
     let style: KeyStyle
     
     @Environment(\.colorScheme) private var scheme
     
+    // MARK: Dynamic Font Scaling
+    private func dynamicFont(for text: String, baseSize: CGFloat = 22) -> Font {
+        let length = text.count
+        switch length {
+        case 0..<50:
+            return .system(size: baseSize + 4, weight: .bold, design: .serif)
+        case 50..<100:
+            return .system(size: baseSize + 2, weight: .bold, design: .serif)
+        case 100..<200:
+            return .system(size: baseSize, weight: .bold, design: .serif)
+        case 200..<400:
+            return .system(size: baseSize - 2, weight: .bold, design: .serif)
+        default:
+            return .system(size: baseSize - 4, weight: .bold, design: .serif)
+        }
+    }
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 8) {
             originalTextSection
             Divider()
                 .padding(.horizontal, 6)
@@ -84,33 +104,49 @@ struct ExplainContentView: View {
             translatedTextSection
             slangCountHeader
             slangListOrEmptyState
-            Spacer()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    // MARK: Original Text
+    
+    private var originalTextSection: some View {
+        let text = vm.getClipboardText()
+        return Text(text)
+            .font(dynamicFont(for: text))
+            .multilineTextAlignment(.leading)
+            .foregroundStyle(.primary)
+            .textSelection(.enabled)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.horizontal, 6)
+            .padding(.bottom, 4)
+    }
+    
+    // MARK: Translated Text
+    
+    private var translatedTextSection: some View {
+        let text = vm.translatedText
+        return Group {
+            if text.isEmpty {
+                Text("No translation available")
+                    .font(.system(.callout, design: .serif))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 6)
+                    .padding(.bottom, 8)
+            } else {
+                Text(text)
+                    .font(dynamicFont(for: text, baseSize: 20))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.leading)
+                    .textSelection(.enabled)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 6)
+                    .padding(.bottom, 8)
+            }
         }
     }
     
-    private var originalTextSection: some View {
-        Text(vm.getClipboardText())
-            .font(.system(.title, design: .serif, weight: .bold))
-            .lineLimit(4)
-            .minimumScaleFactor(0.6)
-            .allowsTightening(true)
-            .multilineTextAlignment(.leading)
-            .foregroundStyle(.primary)
-            .padding(.horizontal, 6)
-            .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    private var translatedTextSection: some View {
-        Text(vm.translatedText)
-            .font(.system(.title, design: .serif, weight: .bold))
-            .foregroundStyle(.secondary)
-            .lineLimit(4)
-            .minimumScaleFactor(0.6)
-            .allowsTightening(true)
-            .multilineTextAlignment(.leading)
-            .padding(.horizontal, 6)
-            .frame(maxWidth: .infinity, alignment: .leading)
-    }
+    // MARK: Slang Count
     
     private var slangCountHeader: some View {
         Text("Slang detected (\(vm.detectedSlangs.count))")
@@ -118,8 +154,10 @@ struct ExplainContentView: View {
             .font(.system(.body, design: .default, weight: .regular))
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.leading, 6)
-            .padding(.vertical, 14)
+            .padding(.vertical, 8)
     }
+    
+    // MARK: Slang List or Empty
     
     @ViewBuilder
     private var slangListOrEmptyState: some View {
@@ -131,27 +169,24 @@ struct ExplainContentView: View {
     }
     
     private var emptySlangState: some View {
-        VStack {
-            Spacer()
+        VStack(spacing: 10) {
             Image(systemName: "questionmark.circle")
                 .resizable()
-                .frame(width: 36, height: 36)
+                .frame(width: 32, height: 32)
                 .foregroundStyle(.secondary)
             
             Text("No slang detected")
                 .font(.system(.title3, design: .serif, weight: .semibold))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-                .frame(maxWidth: .infinity)
-                .padding(.bottom, 20)
-                .transition(.opacity.combined(with: .move(edge: .bottom)))
-                .animation(.easeInOut(duration: 0.4), value: vm.slangText)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 20)
+        .transition(.opacity.combined(with: .move(edge: .bottom)))
     }
     
     private var slangList: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 8) {
             ForEach(vm.detectedSlangs, id: \.id) { slang in
                 KeyboardSlangCardView(slangData: slang)
                 Divider()

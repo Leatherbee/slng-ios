@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct OnboardingView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -28,18 +29,18 @@ struct OnboardingView: View {
                 thirdPage
             }
             else if pageNumber==4{
+                fourthPage
+            }
+            else if pageNumber==5{
                 KeyboardView {
                     if hasSetupKeyboard {
                         withAnimation {
-                            pageNumber = 5
+                            pageNumber = 6
                         }
                     } else {
                         print("Keyboard belum diaktifkan di Settings.")
                     }
                 }
-            }
-            else if pageNumber==5{
-                fifthPage
             }
             else if pageNumber==6{
                 sixthPage
@@ -47,18 +48,18 @@ struct OnboardingView: View {
         }
         .onAppear {
             // If the keyboard has already been set up, fast-forward to the test page.
-            if hasSetupKeyboard && pageNumber < 5 {
-                pageNumber = 5
-            } else if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") && pageNumber < 5 {
+            if hasSetupKeyboard && pageNumber < 6 {
+                pageNumber = 6
+            } else if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") && pageNumber < 6 {
                 // Fallback: if we returned from Settings and the view was recreated,
                 // mark setup as done and jump to test page.
                 hasSetupKeyboard = true
-                pageNumber = 5
+                pageNumber = 6
             }
         }
-        .onChange(of: hasSetupKeyboard) { newValue in
-            if newValue && pageNumber < 5 {
-                pageNumber = 5
+        .onChange(of: hasSetupKeyboard) { oldValue, newValue in
+            if newValue && pageNumber < 6 {
+                pageNumber = 6
             }
         }
     }
@@ -111,19 +112,25 @@ struct OnboardingView: View {
     
     private var secondPage: some View {
         OnBoardingPage(
-            content: {Image(colorScheme == .light ?"OnBoardingIcon" : "OnBoardingIconDark")},
+            content: {
+                Image(colorScheme == .light ?"SecondOnboardingIllustration" : "SecondOnboardingIllustrationDark")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 182, maxHeight: 288)
+            },
             pageNumber: $pageNumber,
-            onBoardingTitle: "Stay fluent in the ever-changing slang world",
-            onBoardingContent: "Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk.",
+            onBoardingTitle: "Everyday Indonesian Translator",
+            onBoardingContent: "Translate indonesian sentences, even when they mix slang, abbreviation, and everyday expressions.",
         )
     }
     
     private var thirdPage: some View {
         OnBoardingPage(
             content: {
-                Image("OnBoardingIcon2")
+                Image(colorScheme == .light ? "ThirdOnboardingIllustration" : "ThirdOnboardingIllustrationDark")
                     .resizable()
-                    .frame(width: 300,height: 340)
+                    .scaledToFit()
+                    .frame(maxWidth: 318, maxHeight: 339)
             },
             pageNumber: $pageNumber,
             onBoardingTitle: "Translate as you chat",
@@ -131,21 +138,38 @@ struct OnboardingView: View {
         )
     }
     
-    private var fifthPage: some View{
-        VStack{
-            VStack(spacing: 16){
-                VStack{
-                    VStack(alignment: .center, spacing:16){
-                        Text("Switch to SLNG")
-                            .font(.system(.largeTitle, design: .serif, weight: .bold))
-                        Text("Tap and hold 􀆪 key below. Select SLNG Keyboard.")
-                            .font(.subheadline)
-                            .foregroundColor(AppColor.Text.primary)
-                    }
-                    Image("OnBoardingSwitchKeyboard")
-                        .frame(maxWidth: 312, maxHeight: 268)
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
+    private var fourthPage: some View {
+        OnBoardingPage(
+            content: {
+                Image(colorScheme == .light ? "FourthOnboardingIllustration" : "FourthOnboardingIllustrationDark")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 339, maxHeight: 262)
+            },
+            pageNumber: $pageNumber,
+            onBoardingTitle: "Stay fluent in the ever-changing slang world",
+            onBoardingContent: "Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk.",
+        )
+    }
+    
+    private var sixthPage: some View{
+        ZStack(alignment: .bottom) {
+            // Main content
+            VStack(spacing: 0) {
+                VStack(alignment: .center, spacing: 16) {
+                    let icon = Image(systemName: "globe")
+                    Text("Switch to SLNG")
+                        .font(.system(.largeTitle, design: .serif, weight: .bold))
+                    Text("Tap and hold \(icon) key below. Select SLNG Keyboard.")
+                        .font(.subheadline)
+                        .foregroundColor(AppColor.Text.primary)
+                        .multilineTextAlignment(.center)
                 }
+                .padding(.top, 12)
+                
+                LottieView(animation: .named("keyboard"))
+                    .looping()
+                    .frame(width: 390, height: 340)
                 
                 TextField("Write Something", text: $trialKeyboardText)
                     .focused($focusedField)
@@ -153,41 +177,33 @@ struct OnboardingView: View {
                     .tint(.black)
                     .textFieldStyle(RoundedTextFieldStyle())
                     .frame(minHeight: 62)
+                    .padding(.horizontal, 32)
                 
+                Spacer()
+                Spacer()
+                Spacer()
+                Spacer()
             }
-            .padding()
-            .padding(.horizontal, 10)
             
-            Spacer()
             Button {
-                pageNumber+=1
+                @AppStorage("hasOnboarded") var hasOnboarded = false
+                hasOnboarded = true
             } label: {
                 HStack {
                     Text("Continue")
                     Image(systemName: "arrow.right")
                 }
-                    .padding(.vertical, 18)
-                    .font(Font.body.bold())
-                    .frame(maxWidth: .infinity, minHeight: 60)
-                    .foregroundColor(.onboardingTextPrimary)
-                    .background(
-                        AppColor.Button.primary
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 30))
+                .padding(.vertical, 18)
+                .font(Font.body.bold())
+                .frame(maxWidth: .infinity, minHeight: 60)
+                .foregroundColor(.onboardingTextPrimary)
+                .background(AppColor.Button.primary)
+                .clipShape(RoundedRectangle(cornerRadius: 30))
             }
             .padding(.horizontal, 33)
+            .padding(.bottom, 33)
         }
-    }
-    
-    private var sixthPage: some View {
-        OnBoardingPage(
-            content: {
-                Image("OnBoardingIcon")
-            },
-            pageNumber: $pageNumber,
-            onBoardingTitle: "You're all set",
-            onBoardingContent: "Explore slang and abbreviations. Type to see what they mean.",
-        )
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
 

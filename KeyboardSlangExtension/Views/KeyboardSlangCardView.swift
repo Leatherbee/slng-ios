@@ -18,6 +18,7 @@ struct KeyboardSlangCardView: View {
                 Text(slangData.slang.capitalized)
                     .font(.system(.title, design: .serif, weight: .regular))
                     .foregroundColor(.primary)
+                    .textSelection(.enabled)
                 
                 Spacer()
                 
@@ -38,33 +39,40 @@ struct KeyboardSlangCardView: View {
                     Text(slangData.translationEN)
                         .font(.system(.body, design: .serif, weight: .bold))
                         .foregroundStyle(.primary)
+                        .textSelection(.enabled)
                     
                     Text("Context")
                         .font(.system(.body, design: .serif, weight: .semibold))
                         .padding(.top, 10)
                         .italic()
                         .foregroundStyle(.primary)
+                        .textSelection(.enabled)
                     
                     Text(slangData.contextEN)
                         .font(.system(.body, design: .serif, weight: .regular))
                         .foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true)
+                        .textSelection(.enabled)
                     
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Example")
                             .font(.system(.body, design: .serif, weight: .semibold))
                             .italic()
                             .foregroundStyle(.primary)
+                            .textSelection(.enabled)
                         
                         VStack(alignment: .leading, spacing: 4) {
                             Text("“\(slangData.exampleID)”")
                                 .font(.system(.body, design: .serif))
                                 .italic()
                                 .foregroundColor(.primary)
+                                .textSelection(.enabled)
+                            
                             Text("“\(slangData.exampleEN)”")
                                 .font(.system(.body, design: .serif))
                                 .italic()
                                 .foregroundColor(.secondary)
+                                .textSelection(.enabled)
                         }
                     }
                     .padding(.top, 6)
@@ -92,7 +100,7 @@ struct KeyboardSlangCardView: View {
         let generator = UIImpactFeedbackGenerator(style: isExpanded ? .light : .medium)
         generator.prepare()
         
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.65, blendDuration: 0.2)) {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.80, blendDuration: 0.2)) {
             isExpanded.toggle()
         }
         

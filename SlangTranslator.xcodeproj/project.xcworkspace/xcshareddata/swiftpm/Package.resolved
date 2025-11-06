@@ -1,12 +1,12 @@
 {
-  "originHash" : "1e30cbfa0e3da351d52f73e6ecc4121b94785f620304c03a2f3606c18449f434",
+  "originHash" : "47f1670335791a36d0c161db72383a09026ffa859e16e2a873949d41f424a36f",
   "pins" : [
     {
-      "identity" : "lottie-ios",
+      "identity" : "lottie-spm",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/airbnb/lottie-ios.git",
+      "location" : "https://github.com/airbnb/lottie-spm.git",
       "state" : {
-        "revision" : "a004050748dc197c56256a14dca49a035d74726c",
+        "revision" : "04f2fd18cc9404a0a0917265a449002674f24ec9",
         "version" : "4.5.2"
       }
     },

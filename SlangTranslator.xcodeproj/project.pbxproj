@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		50FCF1352EBB197D00B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF1342EBB197D00B2C472 /* OpenAI */; };
-		50FCF1372EBB198F00B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF1362EBB198F00B2C472 /* OpenAI */; };
-		50FCF1392EBB199A00B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF1382EBB199A00B2C472 /* OpenAI */; };
-		50FCF13D2EBB19E800B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF13C2EBB19E800B2C472 /* Lottie */; };
-		50FCF13F2EBB19F400B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF13E2EBB19F400B2C472 /* Lottie */; };
-		50FCF1412EBB19F900B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF1402EBB19F900B2C472 /* Lottie */; };
+		50FCF7962EBCFD5700B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7952EBCFD5700B2C472 /* OpenAI */; };
+		50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7982EBCFD6900B2C472 /* Lottie */; };
+		50FCF79B2EBCFD7E00B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF79A2EBCFD7E00B2C472 /* OpenAI */; };
+		50FCF79D2EBCFD7E00B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF79C2EBCFD7E00B2C472 /* Lottie */; };
+		50FCF79F2EBCFD8300B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF79E2EBCFD8300B2C472 /* OpenAI */; };
+		50FCF7A12EBCFD8300B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7A02EBCFD8300B2C472 /* Lottie */; };
 		50FDB6942EB200AC004304A3 /* KeyboardSlangExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -174,8 +174,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50FCF1352EBB197D00B2C472 /* OpenAI in Frameworks */,
-				50FCF1412EBB19F900B2C472 /* Lottie in Frameworks */,
+				50FCF7962EBCFD5700B2C472 /* OpenAI in Frameworks */,
+				50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,8 +197,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50FCF1372EBB198F00B2C472 /* OpenAI in Frameworks */,
-				50FCF13F2EBB19F400B2C472 /* Lottie in Frameworks */,
+				50FCF79B2EBCFD7E00B2C472 /* OpenAI in Frameworks */,
+				50FCF79D2EBCFD7E00B2C472 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,8 +206,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50FCF1392EBB199A00B2C472 /* OpenAI in Frameworks */,
-				50FCF13D2EBB19E800B2C472 /* Lottie in Frameworks */,
+				50FCF79F2EBCFD8300B2C472 /* OpenAI in Frameworks */,
+				50FCF7A12EBCFD8300B2C472 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,8 +268,8 @@
 			);
 			name = SlangTranslator;
 			packageProductDependencies = (
-				50FCF1342EBB197D00B2C472 /* OpenAI */,
-				50FCF1402EBB19F900B2C472 /* Lottie */,
+				50FCF7952EBCFD5700B2C472 /* OpenAI */,
+				50FCF7982EBCFD6900B2C472 /* Lottie */,
 			);
 			productName = SlangTranslator;
 			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
@@ -338,8 +338,8 @@
 			);
 			name = ExplainSlangExtension;
 			packageProductDependencies = (
-				50FCF1362EBB198F00B2C472 /* OpenAI */,
-				50FCF13E2EBB19F400B2C472 /* Lottie */,
+				50FCF79A2EBCFD7E00B2C472 /* OpenAI */,
+				50FCF79C2EBCFD7E00B2C472 /* Lottie */,
 			);
 			productName = ExplainSlangExtension;
 			productReference = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */;
@@ -362,8 +362,8 @@
 			);
 			name = KeyboardSlangExtension;
 			packageProductDependencies = (
-				50FCF1382EBB199A00B2C472 /* OpenAI */,
-				50FCF13C2EBB19E800B2C472 /* Lottie */,
+				50FCF79E2EBCFD8300B2C472 /* OpenAI */,
+				50FCF7A02EBCFD8300B2C472 /* Lottie */,
 			);
 			productName = KeyboardSlangExtension;
 			productReference = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */;
@@ -407,8 +407,8 @@
 			mainGroup = 502CE8D32EA1F638007F38E3;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */,
-				50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */,
+				50FCF7942EBCFD5700B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */,
+				50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 502CE8DD2EA1F638007F38E3 /* Products */;
@@ -817,8 +817,9 @@
 				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Explain Slang";
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Share Sheet";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -829,11 +830,15 @@
 				PRODUCT_NAME = SLNGShareExtension;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -846,8 +851,9 @@
 				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Explain Slang";
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Share Sheet";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -858,11 +864,15 @@
 				PRODUCT_NAME = SLNGShareExtension;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -876,8 +886,9 @@
 				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = KeyboardSlangExtension;
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Keyboard";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -888,11 +899,15 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -906,8 +921,9 @@
 				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = KeyboardSlangExtension;
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Keyboard";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -918,11 +934,15 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -986,15 +1006,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.5.2;
-			};
-		};
-		50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
+		50FCF7942EBCFD5700B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MacPaw/OpenAI.git";
 			requirement = {
@@ -1002,37 +1014,45 @@
 				minimumVersion = 0.4.7;
 			};
 		};
+		50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		50FCF1342EBB197D00B2C472 /* OpenAI */ = {
+		50FCF7952EBCFD5700B2C472 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			package = 50FCF7942EBCFD5700B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */;
 			productName = OpenAI;
 		};
-		50FCF1362EBB198F00B2C472 /* OpenAI */ = {
+		50FCF7982EBCFD6900B2C472 /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */;
-			productName = OpenAI;
-		};
-		50FCF1382EBB199A00B2C472 /* OpenAI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 50FCF1332EBB197D00B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */;
-			productName = OpenAI;
-		};
-		50FCF13C2EBB19E800B2C472 /* Lottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			package = 50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
 		};
-		50FCF13E2EBB19F400B2C472 /* Lottie */ = {
+		50FCF79A2EBCFD7E00B2C472 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			package = 50FCF7942EBCFD5700B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+		50FCF79C2EBCFD7E00B2C472 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
 		};
-		50FCF1402EBB19F900B2C472 /* Lottie */ = {
+		50FCF79E2EBCFD8300B2C472 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 500E393A2EBAFAE8009955BF /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			package = 50FCF7942EBCFD5700B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */;
+			productName = OpenAI;
+		};
+		50FCF7A02EBCFD8300B2C472 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
