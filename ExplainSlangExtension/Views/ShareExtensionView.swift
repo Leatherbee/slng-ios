@@ -34,85 +34,80 @@ struct ShareExtensionView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                ScrollView {
-                    VStack(spacing: 20) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(sharedText)
-                                .font(.system(.largeTitle, design: .serif, weight: .bold))
-                                .lineLimit(6)
-                                .minimumScaleFactor(0.3)
-                                .allowsTightening(true)
-                                .multilineTextAlignment(.leading)
-                                .foregroundStyle(.primary)
-                                .padding(.horizontal, 6)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .textSelection(.enabled)
-                        }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    
+                    // Shared text
+                    Text(sharedText)
+                        .font(dynamicFontSize(for: sharedText))
+                        .foregroundStyle(.primary)
+                        .multilineTextAlignment(.leading)
+                        .textSelection(.enabled)
+                        .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal)
                         .padding(.top)
-                        
-                        if isTranslating {
-                            VStack(spacing: 16) {
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .fill(
-                                            LinearGradient(
-                                                colors: [.gray.opacity(0.15), .gray.opacity(0.05)],
-                                                startPoint: .topLeading,
-                                                endPoint: .bottomTrailing
-                                            )
+                    
+                    // Loading state
+                    if isTranslating {
+                        VStack(spacing: 16) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [.gray.opacity(0.15), .gray.opacity(0.05)],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
                                         )
-                                        .frame(width: 80, height: 80)
-                                        .overlay(
-                                            ProgressView()
-                                                .scaleEffect(1.4)
-                                                .tint(.accentColor)
-                                        )
-                                        .shadow(radius: 4, y: 2)
-                                        .transition(.opacity.combined(with: .scale))
-                                        .animation(.easeInOut(duration: 0.3), value: isTranslating)
-                                }
-                                
-                                VStack(spacing: 4) {
-                                    Text("Translating your text...")
-                                        .font(.headline)
-                                        .foregroundStyle(.primary)
-                                }
+                                    )
+                                    .frame(width: 80, height: 80)
+                                    .overlay(
+                                        ProgressView()
+                                            .scaleEffect(1.4)
+                                            .tint(.accentColor)
+                                    )
+                                    .shadow(radius: 4, y: 2)
+                                    .transition(.opacity.combined(with: .scale))
+                                    .animation(.easeInOut(duration: 0.3), value: isTranslating)
+                            }
+                            
+                            Text("Translating your text...")
+                                .font(.headline)
+                                .foregroundStyle(.primary)
                                 .transition(.opacity)
                                 .animation(.easeInOut(duration: 0.25), value: isTranslating)
-                            }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .padding(.top, 60)
-                        } else if let error = translationError {
-                            HStack {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundStyle(.yellow)
-                                Text("\(error)")
-                                    .foregroundColor(.red)
-                                    .padding(0.4)
-                            }
-                            .padding()
-                        } else if !translatedText.isEmpty {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Divider()
-                                    .frame(height: 1)
-                                    .overlay(AppColor.Stroke.color)
-                                    .padding(.horizontal, 6)
-                                
-                                Text(translatedText)
-                                    .font(.system(.largeTitle, design: .serif, weight: .bold))
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(6)
-                                    .minimumScaleFactor(0.2)
-                                    .allowsTightening(true)
-                                    .multilineTextAlignment(.leading)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 8)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .textSelection(.enabled)
-                            }
-                            .padding(.horizontal)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 60)
+                    }
+                    
+                    // Error state
+                    else if let error = translationError {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundStyle(.yellow)
+                            Text(error)
+                                .foregroundColor(.red)
+                                .padding(0.4)
+                        }
+                        .padding()
+                    }
+                    
+                    // Translated text + results
+                    else if !translatedText.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Divider()
+                                .frame(height: 1)
+                                .overlay(AppColor.Stroke.color)
+                                .padding(.horizontal)
+                            
+                            Text(translatedText)
+                                .font(dynamicFontSize(for: translatedText))
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.leading)
+                                .textSelection(.enabled)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.horizontal)
+                                .padding(.bottom, 8)
                             
                             if !detectedSlangs.isEmpty {
                                 VStack(alignment: .leading, spacing: 14) {
@@ -121,7 +116,10 @@ struct ShareExtensionView: View {
                                         .foregroundStyle(.primary)
                                     
                                     ForEach(detectedSlangs.indices, id: \.self) { index in
-                                        TranslateSlangCardView(slangData: detectedSlangs[index], backgroundColor: .clear)
+                                        TranslateSlangCardView(
+                                            slangData: detectedSlangs[index],
+                                            backgroundColor: .clear
+                                        )
                                     }
                                 }
                                 .padding(.horizontal, 16)
@@ -133,15 +131,16 @@ struct ShareExtensionView: View {
                                         .font(.system(size: 60))
                                         .foregroundStyle(.gray)
                                     Text("No slang detected")
-                                        .font(.headline)
+                                        .font(.system(.headline, design: .serif, weight: .regular))
                                         .foregroundStyle(.secondary)
                                 }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                                 .padding()
                             }
                         }
                     }
-                    .padding(.bottom)
                 }
+                .padding(.bottom)
             }
             .navigationTitle("Explanation")
             .navigationBarTitleDisplayMode(.inline)
@@ -154,18 +153,20 @@ struct ShareExtensionView: View {
                             .resizable()
                             .frame(width: 18, height: 18)
                             .foregroundStyle(.secondary)
-                        
                     }
                 }
             }
-            .scrollIndicators(.hidden)
+            .scrollIndicators(.visible)
         }
         .onAppear {
             let context = SharedModelContainer.shared.context
             let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
             let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
             let slangRepository = SlangRepositoryImpl()
-            let useCase = TranslateSentenceUseCaseImpl(translationRepository: translationRepository, slangRepository: slangRepository)
+            let useCase = TranslateSentenceUseCaseImpl(
+                translationRepository: translationRepository,
+                slangRepository: slangRepository
+            )
             viewModel = ShareTranslateViewModel(useCase: useCase)
             
             Task {
@@ -190,7 +191,9 @@ struct ShareExtensionView: View {
 
 #Preview {
     ShareExtensionView(
-        sharedText: "Gue lagi gabut nih, lu mau ngapain? Santuy aja deh",
+        sharedText: """
+        Bro, lo tau nggak, kemarin tuh gue literally capek banget sumpah...
+        """,
         onDismiss: {}
     )
 }

@@ -100,7 +100,7 @@ struct TranslateSlangCardView: View {
         let generator = UIImpactFeedbackGenerator(style: isExpanded ? .light : .medium)
         generator.prepare()
         
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.65, blendDuration: 0.2)) {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.80, blendDuration: 0.2)) {
             isExpanded.toggle()
         }
         
