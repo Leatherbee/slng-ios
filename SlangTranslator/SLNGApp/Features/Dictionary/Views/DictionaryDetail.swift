@@ -45,31 +45,32 @@ struct DictionaryDetail: View {
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(AppColor.Background.secondary)
-            VStack(spacing: 64){
-                Spacer()
-                VStack(spacing: 32){
-                    Text(slangData?.slang ?? "Tes")
-                        .font(.system(size: 64, design: .serif))
-                        .foregroundColor(AppColor.Text.primary)
-                    VStack(spacing: 24){
-                        Text(slangData?.translationEN ?? "Lorem ipsum dolor sit amet")
-                            .font(.system(size: 18, design: .serif))
+            
+            GeometryReader { geo in
+                VStack{
+                    VStack(spacing: 32){
+                        Text(slangData?.slang ?? "Tes")
+                            .font(.system(size: 64, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
-                            .multilineTextAlignment(.center)
-                            .lineLimit(nil)
-                        Text(slangData?.exampleEN ?? "Lorem ipsum")
-                            .font(.system(size: 20, design: .serif))
-                            .foregroundColor(AppColor.Text.primary)
-                            .multilineTextAlignment(.center)
-                            .lineLimit(nil)
+                        VStack(spacing: 24){
+                            Text(slangData?.translationEN ?? "Lorem ipsum dolor sit amet")
+                                .font(.system(size: 18, design: .serif))
+                                .foregroundColor(AppColor.Text.primary)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(nil)
+                            Text(slangData?.exampleEN ?? "Lorem ipsum")
+                                .font(.system(size: 20, design: .serif))
+                                .foregroundColor(AppColor.Text.primary)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(nil)
+                        }
                     }
                 }
-                Spacer()
-                
-                
+                .padding(.top ,geo.size.height * 0.20)
+                .frame(maxWidth: geo.size.width, maxHeight: geo.size.height, alignment: .top)
+               
             }
-            .padding(.horizontal, 31)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+           
             VStack{
                 Spacer()
                     .frame(height: 450)

@@ -186,6 +186,8 @@ extension DictionaryView {
        }
 }
 
+// Ganti LargeWheelPicker dan ScrollOffsetKey dengan versi ini
+
 struct LargeWheelPicker: View {
     @Binding var selection: Int
     let viewModel: DictionaryViewModel
@@ -193,6 +195,12 @@ struct LargeWheelPicker: View {
     let data: [String]
     @State private var audioPlayer: AVAudioPlayer?
     private let rowHeight: CGFloat = 80
+    private let spacing: CGFloat = 16
+    
+    // Cache posisi scroll (agar tidak hitung tiap frame)
+    @State private var lastOffset: CGFloat = 0
+    @State private var isUpdating = false
+    
     var body: some View {
         GeometryReader { geo in
             ScrollViewReader { proxy in
@@ -202,16 +210,28 @@ struct LargeWheelPicker: View {
                             .preference(key: ScrollOffsetKey.self, value: scrollGeo.frame(in: .global).minY)
                     }
                     .frame(height: 0)
-                    LazyVStack(spacing: 16) {
+                    
+                    LazyVStack(spacing: spacing) {
+                        // buffer atas
+                        ForEach(0..<3, id: \.self) { _ in
+                            Color.clear.frame(height: rowHeight)
+                        }
+                        
                         ForEach(data.indices, id: \.self) { index in
                             item(for: index, geometry: geo)
                                 .frame(height: rowHeight)
                                 .id(index)
                         }
+                        
+                        // buffer bawah
+                        ForEach(0..<3, id: \.self) { _ in
+                            Color.clear.frame(height: rowHeight)
+                        }
                     }
                 }
-                .onPreferenceChange(ScrollOffsetKey.self) { _ in
-                    updateSelection(geometry: geo) }
+                .onPreferenceChange(ScrollOffsetKey.self) { offset in
+                    throttledUpdate(offset: offset, geometry: geo)
+                }
                 .onChange(of: selection) {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                         proxy.scrollTo(selection, anchor: .center)
@@ -226,24 +246,36 @@ struct LargeWheelPicker: View {
         .frame(height: 700)
     }
     
+    // MARK: - Throttled offset update
+    private func throttledUpdate(offset: CGFloat, geometry: GeometryProxy) {
+        guard !isUpdating else { return }
+        isUpdating = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) { // ±60 fps update max
+            updateSelection(geometry: geometry)
+            lastOffset = offset
+            isUpdating = false
+        }
+    }
+    
     private func updateSelection(geometry: GeometryProxy) {
-        // Ambil semua posisi item
-        let viewCenter = geometry.frame(in: .global).midY // Cari index yang paling dekat ke tengah
+        let viewCenter = geometry.frame(in: .global).midY
         var closestIndex: Int?
         var minDistance: CGFloat = .infinity
         for index in data.indices {
-            let itemY = geometry.frame(in: .global).minY + CGFloat(index) * rowHeight + (rowHeight / 2)
+            let itemY = geometry.frame(in: .global).minY + CGFloat(index) * (rowHeight + spacing) + (rowHeight / 2)
             let distance = abs(itemY - viewCenter)
             if distance < minDistance {
                 minDistance = distance
                 closestIndex = index
             }
-        } // Update selectedIndex kalau berubah
+        }
         if let newIndex = closestIndex, newIndex != selection {
             selection = newIndex
             viewModel.selectedIndex = newIndex
         }
-    } // MARK: - Item View
+    }
+    
+    // MARK: - Item View
     private func item(for index: Int, geometry: GeometryProxy) -> some View {
         GeometryReader { itemGeo in
             let itemCenter = itemGeo.frame(in: .global).midY
@@ -254,76 +286,59 @@ struct LargeWheelPicker: View {
             let opacity = 1.0 - (normalized * 0.6)
             let isFocused = scale > 0.9
             
-            // Tentukan tinggi baris berdasarkan scale
-            let dynamicHeight: CGFloat = {
-                switch scale {
-                case ..<0.6:
-                    return 0
-                case 0.6..<0.7:
-                    return 0
-                case 0.7..<0.9:
-                    return 0
-                default:
-                    return 0
+            Button {
+                if isFocused {
+                    if let slangData = viewModel.getSlang(at: index) {
+                        popupManager.setSlangData(slangData)
+                        popupManager.isPresented.toggle()
+                    }
+                } else {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        selection = index
+                    }
+                    playClickSound()
                 }
-            }()
-            
-            if distance < 400 {
-                Button {
+            } label: {
+                HStack(spacing: 4) {
+                    Text(data[index])
+                        .font(.system(size: {
+                            switch scale {
+                            case ...0.6: return 33
+                            case 0.61...0.7: return 34
+                            case 0.8...0.9: return 38
+                            default: return 48
+                            }
+                        }(), weight: .medium, design: .serif))
+                        .opacity(opacity)
+                        .foregroundColor(AppColor.Text.primary)
+                        .lineLimit(1)
+                        .animation(.easeInOut(duration: 0.2), value: scale)
+                    
                     if isFocused {
-                        if let slangData = viewModel.getSlang(at: index) {
-                            popupManager.setSlangData(slangData)
-                            popupManager.isPresented.toggle()
-                        }
-                    } else {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                            selection = index
-                        }
-                        playClickSound()
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Text(data[index])
-                            .font(.system(size: {
-                                switch scale {
-                                case ...0.6: return 33
-                                case 0.61...0.7: return 34
-                                case 0.8...0.9: return 38
-                                default: return 48
-                                }
-                            }(), weight: .medium, design: .serif))
-                            .opacity(opacity)
-                            .foregroundColor(AppColor.Text.primary)
-                            .lineLimit(1)
-                            .animation(.easeInOut(duration: 0.2), value: scale)
-                        
-                        if isFocused {
-                            Image("arrowHome")
-                                .resizable()
-                                .frame(width: 64, height: 18)
-                                .tint(AppColor.Text.primary)
-                                .transition(.asymmetric(
-                                    insertion: .move(edge: .trailing).combined(with: .opacity),
-                                    removal: .opacity
-                                ))
-                                .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isFocused)
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .onChange(of: isFocused) {
-                    if isFocused {
-                        playClickSound()
-                        let generator = UIImpactFeedbackGenerator(style: .light)
-                        generator.impactOccurred()
-                        if index == data.count - 1 {
-                            selection = index
-                        }
+                        Image("arrowHome")
+                            .resizable()
+                            .frame(width: 64, height: 18)
+                            .tint(AppColor.Text.primary)
+                            .transition(.asymmetric(
+                                insertion: .move(edge: .trailing).combined(with: .opacity),
+                                removal: .opacity
+                            ))
+                            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isFocused)
                     }
                 }
-                .frame(height: dynamicHeight) // <— tinggi item menyesuaikan scale
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .onChange(of: isFocused) {
+                if isFocused {
+                    playClickSound()
+                    let generator = UIImpactFeedbackGenerator(style: .light)
+                    generator.impactOccurred()
+                    if index == data.count - 1 {
+                        selection = index
+                    }
+                }
             }
         }
     }
@@ -334,13 +349,13 @@ struct LargeWheelPicker: View {
         audioPlayer?.prepareToPlay()
         audioPlayer?.volume = 1.0
     }
+    
     private func playClickSound() {
         guard let player = audioPlayer else { return }
         player.currentTime = 0
         player.play()
     }
 }
-
 
 // MARK: - Scroll Offset Key
 private struct ScrollOffsetKey: PreferenceKey {
