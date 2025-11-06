@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct KeyboardSettingView: View {
+    
+    @State private var showShareSheetPreview: Bool = false
+    
     @AppStorage("settings.autoCorrect", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
     private var autoCorrect: Bool = true
     @AppStorage("settings.autoCaps", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
     private var autoCapslock: Bool = true
     @AppStorage("settings.keyboardLayout", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
+        
     private var keyboardLayoutRaw: String = LayoutType.qwerty.rawValue
 
     private var selectedLayout: LayoutType {
@@ -37,8 +41,8 @@ struct KeyboardSettingView: View {
                 
                 VStack(alignment: .center) {
                     let iconOne = Image(systemName: "globe")
-                    let iconTwo = Image(systemName: "info.circle")
-
+                    let iconTwo = Text(Image(systemName: "info.circle")).foregroundStyle(.blue)
+                    
                     Image("keyboardsettingplaceholder")
                         .resizable()
                         .frame(width: 315, height: 195, alignment: .center)
@@ -49,20 +53,20 @@ struct KeyboardSettingView: View {
                         .foregroundStyle(AppColor.Text.primary)
                         .padding(.top, 4)
                     
-                    Text("Long press \(iconOne) and select SLNG keyboard or you can use Share extension \(iconTwo)")
-                        .font(.footnote)
-                        .foregroundStyle(AppColor.Text.secondary)
-                        .frame(maxWidth: 250)
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom, 14)
+                    Button {
+                        showShareSheetPreview = true
+                    } label: {
+                        Text("Long press \(iconOne) and select SLNG keyboard or you can use Share extension \(iconTwo)")
+                            .font(.footnote)
+                            .foregroundStyle(AppColor.Text.secondary)
+                            .frame(maxWidth: 250)
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom, 14)
+                    }
                 }
                 
                 VStack(spacing: 24) {
                     VStack(spacing: 4) {
-                        Toggle("Auto Correct", isOn: $autoCorrect)
-                            .padding(.vertical, 2)
-                            .tint(.green)
-                        Divider()
                         Toggle("Auto Capslock", isOn: $autoCapslock)
                             .padding(.vertical, 2)
                             .tint(.green)
@@ -71,7 +75,7 @@ struct KeyboardSettingView: View {
                     .background(Color(.systemGray6))
                     .cornerRadius(16)
                     .frame(maxWidth: .infinity)
-
+                    
                     VStack(alignment: .leading, spacing: 24) {
                         Text("Keyboard Layout")
                             .font(.system(.headline, design: .default, weight: .regular))
@@ -113,6 +117,48 @@ struct KeyboardSettingView: View {
             }
             .padding()
         }
+        .sheet(isPresented: $showShareSheetPreview) {
+            ShareSheetPreviewSheet()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+        }
+    }
+}
+
+struct ShareSheetPreviewSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    var body: some View {
+        NavigationView {
+            VStack {
+                Image("ShareSheetPlaceholder")
+                    .resizable()
+                    .frame(width: 255, height: 520)
+                    .padding(.bottom, 4)
+                
+                Text("Copy text and share")
+                    .font(.system(.body, design: .default, weight: .regular))
+                
+                Text("Tap SLNG icon in the list of your apps")
+                    .font(.system(.callout, design: .default, weight: .regular))
+                    .foregroundStyle(AppColor.Text.secondary)
+            }
+            .navigationTitle("Share Sheet Extension")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .resizable()
+                            .frame(width: 18, height: 18)
+                            .foregroundStyle(.secondary)
+                        
+                    }
+                }
+            }
+            .scrollIndicators(.hidden)
+        }
     }
 }
 
@@ -125,3 +171,4 @@ enum LayoutType: String, CaseIterable {
 #Preview {
     KeyboardSettingView()
 }
+
