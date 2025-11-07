@@ -29,7 +29,7 @@ struct OnboardingView: View {
                 thirdPage
             }
             else if pageNumber==4{
-                fourthPage
+                OnboardingFourthPage(pageNumber: $pageNumber)
             }
             else if pageNumber==5{
                 KeyboardView {
@@ -253,7 +253,6 @@ struct OnBoardingPage<Content: View>: View {
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
-                .padding(.horizontal, 33)
             }
             .padding()
             .padding(.bottom, 33)

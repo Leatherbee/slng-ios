@@ -11,14 +11,14 @@ internal import Combine
 
 @MainActor
 final class DictionaryViewModel: ObservableObject {
-    @Published var allSlangs: [SlangModel] = []      // semua data
-    @Published var slangs: [SlangModel] = []         // data paginated
-    @Published var filteredSlangs: [SlangModel] = [] // hasil filter (yang ditampilkan)
+    @Published var allSlangs: [SlangData] = []      // semua data
+    @Published var slangs: [SlangData] = []         // data paginated
+    @Published var filteredSlangs: [SlangData] = [] // hasil filter (yang ditampilkan)
     @Published var searchText: String = ""
     @Published var selectedIndex: Int = 0
     @Published var dragActiveLetter: String? = nil
 
-    private let slangRepo: SlangSwiftDataImpl
+    private let slangRepo: SlangRepositoryImpl
     private var cancellables = Set<AnyCancellable>()
     private var isLoading: Bool = false
 
@@ -27,7 +27,7 @@ final class DictionaryViewModel: ObservableObject {
     private let pageSize: Int = 100
 
     init(context: ModelContext) {
-        self.slangRepo = SlangSwiftDataImpl(context: context, pageSize: pageSize)
+        self.slangRepo = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
         setupSearch()
         Task { await loadInitial() }
     }
@@ -37,7 +37,7 @@ final class DictionaryViewModel: ObservableObject {
         isLoading = true
         offset = 0
  
-        allSlangs = slangRepo.fetchAll()
+        allSlangs = slangRepo.loadAll()
         totalCount = allSlangs.count
  
         slangs = Array(allSlangs)

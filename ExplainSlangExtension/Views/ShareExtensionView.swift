@@ -162,7 +162,7 @@ struct ShareExtensionView: View {
             let context = SharedModelContainer.shared.context
             let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
             let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
-            let slangRepository = SlangRepositoryImpl()
+            let slangRepository = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
             let useCase = TranslateSentenceUseCaseImpl(
                 translationRepository: translationRepository,
                 slangRepository: slangRepository

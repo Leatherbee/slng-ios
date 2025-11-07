@@ -24,13 +24,11 @@ struct DictionaryView: View {
     var body: some View {
         ZStack(alignment: .topLeading){
             VStack(spacing: 0){
-              
                 VStack {
                     HStack(alignment: .center) {
                         slangPickerView()
                         alphabetSidebar
                     }
-                    
                 }
                 
                 VStack {
@@ -40,17 +38,14 @@ struct DictionaryView: View {
                     }
                     .background(AppColor.Background.primary)
                     .padding(.top, -220)
-                    
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.clear)
-                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(AppColor.Background.primary)
             VStack{
                 Text(activeLetter) .font(.system(size: 64, design: .serif))
-                   
                     .foregroundColor(AppColor.Text.secondary)
                     .id(activeLetter)
                     .transition(.opacity.combined(with: .scale))
@@ -58,10 +53,7 @@ struct DictionaryView: View {
             }
             .padding(.top, 150)
             .padding(.leading)
-          
         }
-        
-  
     }
 }
 struct KeyboardAdaptive: ViewModifier {
@@ -89,10 +81,8 @@ extension View {
         self.modifier(KeyboardAdaptive())
     }
 }
-// MARK: - Subviews
-extension DictionaryView {
-        
 
+extension DictionaryView {
     @ViewBuilder
     private func slangPickerView() -> some View {
         let slangs = viewModel.filteredSlangs.map { $0.slang }
@@ -180,13 +170,12 @@ extension DictionaryView {
         .padding(.horizontal)
         .padding(.bottom, 8)
     }
+    
     var activeLetter: String {
         guard viewModel.selectedIndex < viewModel.filteredSlangs.count else { return "" }
         return String(viewModel.filteredSlangs[viewModel.selectedIndex].slang.prefix(1).uppercased())
-       }
+    }
 }
-
-// Ganti LargeWheelPicker dan ScrollOffsetKey dengan versi ini
 
 struct LargeWheelPicker: View {
     @Binding var selection: Int
