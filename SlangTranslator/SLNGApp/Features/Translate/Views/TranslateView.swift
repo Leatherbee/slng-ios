@@ -14,6 +14,7 @@ struct TranslateView: View {
     
     @State private var dynamicTextStyle: Font.TextStyle = .largeTitle
     @State private var shouldPlaySequentialAnimation = false
+    @State private var fontSizeWorkItem: DispatchWorkItem?
     
     var body: some View {
         ZStack {
@@ -30,20 +31,36 @@ struct TranslateView: View {
                 .background(Color.black.opacity(0.1))
                 .ignoresSafeArea()
             }
+            else if viewModel.isLoading {
+                TranslateLoadingSection(
+                    viewModel: viewModel,
+                    textNamespace: textNamespace,
+                    dynamicTextStyle: dynamicTextStyle
+                )
+            }
             else if !viewModel.isTranslated {
-                TranslateInputSection(viewModel: viewModel, textNamespace: textNamespace, adjustFontSizeDebounced: adjustFontSizeDebounced, shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation, dynamicTextStyle: $dynamicTextStyle)
+                TranslateInputSection(
+                    viewModel: viewModel,
+                    textNamespace: textNamespace,
+                    adjustFontSizeDebounced: adjustFontSizeDebounced,
+                    shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
+                    dynamicTextStyle: $dynamicTextStyle
+                )
             }
             else {
-                TranslateResultSection(viewModel: viewModel, textNamespace: textNamespace, adjustFontSizeDebounced: adjustFontSizeDebounced, shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation, dynamicTextStyle: $dynamicTextStyle)
+                TranslateResultSection(
+                    viewModel: viewModel,
+                    textNamespace: textNamespace,
+                    adjustFontSizeDebounced: adjustFontSizeDebounced,
+                    shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
+                    dynamicTextStyle: $dynamicTextStyle
+                )
             }
         }
         .background(Color.backgroundPrimary)
         .animation(.easeInOut(duration: 0.25), value: viewModel.isTranslated)
     }
-    
-    // MARK: Dynamic Font
-    @State private var fontSizeWorkItem: DispatchWorkItem?
-    
+        
     private func adjustFontSizeDebounced() {
         fontSizeWorkItem?.cancel()
         let workItem = DispatchWorkItem {

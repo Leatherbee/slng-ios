@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TranslateInputSection: View { 
+struct TranslateInputSection: View {
     @ObservedObject var viewModel: TranslateViewModel
     @Environment(\.colorScheme) var colorScheme
     var textNamespace: Namespace.ID
