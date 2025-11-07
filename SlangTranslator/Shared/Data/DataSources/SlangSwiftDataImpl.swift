@@ -16,7 +16,7 @@ final class SlangSwiftDataImpl {
         self.pageSize = pageSize
     }
     
-    /// Ambil data berdasarkan offset (untuk lazy load)
+    // Fetch data based on lazy load 
     func fetch(offset: Int = 0, keyword: String? = nil) -> [SlangModel] {
         var predicate: Predicate<SlangModel>? = nil
         
@@ -39,7 +39,7 @@ final class SlangSwiftDataImpl {
         do {
             return try context.fetch(descriptor)
         } catch {
-            print("❌ Failed to fetch slangs: \(error)")
+            print("Failed to fetch slangs: \(error)")
             return []
         }
     }
@@ -67,8 +67,7 @@ final class SlangSwiftDataImpl {
         do {
             return try context.fetch(descriptor).count
         } catch {
-            print("❌ Failed to count slangs: \(error)")
-            return 0
+            fatalError("Failed to count slangs: \(error)")
         }
     }
 }

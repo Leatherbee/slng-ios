@@ -38,8 +38,6 @@ struct DictionaryDetail: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
-                
-                
                 Spacer()
             }
             .padding()
@@ -52,17 +50,20 @@ struct DictionaryDetail: View {
                         Text(slangData?.slang ?? "Tes")
                             .font(.system(size: 64, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
+                            .textSelection(.enabled)
                         VStack(spacing: 24){
                             Text(slangData?.translationEN ?? "Lorem ipsum dolor sit amet")
                                 .font(.system(size: 18, design: .serif))
                                 .foregroundColor(AppColor.Text.primary)
                                 .multilineTextAlignment(.center)
                                 .lineLimit(nil)
+                                .textSelection(.enabled)
                             Text(slangData?.exampleEN ?? "Lorem ipsum")
                                 .font(.system(size: 20, design: .serif))
                                 .foregroundColor(AppColor.Text.primary)
                                 .multilineTextAlignment(.center)
                                 .lineLimit(nil)
+                                .textSelection(.enabled)
                         }
                     }
                 }
@@ -111,69 +112,52 @@ struct DictionaryDetail: View {
             }
         }
         .sheet(isPresented: $showInfoSheet) {
-            VStack(){
-                HStack{
-                    Button{
-                        showInfoSheet.toggle()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 17))
-                            .foregroundColor(AppColor.Text.primary.opacity(0.6))
-                    }
-                    .frame(width: 44, height: 44)
-                    .background(Color.gray.opacity(0.16))
-                    .clipShape(.circle)
-                    Spacer()
-                    Text("Explain")
-                        .font(.headline)
-                        .foregroundColor(AppColor.Text.primary)
-                    Spacer()
-                }
-                Spacer()
-                VStack(spacing: 24){
-                    VStack(spacing: 8){
+            NavigationView {
+                VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Context")
                             .font(.system(size: 17, design: .serif))
-                            .bold()
-                            .italic()
+                            .bold().italic()
                             .foregroundColor(AppColor.Text.primary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-
                         Text(slangData?.contextEN ?? "")
                             .font(.system(size: 17, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    VStack(spacing: 8){
+
+                    VStack(alignment: .leading, spacing: 8) {
                         Text("Example")
                             .font(.system(size: 17, design: .serif))
-                            .bold()
-                            .italic()
+                            .bold().italic()
                             .foregroundColor(AppColor.Text.primary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-
-                        
                         Text("""
                         "\(slangData?.exampleEN ?? "")"
                         "\(slangData?.exampleID ?? "")"
                         """)
                         .font(.system(size: 17, design: .serif))
                         .foregroundColor(AppColor.Text.primary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                         .multilineTextAlignment(.leading)
-                        .lineLimit(nil)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    Spacer(minLength: 0)
                 }
-               Spacer()
-                
-                
+                .padding()
+                .navigationTitle("Explanation")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            showInfoSheet.toggle()
+                        } label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 17))
+                                .foregroundColor(AppColor.Text.primary.opacity(0.6))
+                                .frame(width: 44, height: 44)
+                        }
+                    }
+                }
             }
-            .padding()
-            .presentationDetents([.height(sheetHeight)])
+            .presentationDetents([.fraction(0.4)])
             .presentationDragIndicator(.visible)
-            .presentationBackground(colorScheme == .dark ? Color(red: 0.2, green: 0.2, blue: 0.2) : Color(red: 1, green: 0.95, blue: 0.86))
         }
     }
 }

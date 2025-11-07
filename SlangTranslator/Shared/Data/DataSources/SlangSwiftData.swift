@@ -19,22 +19,20 @@ final class SlangSwiftData {
     func loadAll() -> [SlangModel] {
         let context = ModelContext(container)
 
-        // Cek apakah sudah pernah diimport
         let descriptor = FetchDescriptor<SlangModel>()
         if let slangs = try? context.fetch(descriptor), !slangs.isEmpty {
-            print("✅ Loaded \(slangs.count) slangs from SwiftData.")
+            print("Loaded \(slangs.count) slangs from SwiftData.")
             return slangs
         }
 
-        // Belum ada, import dari JSON
-        print("📦 Importing slangs from JSON...")
+        print("Importing slangs from JSON...")
         if let newSlangs = loadFromJSON() {
             for (index, slang) in newSlangs.enumerated() {
                 context.insert(slang)
                 if index % 500 == 0 { try? context.save() }
             }
             try? context.save()
-            print("✅ Imported \(newSlangs.count) slangs into SwiftData.")
+            print("Imported \(newSlangs.count) slangs into SwiftData.")
             return newSlangs
         }
 
@@ -47,7 +45,7 @@ final class SlangSwiftData {
 
         guard let url = Bundle.main.url(forResource: "slng_data_seeded", withExtension: "json"),
               let stream = InputStream(url: url) else {
-            print("❌ Slang JSON not found!")
+            print("Slang JSON not found!")
             return nil
         }
 
@@ -56,7 +54,7 @@ final class SlangSwiftData {
 
         do {
             guard let array = try JSONSerialization.jsonObject(with: stream, options: []) as? [Any] else {
-                print("❌ Invalid JSON format")
+                print("Invalid JSON format")
                 return nil
             }
 
@@ -73,10 +71,10 @@ final class SlangSwiftData {
                 }
             }
 
-            print("📘 Finished decoding \(temp.count) slangs from JSON.")
+            print("Finished decoding \(temp.count) slangs from JSON.")
             return temp
         } catch {
-            print("❌ Failed to parse slang JSON: \(error)")
+            print("Failed to parse slang JSON: \(error)")
             return nil
         }
     }

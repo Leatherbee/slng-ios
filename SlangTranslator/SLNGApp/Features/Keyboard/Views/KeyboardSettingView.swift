@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct KeyboardSettingView: View {
     
@@ -93,7 +94,6 @@ struct KeyboardSettingView: View {
                                                 .foregroundColor(AppColor.Background.primary)
                                                 .opacity(selectedLayout == layout ? 1 : 0)
                                         )
-                                        .shadow(radius: 1)
                                         .onTapGesture {
                                             withAnimation(.easeInOut) {
                                                 keyboardLayoutRaw = layout.rawValue
@@ -130,10 +130,9 @@ struct ShareSheetPreviewSheet: View {
     var body: some View {
         NavigationView {
             VStack {
-                Image("ShareSheetPlaceholder")
-                    .resizable()
-                    .frame(width: 255, height: 520)
-                    .padding(.bottom, 4)
+                LottieView(animation: .named("share-extension"))
+                    .looping()
+                    .frame(width: 500, height: 600)
                 
                 Text("Copy text and share")
                     .font(.system(.body, design: .default, weight: .regular))

@@ -48,7 +48,7 @@ final class TranslateViewModel: ObservableObject {
             let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
 //            let repository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
             let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
-            let slangRepository = SlangRepositoryImpl()
+            let slangRepository = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
             
             let useCase = TranslateSentenceUseCaseImpl(translationRepository: translationRepository, slangRepository: slangRepository)
             
