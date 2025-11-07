@@ -12,7 +12,6 @@ import SwiftData
 
 @MainActor
 final class TranslateViewModel: ObservableObject {
-    // MARK: - Published States
     @Published var inputText: String = ""
     @Published var translatedText: String? = nil
     @Published var isTranslated: Bool = false
@@ -22,49 +21,33 @@ final class TranslateViewModel: ObservableObject {
     @Published var slangDetected: [String] = []
     @Published var slangData: [SlangData] = []
     
-    // Loading & Error state
     @Published var isLoading: Bool = false
     @Published var isInitializing: Bool = true
     @Published var errorMessage: String? = nil
     
-    // Backend Result
     @Published var result: TranslationResult? = nil
     
-    // MARK: - Dependencies
     private var useCase: TranslateSentenceUseCase?
     
-    // MARK: - Init
     init() {
         Task {
             await self.initializeDependencies()
         }
     }
     
-    // MARK: - Dependency Setup
     private func initializeDependencies() async {
-        do {
-            // Run heavy setup asynchronously off the main render path
-            let context = SharedModelContainer.shared.container.mainContext
-            let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
-//            let repository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
-            let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
-            let slangRepository = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
-            
-            let useCase = TranslateSentenceUseCaseImpl(translationRepository: translationRepository, slangRepository: slangRepository)
-            
-            await MainActor.run {
-                self.useCase = useCase
-                self.isInitializing = false
-            }
-        } catch {
-            await MainActor.run {
-                self.errorMessage = "Failed to initialize translation engine: \(error.localizedDescription)"
-                self.isInitializing = false
-            }
+        let context = SharedModelContainer.shared.container.mainContext
+        let apiKey = Bundle.main.infoDictionary?[("APIKey")] as? String ?? ""
+        let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+        let slangRepository = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
+        let useCase = TranslateSentenceUseCaseImpl(translationRepository: translationRepository, slangRepository: slangRepository)
+
+        await MainActor.run {
+            self.useCase = useCase
+            self.isInitializing = false
         }
     }
     
-    // MARK: - Main Translation Logic
     func translate(text: String) {
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
         guard let useCase = useCase else {
@@ -77,7 +60,7 @@ final class TranslateViewModel: ObservableObject {
         isTranslated = false
         translatedText = nil
         slangDetected.removeAll()
-        slangData.removeAll() // Clear previous slang data
+        slangData.removeAll()
         errorMessage = nil
         
         Task {
@@ -88,9 +71,6 @@ final class TranslateViewModel: ObservableObject {
                     self.result = result
                     self.translatedText = result.translation.englishTranslation
                     self.isTranslated = true
-                    
-                    // Get matched slangs from dictionary
-//                    let matchedSlangs = SlangDictionary.shared.findSlang(in: inputText, matching: response.sentiment)
                     self.slangData = result.detectedSlangs
                     self.slangDetected = result.detectedSlangs.map { $0.slang }
                     self.isLoading = false
@@ -104,7 +84,6 @@ final class TranslateViewModel: ObservableObject {
         }
     }
 
-    // Update reset function to clear slangData
     func reset() {
         inputText = ""
         translatedText = nil
@@ -149,3 +128,4 @@ final class TranslateViewModel: ObservableObject {
         }
     }
 }
+
