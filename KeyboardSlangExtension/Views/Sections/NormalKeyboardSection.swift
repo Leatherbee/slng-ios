@@ -30,6 +30,7 @@ struct NormalKeyboardSection: View {
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         .overlay(VStack(spacing: 0) { Divider().opacity(0.6) }, alignment: .top)
         .frame(height: keyboardHeight)
+        .animation(nil, value: vm.showNumber)
     }
     
     private var pasteSlangPrompt: some View {
@@ -48,7 +49,7 @@ struct NormalKeyboardSection: View {
             
             Spacer()
         }
-        .padding(.horizontal, 10)
+        .padding(.horizontal, 12)
         .padding(.vertical, 6)
         .background(style.keyboardBackground)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -93,17 +94,19 @@ struct NormalKeyboardSection: View {
                 height: 44,
                 fontSize: 18
             ) {
-                vm.showNumber.toggle()
-                if !vm.showNumber { vm.showNumbersShifted = false }
+                withTransaction(Transaction(animation: nil)) {
+                    vm.showNumber.toggle()
+                    if !vm.showNumber { vm.showNumbersShifted = false }
+                }
             }
             
             PlainKeyButton(label: nil, systemName: "face.smiling", width: 48, height: 44, fontSize: 18) {
-                withAnimation(.easeInOut(duration: 0.25)) { vm.changeDisplayMode(.emoji) }
+                vm.changeDisplayMode(.emoji)
             }
             PlainKeyButton(label: "space", systemName: nil, width: 150, height: 44, fontSize: 17) { insertText(" ") }
             PlainKeyButton(label: "return", systemName: nil, width: 76, height: 44, fontSize: 17) { insertText("\n") }
         }
-        .padding(.horizontal, 6)
+        .padding(.horizontal, 12)
     }
     
     private func handlePasteAction() {
@@ -161,7 +164,7 @@ struct KeyRowView: View {
                 }
             }
         }
-        .padding(.horizontal, rowIndex == 1 ? 12 : 6)
+        .padding(.horizontal, 12)
     }
     
     private var leftModifierKey: some View {
@@ -174,15 +177,21 @@ struct KeyRowView: View {
             height: 44,
             fontSize: vm.showNumber ? 14 : 22
         ) {
-            if vm.showNumbersShifted || vm.showNumber {
-                vm.showNumbersShifted.toggle()
-            } else {
-                vm.toggleShift()
+            // Disable animations when toggling symbol/shift state
+            withTransaction(Transaction(animation: nil)) {
+                if vm.showNumbersShifted || vm.showNumber {
+                    vm.showNumbersShifted.toggle()
+                } else {
+                    vm.toggleShift()
+                }
             }
         }
         .highPriorityGesture(TapGesture(count: 2).onEnded {
-            if !(vm.showNumbersShifted || vm.showNumber) {
-                vm.setCapsLock(on: !vm.isCapsLockOn)
+            // Also disable animations for caps lock toggle
+            withTransaction(Transaction(animation: nil)) {
+                if !(vm.showNumbersShifted || vm.showNumber) {
+                    vm.setCapsLock(on: !vm.isCapsLockOn)
+                }
             }
         })
     }
