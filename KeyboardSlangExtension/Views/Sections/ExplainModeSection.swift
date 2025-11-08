@@ -84,7 +84,7 @@ struct ExplainModeSection: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
-            Text("Copy some text, then open Explain mode.")
+            Text("Copy some text, paste, and it will appear here.")
                 .font(.system(.footnote))
                 .foregroundStyle(.secondary)
         }
@@ -94,7 +94,6 @@ struct ExplainModeSection: View {
     }
 }
 
-// MARK: - Explain Content
 
 struct ExplainContentView: View {
     @ObservedObject var vm: SlangKeyboardViewModel
@@ -102,7 +101,6 @@ struct ExplainContentView: View {
     
     @Environment(\.colorScheme) private var scheme
     
-    // MARK: Dynamic Font Scaling
     private func dynamicFont(for text: String, baseSize: CGFloat = 22) -> Font {
         let length = text.count
         switch length {
@@ -131,9 +129,7 @@ struct ExplainContentView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-    
-    // MARK: Original Text
-    
+        
     private var originalTextSection: some View {
         let text = vm.getClipboardText()
         return Text(text)
@@ -145,9 +141,7 @@ struct ExplainContentView: View {
             .padding(.horizontal, 6)
             .padding(.bottom, 4)
     }
-    
-    // MARK: Translated Text
-    
+        
     private var translatedTextSection: some View {
         let text = vm.translatedText
         return Group {
@@ -169,9 +163,7 @@ struct ExplainContentView: View {
             }
         }
     }
-    
-    // MARK: Slang Count
-    
+        
     private var slangCountHeader: some View {
         Text("Slang detected (\(vm.detectedSlangs.count))")
             .foregroundColor(scheme == .dark ? .white : .black)
@@ -180,9 +172,7 @@ struct ExplainContentView: View {
             .padding(.leading, 6)
             .padding(.vertical, 8)
     }
-    
-    // MARK: Slang List or Empty
-    
+        
     @ViewBuilder
     private var slangListOrEmptyState: some View {
         if vm.detectedSlangs.isEmpty {
