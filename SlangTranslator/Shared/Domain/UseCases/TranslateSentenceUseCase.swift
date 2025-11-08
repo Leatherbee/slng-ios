@@ -9,6 +9,7 @@ import Foundation
 
 protocol TranslateSentenceUseCase {
     func execute(_ text: String) async throws -> TranslationResult
+    func peekCache(_ text: String) -> TranslationResponse?
 }
 
 final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
@@ -24,6 +25,11 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
         let translation = try await translationRepository.translateSentence(text)
         let detectedSlangs = findSlang(in: text, matching: translation.sentiment)
         return TranslationResult(translation: translation, detectedSlangs: detectedSlangs)
+    }
+    
+    func peekCache(_ text: String) -> TranslationResponse? {
+        let normalized = text.lowercased()
+        return translationRepository.fetchCachedTranslation(for: normalized)
     }
     
     private func findSlang(in text: String, matching sentiment: SentimentType?) -> [SlangData] {

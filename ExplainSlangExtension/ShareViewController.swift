@@ -49,12 +49,23 @@ class ShareViewController: UIViewController {
     }
     
     private func setupSwiftUIView() {
+        let context = SharedModelContainer.shared.context
+        let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
+        let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+        let slangRepository = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
+        let useCase = TranslateSentenceUseCaseImpl(
+            translationRepository: translationRepository,
+            slangRepository: slangRepository
+        )
+        let viewModel = ShareTranslateViewModel(useCase: useCase)
+        
         let hostingController = UIHostingController(
             rootView: ShareExtensionView(
                 sharedText: sharedText,
                 onDismiss: { [weak self] in
                     self?.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
-                }
+                },
+                viewModel: viewModel
             )
         )
         

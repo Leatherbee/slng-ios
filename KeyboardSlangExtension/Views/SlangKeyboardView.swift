@@ -55,9 +55,17 @@ struct SlangKeyboardView: View {
                     deleteText: deleteText
                 )
                 .transition(.move(edge: .bottom).combined(with: .opacity))
-            } else {
+            } else if vm.mode == .explain {
                 ExplainModeSection(vm: vm, style: style)
                     .transition(.move(edge: .top).combined(with: .opacity))
+            } else if vm.mode == .emoji {
+                EmojiKeyboardSection(
+                    vm: vm,
+                    style: style,
+                    keyboardHeight: keyboardHeight,
+                    insertText: insertText
+                )
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.mode)

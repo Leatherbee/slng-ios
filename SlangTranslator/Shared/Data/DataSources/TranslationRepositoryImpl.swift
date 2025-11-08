@@ -35,7 +35,7 @@ final class TranslationRepositoryImpl: TranslationRepository {
         return gptResponse
     }
     
-    private func fetchCachedTranslation(for text: String) -> TranslationResponse? {
+    func fetchCachedTranslation(for text: String) -> TranslationResponse? {
         let fetchDescriptor = FetchDescriptor<TranslationModel>(
             predicate: #Predicate { $0.originalText == text }
         )
@@ -46,7 +46,8 @@ final class TranslationRepositoryImpl: TranslationRepository {
             id: UUID(),
             originalText: cached.originalText,
             englishTranslation: cached.englishTranslation,
-            sentiment: cached.sentiment
+            sentiment: cached.sentiment,
+            source: .localDB
         )
     }
     
@@ -90,7 +91,8 @@ final class TranslationRepositoryImpl: TranslationRepository {
             id: UUID(),
             originalText: text,
             englishTranslation: decoded.englishTranslation,
-            sentiment: sentiment
+            sentiment: sentiment,
+            source: .openAI
         )
         
         return response

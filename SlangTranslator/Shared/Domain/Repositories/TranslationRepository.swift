@@ -9,4 +9,6 @@ import Foundation
 
 protocol TranslationRepository {
     func translateSentence(_ text: String) async throws -> TranslationResponse
+    // Peek cached translation synchronously to decide UI loading behavior
+    func fetchCachedTranslation(for text: String) -> TranslationResponse?
 }

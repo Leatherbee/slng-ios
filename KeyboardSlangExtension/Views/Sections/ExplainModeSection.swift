@@ -21,6 +21,8 @@ struct ExplainModeSection: View {
             ZStack {
                 if vm.isTranslating {
                     loadingView
+                } else if vm.getClipboardText().isEmpty {
+                    emptyClipboardView
                 } else {
                     ScrollView(.vertical, showsIndicators: false) {
                         ExplainContentView(vm: vm, style: style)
@@ -63,6 +65,28 @@ struct ExplainModeSection: View {
             Text("Translating...")
                 .font(.system(size: 15, weight: .medium))
                 .foregroundColor(style.keyText)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(style.keyboardBackground)
+        .transition(.opacity)
+    }
+
+    private var emptyClipboardView: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "clipboard")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 34, height: 34)
+                .foregroundStyle(.secondary)
+
+            Text("No clipboard detected")
+                .font(.system(.title3, design: .serif, weight: .semibold))
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Text("Copy some text, then open Explain mode.")
+                .font(.system(.footnote))
+                .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(style.keyboardBackground)

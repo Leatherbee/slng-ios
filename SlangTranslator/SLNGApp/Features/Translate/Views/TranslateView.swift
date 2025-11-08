@@ -30,15 +30,13 @@ struct TranslateView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.black.opacity(0.1))
                 .ignoresSafeArea()
-            }
-            else if viewModel.isLoading {
+            } else if viewModel.isLoading {
                 TranslateLoadingSection(
                     viewModel: viewModel,
                     textNamespace: textNamespace,
                     dynamicTextStyle: dynamicTextStyle
                 )
-            }
-            else if !viewModel.isTranslated {
+            } else if !viewModel.isTranslated {
                 TranslateInputSection(
                     viewModel: viewModel,
                     textNamespace: textNamespace,
@@ -46,8 +44,7 @@ struct TranslateView: View {
                     shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
                     dynamicTextStyle: $dynamicTextStyle
                 )
-            }
-            else {
+            } else {
                 TranslateResultSection(
                     viewModel: viewModel,
                     textNamespace: textNamespace,
