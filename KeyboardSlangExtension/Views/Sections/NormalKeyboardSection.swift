@@ -97,7 +97,9 @@ struct NormalKeyboardSection: View {
                 if !vm.showNumber { vm.showNumbersShifted = false }
             }
             
-            PlainKeyButton(label: nil, systemName: "face.smiling", width: 48, height: 44, fontSize: 18) {}
+            PlainKeyButton(label: nil, systemName: "face.smiling", width: 48, height: 44, fontSize: 18) {
+                withAnimation(.easeInOut(duration: 0.25)) { vm.changeDisplayMode(.emoji) }
+            }
             PlainKeyButton(label: "space", systemName: nil, width: 150, height: 44, fontSize: 17) { insertText(" ") }
             PlainKeyButton(label: "return", systemName: nil, width: 76, height: 44, fontSize: 17) { insertText("\n") }
         }

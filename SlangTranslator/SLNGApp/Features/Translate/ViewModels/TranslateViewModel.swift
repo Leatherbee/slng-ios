@@ -29,6 +29,7 @@ final class TranslateViewModel: ObservableObject {
     
     private var useCase: TranslateSentenceUseCase?
     
+    
     init() {
         Task {
             await self.initializeDependencies()
@@ -56,7 +57,11 @@ final class TranslateViewModel: ObservableObject {
         }
         
         inputText = text
-        isLoading = true
+
+        // Only show loading when we expect to call OpenAI (no cache)
+        let normalized = text.lowercased()
+        let hasCache = useCase.peekCache(normalized) != nil
+        isLoading = !hasCache
         isTranslated = false
         translatedText = nil
         slangDetected.removeAll()
@@ -74,6 +79,15 @@ final class TranslateViewModel: ObservableObject {
                     self.slangData = result.detectedSlangs
                     self.slangDetected = result.detectedSlangs.map { $0.slang }
                     self.isLoading = false
+                    
+                    switch result.translation.source {
+                    case .localDB:
+                        print("Loaded from SwiftData cache")
+                    case .openAI:
+                        print("Loaded from OpenAI")
+                    default:
+                        print("Unknown source")
+                    }
                 }
             } catch {
                 await MainActor.run {

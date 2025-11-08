@@ -32,8 +32,15 @@ class KeyboardViewController: UIInputViewController {
         
         // Read settings from App Group UserDefaults
         let settings = UserDefaults(suiteName: "group.prammmoe.SLNG")
-        let autoCorrect = settings?.bool(forKey: "settings.autoCorrect") ?? true
-        let autoCaps = settings?.bool(forKey: "settings.autoCaps") ?? true
+        // Register defaults so first run has expected values
+        settings?.register(defaults: [
+            "settings.autoCorrect": true,
+            "settings.autoCaps": true,
+            "settings.keyboardLayout": "QWERTY"
+        ])
+        // Use object(forKey:) to distinguish missing keys (nil) from false
+        let autoCorrect = (settings?.object(forKey: "settings.autoCorrect") as? Bool) ?? true
+        let autoCaps = (settings?.object(forKey: "settings.autoCaps") as? Bool) ?? true
         let layoutRaw = settings?.string(forKey: "settings.keyboardLayout") ?? "QWERTY"
         
         // Apply settings to VM
@@ -49,8 +56,8 @@ class KeyboardViewController: UIInputViewController {
                 self.handleInsert(text)
             },
             deleteText: { [weak self] in
-                guard let self, self.textDocumentProxy.hasText else { return }
-                self.textDocumentProxy.deleteBackward()
+                guard let self else { return }
+                self.handleDelete()
             },
             keyboardHeight: keyboardHeight,
             backgroundColor: .clear, needsInputModeSwitchKey: self.needsInputModeSwitchKey,
@@ -96,6 +103,11 @@ class KeyboardViewController: UIInputViewController {
             }
         } else {
             textDocumentProxy.insertText(text)
+        }
+
+        // Recompute auto shift when needed (e.g., after newline)
+        if vm.autoCapsEnabled, text == "\n" {
+            updateAutoShiftFromContext()
         }
     }
 
@@ -160,6 +172,35 @@ class KeyboardViewController: UIInputViewController {
         if viewModelRef?.autoCapsEnabled == true {
             viewModelRef?.isShifted = true
         }
+    }
+
+    // MARK: - Backspace Handling with Auto Caps
+    private func handleDelete() {
+        guard textDocumentProxy.hasText else { return }
+        textDocumentProxy.deleteBackward()
+        updateAutoShiftFromContext()
+    }
+
+    private func updateAutoShiftFromContext() {
+        guard let vm = viewModelRef else { return }
+        // If caps lock is on, remain shifted
+        if vm.isCapsLockOn { vm.isShifted = true; return }
+        guard vm.autoCapsEnabled else { return }
+        vm.isShifted = shouldEnableAutoShift()
+    }
+
+    private func shouldEnableAutoShift() -> Bool {
+        let before = textDocumentProxy.documentContextBeforeInput ?? ""
+        // Start of field or only whitespace -> enable
+        if before.isEmpty { return true }
+        let trimmed = before.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty { return true }
+        // Last non-whitespace char decides sentence boundary
+        guard let last = trimmed.last else { return false }
+        if ".!?".contains(last) { return true }
+        // Also treat newline as boundary
+        if before.hasSuffix("\n") { return true }
+        return false
     }
 
     override func viewWillLayoutSubviews() {

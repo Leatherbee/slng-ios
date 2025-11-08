@@ -11,12 +11,12 @@ import SwiftData
 struct ShareExtensionView: View {
     let sharedText: String
     let onDismiss: () -> Void
+    @ObservedObject var viewModel: ShareTranslateViewModel
     
     @State private var detectedSlangs: [SlangData] = []
     @State private var translatedText: String = ""
     @State private var isTranslating: Bool = false
     @State private var translationError: String?
-    @State private var viewModel: ShareTranslateViewModel?
     
     // Dynamic font size based on text length
     private func dynamicFontSize(for text: String) -> Font {
@@ -159,41 +159,21 @@ struct ShareExtensionView: View {
             .scrollIndicators(.visible)
         }
         .onAppear {
-            let context = SharedModelContainer.shared.context
-            let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
-            let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
-            let slangRepository = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
-            let useCase = TranslateSentenceUseCaseImpl(
-                translationRepository: translationRepository,
-                slangRepository: slangRepository
-            )
-            viewModel = ShareTranslateViewModel(useCase: useCase)
-            
             Task {
-                guard let vm = viewModel else { return }
                 isTranslating = true
-                vm.inputText = sharedText
-                await vm.translate()
+                viewModel.inputText = sharedText
+                await viewModel.translate()
                 
-                if let result = vm.result {
+                if let result = viewModel.result {
                     translatedText = result.translation.englishTranslation
                     detectedSlangs = result.detectedSlangs
                 }
                 
-                if let vmError = vm.errorMessage, !vmError.isEmpty {
+                if let vmError = viewModel.errorMessage, !vmError.isEmpty {
                     translationError = vmError
                 }
                 isTranslating = false
             }
         }
     }
-}
-
-#Preview {
-    ShareExtensionView(
-        sharedText: """
-        Bro, lo tau nggak, kemarin tuh gue literally capek banget sumpah...
-        """,
-        onDismiss: {}
-    )
 }

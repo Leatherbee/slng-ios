@@ -18,6 +18,7 @@ enum KeyboardLayoutType: String, CaseIterable {
 enum KeyboardMode {
     case normal
     case explain
+    case emoji
 }
 
 extension String {

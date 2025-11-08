@@ -14,6 +14,8 @@
 		50FCF79D2EBCFD7E00B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF79C2EBCFD7E00B2C472 /* Lottie */; };
 		50FCF79F2EBCFD8300B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF79E2EBCFD8300B2C472 /* OpenAI */; };
 		50FCF7A12EBCFD8300B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7A02EBCFD8300B2C472 /* Lottie */; };
+		50FCF94C2EBF510E00B2C472 /* EmojiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF94B2EBF510E00B2C472 /* EmojiKit */; };
+		50FCF9502EBF527700B2C472 /* EmojiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF94F2EBF527700B2C472 /* EmojiKit */; };
 		50FDB6942EB200AC004304A3 /* KeyboardSlangExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -174,6 +176,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50FCF94C2EBF510E00B2C472 /* EmojiKit in Frameworks */,
 				50FCF7962EBCFD5700B2C472 /* OpenAI in Frameworks */,
 				50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */,
 			);
@@ -206,6 +209,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50FCF9502EBF527700B2C472 /* EmojiKit in Frameworks */,
 				50FCF79F2EBCFD8300B2C472 /* OpenAI in Frameworks */,
 				50FCF7A12EBCFD8300B2C472 /* Lottie in Frameworks */,
 			);
@@ -270,6 +274,7 @@
 			packageProductDependencies = (
 				50FCF7952EBCFD5700B2C472 /* OpenAI */,
 				50FCF7982EBCFD6900B2C472 /* Lottie */,
+				50FCF94B2EBF510E00B2C472 /* EmojiKit */,
 			);
 			productName = SlangTranslator;
 			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
@@ -364,6 +369,7 @@
 			packageProductDependencies = (
 				50FCF79E2EBCFD8300B2C472 /* OpenAI */,
 				50FCF7A02EBCFD8300B2C472 /* Lottie */,
+				50FCF94F2EBF527700B2C472 /* EmojiKit */,
 			);
 			productName = KeyboardSlangExtension;
 			productReference = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */;
@@ -409,6 +415,7 @@
 			packageReferences = (
 				50FCF7942EBCFD5700B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */,
 				50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 502CE8DD2EA1F638007F38E3 /* Products */;
@@ -1022,6 +1029,14 @@
 				minimumVersion = 4.5.2;
 			};
 		};
+		50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielsaidi/EmojiKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1054,6 +1069,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
+		};
+		50FCF94B2EBF510E00B2C472 /* EmojiKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */;
+			productName = EmojiKit;
+		};
+		50FCF94F2EBF527700B2C472 /* EmojiKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */;
+			productName = EmojiKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
