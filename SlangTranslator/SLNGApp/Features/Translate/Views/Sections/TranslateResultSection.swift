@@ -213,6 +213,7 @@ struct TranslateResultSection: View {
                     .padding(.top, 1)
                 }
                 .safeAreaPadding(.top)
+                .scrollIndicators(.hidden)
                 
                 Button {
                     viewModel.reset()
