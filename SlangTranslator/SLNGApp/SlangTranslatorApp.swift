@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import FirebaseCore
 
 @main
 struct SlangTranslatorApp: App {
@@ -20,7 +19,6 @@ struct SlangTranslatorApp: App {
         let container = SharedModelContainer.shared.container
         let dataSlangRpository = SlangSwiftData(container: container)
         _ = dataSlangRpository.loadAll()
-        FirebaseApp.configure()
     }
     
     var body: some Scene {

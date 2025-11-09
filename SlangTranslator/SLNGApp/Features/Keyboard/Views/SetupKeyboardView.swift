@@ -49,11 +49,13 @@ struct SetupKeyboardView: View {
                         Text("Add Keyboard")
                             .padding(.vertical, 18)
                             .font(Font.body.bold())
-                            .foregroundColor(Color(.white))
+                            .frame(maxWidth: .infinity, minHeight: 60)
+                            .foregroundColor(.onboardingTextPrimary)
+                            .background(
+                                AppColor.Button.primary
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: 30))
                     }
-                    .frame(maxWidth: .infinity, minHeight: 60)
-                    .background(Color(.black))
-                    .clipShape(RoundedRectangle(cornerRadius: 30))
                     
                     Text("This will open IOS system settings")
                         .font(.footnote)
