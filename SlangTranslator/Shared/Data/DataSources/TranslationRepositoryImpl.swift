@@ -53,20 +53,35 @@ final class TranslationRepositoryImpl: TranslationRepository {
     
     private func translateSentenceWithGPT(for text: String) async throws -> TranslationResponse {
         let prompt = """
-        Terjemahkan kalimat berikut dari Bahasa Indonesia informal ke Bahasa Inggris natural.
-        Juga tentukan sentimen dari kalimat tersebut (positif, netral, atau negatif).
-        Format hasil sebagai JSON valid:
+        You are an expert Indonesian-English translator that understands modern Indonesian slang, abbreviations, and internet language. 
+        Your goal is to translate informal or slang sentences into natural, fluent English that preserves the *meaning and emotional tone*, not word-for-word translation.
+
+        For each input sentence:
+        1. Translate it naturally to English (preserving tone and intention).
+        2. Identify the sentiment as one of: "positive", "neutral", or "negative".
+        3. If the sentence includes slang or figurative expressions, interpret their *contextual meaning*.
+
+        Return ONLY valid JSON in this format:
         {
           "englishTranslation": "...",
-          "sentiment": "..."
+          "sentiment": "...",
         }
-        
-        Kalimat: "\(text)"
+
+        Examples:
+        Input: "anjir, parah banget!"
+        Output: {"englishTranslation": "Damn, that’s crazy!", "sentiment": "negative"}
+
+        Input: "mantul bro!"
+        Output: {"englishTranslation": "That’s awesome, bro!", "sentiment": "positive"}
+
+        Now translate the following:
+        "\(text)"
         """
         
         let query = ChatQuery(
-            messages: [.user(.init(content: .string(prompt)))], model: .gpt4_o_mini,
-            temperature: 0.7
+            messages: [.user(.init(content: .string(prompt)))],
+            model: .gpt4_o_mini,
+            temperature: 0.3
         )
         
         let result = try await client.chats(query: query)
@@ -111,7 +126,7 @@ final class TranslationRepositoryImpl: TranslationRepository {
     }
 }
 
-// Helper model for decoding JSON data
+// Helper entity for decoding JSON data
 private struct GPTTranslationResult: Codable {
     let englishTranslation: String
     let sentiment: String
