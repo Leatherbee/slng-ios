@@ -160,16 +160,20 @@ struct OnboardingView: View {
                     let icon = Image(systemName: "globe")
                     Text("Switch to SLNG")
                         .font(.system(.largeTitle, design: .serif, weight: .bold))
+                        .padding(.top, 12) 
                     Text("Tap and hold \(icon) key below. Select SLNG Keyboard.")
                         .font(.subheadline)
                         .foregroundColor(AppColor.Text.primary)
                         .multilineTextAlignment(.center)
+                        .frame(maxWidth: 292, minHeight: 50)
                 }
-                .padding(.top, 12)
+                .padding(.top, 16)
+                .padding(.bottom, 8)
                 
-                LottieView(animation: .named("keyboard"))
+                LottieView(animation: .named(colorScheme == .light ? "keyboard-change-light" : "keyboard-change-dark"))
                     .looping()
-                    .frame(width: 390, height: 340)
+                    .frame(width: 312, height: 268)
+                    .padding(.bottom, 14)
                 
                 TextField("Write Something", text: $trialKeyboardText)
                     .focused($focusedField)

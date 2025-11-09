@@ -1,0 +1,12 @@
+{
+  "data" : [
+    {
+      "filename" : "keyboard-change-light.json",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -6,10 +6,10 @@ struct EmojiKeyboardSection: View {
     let style: KeyStyle
     let keyboardHeight: CGFloat
     let insertText: (String) -> Void
-
+    
     @State private var selectedCategory: EmojiCategory = .smileysAndPeople
     @State private var searchQuery: String = ""
-
+    
     private var categories: [EmojiCategory] {
         [
             .smileysAndPeople,
@@ -22,7 +22,7 @@ struct EmojiKeyboardSection: View {
             .flags
         ]
     }
-
+    
     private var filteredEmojis: [Emoji] {
         let q = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         guard !q.isEmpty else { return selectedCategory.emojis }
@@ -32,9 +32,9 @@ struct EmojiKeyboardSection: View {
             return name.contains(q) || emoji.char.lowercased().contains(q)
         }
     }
-
+    
     private let columns: [GridItem] = Array(repeating: GridItem(.flexible(minimum: 28, maximum: 40), spacing: 6), count: 8)
-
+    
     var body: some View {
         VStack(spacing: 8) {
             header
@@ -49,7 +49,7 @@ struct EmojiKeyboardSection: View {
         .frame(height: keyboardHeight)
         .transition(.move(edge: .bottom).combined(with: .opacity))
     }
-
+    
     private var header: some View {
         HStack(spacing: 8) {
             Button {
@@ -63,17 +63,17 @@ struct EmojiKeyboardSection: View {
                     .clipShape(Circle())
                     .shadow(color: Color.black.opacity(0.10), radius: 1, y: 0.5)
             }
-
+            
             Text("Emoji")
                 .foregroundStyle(style.labelText)
                 .font(.system(.subheadline, design: .default, weight: .regular))
-
+            
             Spacer()
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
     }
-
+    
     private var categoryPicker: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 6) {
@@ -101,7 +101,7 @@ struct EmojiKeyboardSection: View {
             .padding(.horizontal, 8)
         }
     }
-
+    
     private var searchField: some View {
         HStack {
             Image(systemName: "magnifyingglass")
@@ -121,7 +121,7 @@ struct EmojiKeyboardSection: View {
         )
         .padding(.horizontal, 8)
     }
-
+    
     private var emojiGrid: some View {
         ScrollView(showsIndicators: false) {
             LazyVGrid(columns: columns, spacing: 8) {
@@ -161,7 +161,7 @@ private extension EmojiCategory {
         case .objects: return "Objects"
         case .symbols: return "Symbols"
         case .flags: return "Flags"
-        @unknown default: return "Other"
+        default: return "Other"
         }
     }
 }

@@ -10,6 +10,7 @@ import Lottie
 
 struct KeyboardSettingView: View {
     
+    @Environment(\.colorScheme) var colorScheme
     @State private var showShareSheetPreview: Bool = false
     
     @AppStorage("settings.autoCorrect", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
@@ -44,9 +45,9 @@ struct KeyboardSettingView: View {
                     let iconOne = Image(systemName: "globe")
                     let iconTwo = Text(Image(systemName: "info.circle")).foregroundStyle(.blue)
                     
-                    Image("keyboardsettingplaceholder")
-                        .resizable()
-                        .frame(width: 315, height: 195, alignment: .center)
+                    LottieView(animation: .named(colorScheme == .light ? "keyboard-change-light" : "keyboard-change-dark"))
+                        .looping()
+                        .frame(width: 312, height: 268)
                         .padding(.vertical, 10)
                     
                     Text("SLNG keyboard is now enabled")
@@ -57,12 +58,23 @@ struct KeyboardSettingView: View {
                     Button {
                         showShareSheetPreview = true
                     } label: {
-                        Text("Long press \(iconOne) and select SLNG keyboard or you can use Share extension \(iconTwo)")
-                            .font(.footnote)
-                            .foregroundStyle(AppColor.Text.secondary)
-                            .frame(maxWidth: 250)
-                            .multilineTextAlignment(.center)
-                            .padding(.bottom, 14)
+                        VStack(spacing: 4) {
+                            HStack(spacing: 4) {
+                                Text("Long press")
+                                Image(systemName: "globe")
+                                Text("and select SLNG keyboard")
+                            }
+                            HStack(spacing: 4) {
+                                Text("or use Share extension")
+                                Image(systemName: "info.circle")
+                                    .foregroundStyle(.blue)
+                            }
+                        }
+                        .font(.footnote)
+                        .foregroundStyle(AppColor.Text.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 14)
+                        .padding(.top, 4)
                     }
                 }
                 
