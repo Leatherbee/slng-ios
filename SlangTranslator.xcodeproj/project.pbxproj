@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		509D0C372EBF9C9700437884 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 509D0C362EBF9C9700437884 /* FirebaseAnalytics */; };
+		509D0C392EBF9C9700437884 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 509D0C382EBF9C9700437884 /* FirebaseAnalyticsCore */; };
+		509D0C3B2EBF9C9700437884 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 509D0C3A2EBF9C9700437884 /* FirebaseAnalyticsIdentitySupport */; };
 		50FCF7962EBCFD5700B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7952EBCFD5700B2C472 /* OpenAI */; };
 		50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7982EBCFD6900B2C472 /* Lottie */; };
 		50FCF79B2EBCFD7E00B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF79A2EBCFD7E00B2C472 /* OpenAI */; };
@@ -178,6 +181,9 @@
 			files = (
 				50FCF94C2EBF510E00B2C472 /* EmojiKit in Frameworks */,
 				50FCF7962EBCFD5700B2C472 /* OpenAI in Frameworks */,
+				509D0C3B2EBF9C9700437884 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
+				509D0C392EBF9C9700437884 /* FirebaseAnalyticsCore in Frameworks */,
+				509D0C372EBF9C9700437884 /* FirebaseAnalytics in Frameworks */,
 				50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -275,6 +281,9 @@
 				50FCF7952EBCFD5700B2C472 /* OpenAI */,
 				50FCF7982EBCFD6900B2C472 /* Lottie */,
 				50FCF94B2EBF510E00B2C472 /* EmojiKit */,
+				509D0C362EBF9C9700437884 /* FirebaseAnalytics */,
+				509D0C382EBF9C9700437884 /* FirebaseAnalyticsCore */,
+				509D0C3A2EBF9C9700437884 /* FirebaseAnalyticsIdentitySupport */,
 			);
 			productName = SlangTranslator;
 			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
@@ -416,6 +425,7 @@
 				50FCF7942EBCFD5700B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */,
 				50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 				50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */,
+				509D0C352EBF9C9700437884 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 502CE8DD2EA1F638007F38E3 /* Products */;
@@ -1013,6 +1023,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		509D0C352EBF9C9700437884 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.5.0;
+			};
+		};
 		50FCF7942EBCFD5700B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MacPaw/OpenAI.git";
@@ -1040,6 +1058,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		509D0C362EBF9C9700437884 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 509D0C352EBF9C9700437884 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		509D0C382EBF9C9700437884 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 509D0C352EBF9C9700437884 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		509D0C3A2EBF9C9700437884 /* FirebaseAnalyticsIdentitySupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 509D0C352EBF9C9700437884 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsIdentitySupport;
+		};
 		50FCF7952EBCFD5700B2C472 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 50FCF7942EBCFD5700B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */;

@@ -95,6 +95,7 @@ struct TranslateLoadingSection: View {
         .onDisappear {
             timer?.invalidate()
         }
+        .toolbar(.hidden, for: .tabBar)
     }
     
     private func startLoopingAnimation() {

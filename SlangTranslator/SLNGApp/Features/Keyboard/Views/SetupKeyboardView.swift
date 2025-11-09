@@ -11,6 +11,7 @@ import Lottie
 struct SetupKeyboardView: View {
     @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
     var onReturnFromSettings: () -> Void
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ZStack {
@@ -25,7 +26,10 @@ struct SetupKeyboardView: View {
                     .font(.footnote)
                     .foregroundStyle(AppColor.Text.secondary)
                 
-                LottieAnimationUIView(animationName: "keyboard-setup", width: 242, height: 526)
+//                LottieAnimationUIView(animationName: "keyboard-setup", width: 242, height: 526)
+                LottieView(animation: .named(colorScheme == .light ? "keyboard-setup-light" : "keyboard-setup-dark"))
+                    .looping()
+//                    .frame(width: 242, height: 526)
                 
                 Spacer()
                 
