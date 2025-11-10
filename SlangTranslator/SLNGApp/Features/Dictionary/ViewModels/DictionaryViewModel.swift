@@ -37,7 +37,7 @@ final class DictionaryViewModel: ObservableObject {
         isLoading = true
         offset = 0
  
-        allSlangs = slangRepo.fetchAll()
+        allSlangs = await slangRepo.fetchAll()!
         totalCount = allSlangs.count
  
         slangs = Array(allSlangs)

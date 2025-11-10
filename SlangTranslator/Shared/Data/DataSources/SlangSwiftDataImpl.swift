@@ -17,7 +17,7 @@ final class SlangSwiftDataImpl {
     }
     
     /// Ambil data berdasarkan offset (untuk lazy load)
-    func fetch(offset: Int = 0, keyword: String? = nil) -> [SlangModel] {
+    func fetch(offset: Int = 0, keyword: String? = nil) async throws -> [SlangModel] {
         var predicate: Predicate<SlangModel>? = nil
         
         if let keyword, !keyword.isEmpty {
@@ -44,7 +44,7 @@ final class SlangSwiftDataImpl {
         }
     }
     
-    func fetchAll() -> [SlangModel] {
+    func fetchAll() -> [SlangModel]? {
         let descriptor = FetchDescriptor<SlangModel>(
             sortBy: [SortDescriptor(\.slang, order: .forward)]
         )
