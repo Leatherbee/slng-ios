@@ -93,13 +93,12 @@ class KeyboardViewController: UIInputViewController {
             textDocumentProxy.insertText(text)
             return
         }
-        if vm.autoCorrectEnabled {
-            if text == " " {
-                applyAutoCorrectOnSpace()
-            } else if [".", ",", "!", "?", ";", ":"].contains(text) {
-                applyAutoCorrectOnPunctuation(text)
-            } else {
-                textDocumentProxy.insertText(text)
+        if text == " " {
+            textDocumentProxy.insertText(" ")
+        } else if [".", ",", "!", "?", ";", ":"].contains(text) {
+            textDocumentProxy.insertText(text)
+            if vm.autoCapsEnabled {
+                vm.isShifted = true
             }
         } else {
             textDocumentProxy.insertText(text)

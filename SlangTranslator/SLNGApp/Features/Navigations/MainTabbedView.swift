@@ -24,15 +24,24 @@ struct MainTabbedView: View {
                 Tab("Translate", systemImage: "bubbles.and.sparkles", value: .translate) {
                     TranslateView()
                 }
+                .accessibilityLabel("Translate tab")
+                .accessibilityHint("Translate page is selected by default.")
+                .accessibilityInputLabels(["Translate Tab"])
                 
                 Tab("Keyboard", systemImage: "keyboard", value: .keyboard) {
                     KeyboardView(onReturnFromSettings: {})
                 }
+                .accessibilityLabel("Keyboard tab")
+                .accessibilityHint("Keyboard page")
+                .accessibilityInputLabels(["Keyboard Tab"])
                 
                 Tab("Dictionary", systemImage: "text.book.closed", value: .dictionary) {
                     DictionaryView()
                         .environment(popupManager)
                 }
+                .accessibilityLabel("Dictionary tab")
+                .accessibilityHint("Dictionary page")
+                .accessibilityInputLabels(["Dictionary Tab"])
             }
             .tint(.primary)
             

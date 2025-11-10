@@ -84,7 +84,6 @@
 		50FCF2072EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Resources/Data/slng_data_seeded.json,
 				Shared/Common/Colors.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
@@ -98,6 +97,7 @@
 				Shared/Domain/Repositories/TranslationRepository.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
+				Shared/Manager/HapticManager.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
 			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
@@ -105,7 +105,6 @@
 		50FCF2082EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Resources/Data/slng_data_seeded.json,
 				Shared/Common/Colors.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
@@ -119,6 +118,7 @@
 				Shared/Domain/Repositories/TranslationRepository.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
+				Shared/Manager/HapticManager.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
 			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;

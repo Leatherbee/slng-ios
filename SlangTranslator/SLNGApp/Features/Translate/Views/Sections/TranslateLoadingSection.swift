@@ -2,6 +2,7 @@ import SwiftUI
 internal import Combine
 
 struct TranslateLoadingSection: View {
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
     @ObservedObject var viewModel: TranslateViewModel
     var textNamespace: Namespace.ID
     var dynamicTextStyle: Font.TextStyle
@@ -104,23 +105,27 @@ struct TranslateLoadingSection: View {
         
         var tickCounter = 0
         
-        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-            withAnimation(.interpolatingSpring(stiffness: 150, damping: 14)) {
-                dotCount = (dotCount + 1) % 4
-            }
-            tickCounter += 1
-            
-            let randomThreshold = Int.random(in: 3...5)
-            if tickCounter >= randomThreshold {
-                tickCounter = 0
+        if !reduceMotion {
+            timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                withAnimation(.interpolatingSpring(stiffness: 150, damping: 14)) {
+                    dotCount = (dotCount + 1) % 4
+                }
+                tickCounter += 1
                 
-                if availableMessages.isEmpty {
-                    availableMessages = loadingMessages.shuffled()
-                }
-                withAnimation(.interpolatingSpring(stiffness: 180, damping: 12)) {
-                    currentMessage = availableMessages.popLast() ?? currentMessage
+                let randomThreshold = Int.random(in: 3...5)
+                if tickCounter >= randomThreshold {
+                    tickCounter = 0
+                    
+                    if availableMessages.isEmpty {
+                        availableMessages = loadingMessages.shuffled()
+                    }
+                    withAnimation(.interpolatingSpring(stiffness: 180, damping: 12)) {
+                        currentMessage = availableMessages.popLast() ?? currentMessage
+                    }
                 }
             }
+        } else {
+            currentMessage = "\(availableMessages.popLast() ?? "Loading")..."
         }
     }
 }
