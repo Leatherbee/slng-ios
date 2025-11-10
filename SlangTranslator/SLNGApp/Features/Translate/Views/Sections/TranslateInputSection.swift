@@ -10,6 +10,7 @@ import SwiftUI
 struct TranslateInputSection: View {
     @ObservedObject var viewModel: TranslateViewModel
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
     var textNamespace: Namespace.ID
     var adjustFontSizeDebounced: () -> Void
     
@@ -38,6 +39,9 @@ struct TranslateInputSection: View {
                         adjustFontSizeDebounced()
                     }
                     .focused($isKeyboardActive)
+                    .accessibilityLabel("Input text to translate")
+                    .accessibilityInputLabels(["Input text"])
+                    .accessibilityAddTraits(.allowsDirectInteraction)
                 
                 if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     Text("Heard a slang you don't get? Type here")
@@ -46,8 +50,11 @@ struct TranslateInputSection: View {
                         .padding(.horizontal, 5)
                         .padding(.top, 8)
                         .allowsHitTesting(false)
+                        .accessibilityLabel("Input field for slang to translate")
+                        .accessibilityHint("Type a slang word you want to translate")
+                        .accessibilityHidden(false)
                     
-                    if !isKeyboardActive {
+                    if !isKeyboardActive && !reduceMotion {
                         BlinkingCursor()
                             .padding(.horizontal, -3)
                     }
@@ -81,6 +88,9 @@ struct TranslateInputSection: View {
                 .clipShape(RoundedRectangle(cornerRadius: 30))
             }
             .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .accessibilityLabel("Translate button")
+            .accessibilityInputLabels(["Translate button"])
+            .accessibilityHidden(false)
         }
         .padding()
         .contentShape(Rectangle())

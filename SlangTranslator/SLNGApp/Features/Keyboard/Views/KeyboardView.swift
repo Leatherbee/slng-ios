@@ -13,10 +13,16 @@ struct KeyboardView: View {
     var body: some View {
         if hasSetupKeyboard {
             KeyboardSettingView()
+                .accessibilityLabel("Keyboard settings")
+                .accessibilityHint("Manage keyboard translator preferences and options")
+                .accessibilityIdentifier("KeyboardView.Settings")
         } else {
             SetupKeyboardView {
                 onReturnFromSettings()
             }
+            .accessibilityLabel("Keyboard setup")
+            .accessibilityHint("Follow instructions to enable the slang translator keyboard")
+            .accessibilityIdentifier("KeyboardView.Setup")
         }
     }    
 }

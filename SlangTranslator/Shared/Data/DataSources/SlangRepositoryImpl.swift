@@ -65,7 +65,7 @@ final class SlangRepositoryImpl: SlangRepository {
         guard !isLoaded else { return }
         isLoaded = true
 
-        guard let url = Bundle.main.url(forResource: "slng_data_seeded", withExtension: "json"),
+        guard let url = Bundle.main.url(forResource: "slng_data_v1.1", withExtension: "json"),
               let stream = InputStream(url: url) else {
             print("Slang JSON not found!")
             return

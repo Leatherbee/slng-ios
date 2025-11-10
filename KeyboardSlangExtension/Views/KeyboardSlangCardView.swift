@@ -28,12 +28,17 @@ struct KeyboardSlangCardView: View {
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(.primary)
                     .animation(.spring(response: 0.35, dampingFraction: 0.55), value: isExpanded)
-                    .onTapGesture {
-                        toggleCard()
-                    }
+                    .onTapGesture { toggleCard() }
                     .padding(.horizontal, 4)
             }
-            
+            .contentShape(Rectangle())
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityLabel(isExpanded ? "Collapse details for \(slangData.slang.capitalized)" : "Expand details for \(slangData.slang.capitalized)")
+            .accessibilityHint("Tap to show or hide slang details")
+            .accessibilityValue(isExpanded ? "Expanded" : "Collapsed")
+            .accessibilityAction { toggleCard() }
+
             if isExpanded {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(slangData.translationEN)
@@ -94,6 +99,7 @@ struct KeyboardSlangCardView: View {
             toggleCard()
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.65), value: isExpanded)
+        .accessibilityElement(children: .contain)
     }
     
     private func toggleCard() {

@@ -77,7 +77,7 @@ struct VariableSunburstShape: Shape {
                     y: center.y + sin(angle) * finalLength + sin(perpAngle2) * endWidth
                 )
                 
-                // ✅ Draw trapezium (narrow at start, wide at end)
+                // Draw trapezium (narrow at start, wide at end)
                 path.move(to: startLeft)
                 path.addLine(to: endLeft)
                 path.addLine(to: endRight)

@@ -33,6 +33,14 @@ struct TranslateSlangCardView: View {
             .onTapGesture {
                 toggleCard()
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityLabel(isExpanded ? "Collapse details for \(slangData.slang.capitalized)" : "Expand details for \(slangData.slang.capitalized)")
+            .accessibilityHint("Tap to show or hide slang details")
+            .accessibilityValue(isExpanded ? "Expanded" : "Collapsed")
+            .accessibilityAction {
+                toggleCard()
+            }
             
             if isExpanded {
                 VStack(alignment: .leading, spacing: 8) {
@@ -94,6 +102,7 @@ struct TranslateSlangCardView: View {
             Divider()
         }
         .background(backgroundColor)
+        .accessibilityElement(children: .contain)
     }
     
     private func toggleCard() {

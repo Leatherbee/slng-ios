@@ -42,13 +42,11 @@ struct KeyboardSettingView: View {
                 }
                 
                 VStack(alignment: .center) {
-                    let iconOne = Image(systemName: "globe")
-                    let iconTwo = Text(Image(systemName: "info.circle")).foregroundStyle(.blue)
-                    
                     LottieView(animation: .named(colorScheme == .light ? "keyboard-change-light" : "keyboard-change-dark"))
                         .looping()
                         .frame(width: 312, height: 268)
                         .padding(.vertical, 10)
+                        .accessibilityHidden(true)
                     
                     Text("SLNG keyboard is now enabled")
                         .font(.body)
@@ -76,13 +74,19 @@ struct KeyboardSettingView: View {
                         .padding(.bottom, 14)
                         .padding(.top, 4)
                     }
+                    .accessibilityLabel("Show Instructions")
+                    .accessibilityHint("Opens guidance sheet with steps")
+                    .accessibilityInputLabels(["Instructions", "Setup Tips", "Show Guide"])
+                    .accessibilityIdentifier("KeyboardSettingView.ShowInstructions")
                 }
-                
+
                 VStack(spacing: 24) {
                     VStack(spacing: 4) {
                         Toggle("Auto Capslock", isOn: $autoCapslock)
                             .padding(.vertical, 2)
                             .tint(.green)
+                            .accessibilityIdentifier("KeyboardSettingView.AutoCapslockToggle")
+                            .accessibilityInputLabels(["Auto Caps", "Auto Capitalization"]) 
                     }
                     .padding()
                     .background(Color(.systemGray6))
@@ -115,6 +119,19 @@ struct KeyboardSettingView: View {
                                         .font(.footnote)
                                         .foregroundColor(.secondary)
                                 }
+                                .contentShape(.rect)
+                                .accessibilityElement(children: .combine)
+                                .accessibilityAddTraits(.isButton)
+                                .accessibilityLabel(layout.rawValue)
+                                .accessibilityValue(selectedLayout == layout ? "Selected" : "Not selected")
+                                .accessibilityHint("Applies keyboard layout")
+                                .accessibilityInputLabels([layout.rawValue, "\(layout.rawValue) layout", "Select \(layout.rawValue)"])
+                                .accessibilityIdentifier("KeyboardSettingView.Layout.\(layout.rawValue)")
+                                .accessibilityAction {
+                                    withAnimation(.easeInOut) {
+                                        keyboardLayoutRaw = layout.rawValue
+                                    }
+                                }
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -145,6 +162,7 @@ struct ShareSheetPreviewSheet: View {
                 LottieView(animation: .named("share-extension"))
                     .looping()
                     .frame(width: 500, height: 600)
+                    .accessibilityHidden(true)
                 
                 Text("Copy text and share")
                     .font(.system(.body, design: .default, weight: .regular))
@@ -166,6 +184,9 @@ struct ShareSheetPreviewSheet: View {
                             .foregroundStyle(.secondary)
                         
                     }
+                    .accessibilityLabel("Close")
+                    .accessibilityHint("Dismiss share sheet preview")
+                    .accessibilityIdentifier("ShareSheetPreview.Close")
                 }
             }
             .scrollIndicators(.hidden)

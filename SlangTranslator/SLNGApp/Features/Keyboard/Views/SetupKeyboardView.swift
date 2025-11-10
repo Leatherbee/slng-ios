@@ -29,6 +29,7 @@ struct SetupKeyboardView: View {
 //                LottieAnimationUIView(animationName: "keyboard-setup", width: 242, height: 526)
                 LottieView(animation: .named(colorScheme == .light ? "keyboard-setup-light" : "keyboard-setup-dark"))
                     .looping()
+                    .accessibilityHidden(true)
 //                    .frame(width: 242, height: 526)
                 
                 Spacer()
@@ -56,6 +57,9 @@ struct SetupKeyboardView: View {
                             )
                             .clipShape(RoundedRectangle(cornerRadius: 30))
                     }
+                    .accessibilityLabel("Add SLNG keyboard")
+                    .accessibilityHint("Opens iOS Settings to enable the keyboard")
+                    .accessibilityIdentifier("SetupKeyboardView.AddKeyboard")
                     
                     Text("This will open IOS system settings")
                         .font(.footnote)
