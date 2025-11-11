@@ -33,7 +33,6 @@ class PopupManager {
         return slangData
     }
     
-    // Alternative method names untuk backward compatibility
     func setData(slangData: SlangData) {
         self.slangData = slangData
     }

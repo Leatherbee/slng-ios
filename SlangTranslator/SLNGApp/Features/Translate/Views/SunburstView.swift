@@ -8,7 +8,6 @@
 import SwiftUI
 import CoreGraphics
 
-// MARK: - Shape dengan seed random dan trapezium shape
 struct VariableSunburstShape: Shape {
     var seed: Int
     var progress: CGFloat
@@ -115,7 +114,7 @@ struct SunburstView: View {
                     shrink: shrink,
                     scale: index < layers.count ? layerScales[index] : layer.scale
                 )
-                .fill(Color.primary.opacity(layer.opacity))  // ✅ Changed to .fill for solid trapezium
+                .fill(Color.primary.opacity(layer.opacity))  
             }
         }
         .onAppear {
