@@ -177,8 +177,8 @@ struct OnboardingView: View {
                 
                 TextField("Write Something", text: $trialKeyboardText)
                     .focused($focusedField)
-                    .foregroundColor(focusedField ? .black : AppColor.Text.disable)
-                    .tint(.black)
+                    .foregroundColor(AppColor.Text.primary)
+                    .tint(AppColor.Text.primary)
                     .textFieldStyle(RoundedTextFieldStyle())
                     .frame(minHeight: 62)
                     .padding(.horizontal, 32)

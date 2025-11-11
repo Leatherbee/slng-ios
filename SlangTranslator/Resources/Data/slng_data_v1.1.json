@@ -1,44 +1,14 @@
 [
-  {
-    "slang": "@",
-    "translationID": "di",
-    "translationEN": "at",
-    "contextID": "Digunakan dalam konteks digital atau media sosial untuk menunjukkan lokasi atau tujuan, sering kali dalam percakapan informal.",
-    "contextEN": "Used in digital or social media contexts to indicate location or direction, often in informal conversations.",
-    "exampleID": "Kita ketemu @ mall besok ya.",
-    "exampleEN": "Let's meet at the mall tomorrow.",
-    "sentiment": "neutral"
-  },
-  {
-    "slang": "22nya",
-    "translationID": "dua-duanya",
-    "translationEN": "both",
-    "contextID": "Digunakan dalam situasi santai untuk menyatakan dua hal sekaligus, sering kali dalam percakapan sehari-hari.",
-    "contextEN": "Used in casual situations to express both things at once, often in daily conversations.",
-    "exampleID": "Aku suka pizza dan burger, 22nya enak.",
-    "exampleEN": "I like pizza and burgers, both are delicious.",
-    "sentiment": "positive"
-  },
-  {
-    "slang": "7an",
-    "translationID": "tujuan",
-    "translationEN": "goal",
-    "contextID": "Istilah ini digunakan dalam percakapan santai untuk merujuk pada tujuan atau sasaran yang ingin dicapai, sering kali dalam konteks motivasi atau pencapaian.",
-    "contextEN": "This term is used in casual conversations to refer to a goal or target that one aims to achieve, often in the context of motivation or accomplishment.",
-    "exampleID": "Target 7an kita tahun ini adalah meningkatkan penjualan.",
-    "exampleEN": "Our goal this year is to increase sales.",
-    "sentiment": "positive"
-  },
-  {
-    "slang": "aaaaaaakkk",
-    "translationID": "ah",
-    "translationEN": "ah",
-    "contextID": "Digunakan sebagai ungkapan kejutan, kekaguman, atau ketidakpercayaan, seringkali dengan nada dramatis.",
-    "contextEN": "Used as an expression of surprise, amazement, or disbelief, often with a dramatic tone.",
-    "exampleID": "Aaaaaaakkk, kamu berhasil menang lomba itu!",
-    "exampleEN": "Aaaaaaakkk, you actually won that competition!",
-    "sentiment": "positive"
-  },
+    {
+        "slang":"anjeng",
+        "translationID":"anjing",
+        "translationEN":"dog",
+        "contextID":"Dalam konteks bercanda antar teman, kadang digunakan secara akrab untuk mengekspresikan keterkejutan atau kekaguman tanpa maksud menghina.",
+        "contextEN":"In friendly banter, sometimes used playfully to express surprise or amazement without offensive intent.",
+        "exampleID":"Anjeng, lo keren banget sih!",
+        "exampleEN":"Damn, you're so cool!",
+        "sentiment":"positive"
+    },
   {
     "slang": "aaaaahhhh",
     "translationID": "ah",

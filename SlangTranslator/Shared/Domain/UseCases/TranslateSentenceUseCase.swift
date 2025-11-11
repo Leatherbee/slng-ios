@@ -34,12 +34,29 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
     
     private func findSlang(in text: String, matching sentiment: SentimentType?) -> [SlangData] {
         let slangs = slangRepository.loadAll()
-        let normalizedText = text.normalizedForSlangMatching()
-        
-        let found = findMatchesSlangs(in: normalizedText, from: slangs)
-        let filtered = filterSlangBasedOnSentiment(found, sentiment: sentiment)
+
+        let rawText = text.lowercased()
+
+        let foundRaw = findMatchesSlangs(in: rawText, from: slangs)
+
+        let foundFuzzy = findFuzzyElongationMatches(
+            in: rawText,
+            from: slangs,
+            excluding: foundRaw.map { $0.range }
+        )
+
+        var found = foundRaw + foundFuzzy
+
+        if found.isEmpty {
+            let normalizedText = text.normalizedForSlangMatching()
+            found = findMatchesSlangs(in: normalizedText, from: slangs)
+            let filtered = filterSlangBasedOnSentiment(found, in: normalizedText, sentiment: sentiment)
+            let uniqueOrdered = deduplicateAndSortSlangs(filtered, found: found)
+            return uniqueOrdered
+        }
+
+        let filtered = filterSlangBasedOnSentiment(found, in: rawText, sentiment: sentiment)
         let uniqueOrdered = deduplicateAndSortSlangs(filtered, found: found)
-        
         return uniqueOrdered
     }
     
@@ -47,49 +64,104 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
         var results: [(data: SlangData, range: NSRange)] = []
         let fullRange = NSRange(location: 0, length: text.utf16.count)
 
-        for slangData in slangs {
+        let orderedSlangs = slangs.sorted { $0.slang.count > $1.slang.count }
+        var occupiedRanges: [NSRange] = []
+
+        for slangData in orderedSlangs {
             let slang = slangData.slang.lowercased()
             let pattern = "\\b\(NSRegularExpression.escapedPattern(for: slang))\\b"
             guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
 
             regex.enumerateMatches(in: text, options: [], range: fullRange) { match, _, _ in
-                if let range = match?.range {
-                    results.append((data: slangData, range: range))
-                }
+                guard let range = match?.range else { return }
+                let overlaps = occupiedRanges.contains { NSIntersectionRange($0, range).length > 0 }
+                if overlaps { return }
+
+                results.append((data: slangData, range: range))
+                occupiedRanges.append(range)
             }
         }
         
         return results
     }
+
+    private func findFuzzyElongationMatches(
+        in text: String,
+        from slangs: [SlangData],
+        excluding existingRanges: [NSRange]
+    ) -> [(data: SlangData, range: NSRange)] {
+        var results: [(data: SlangData, range: NSRange)] = []
+        let fullRange = NSRange(location: 0, length: text.utf16.count)
+
+        let orderedSlangs = slangs.sorted { $0.slang.count > $1.slang.count }
+        var occupiedRanges: [NSRange] = existingRanges
+
+        for slangData in orderedSlangs {
+            let base = slangData.slang.lowercased()
+            let fuzzy = base.map { ch in
+                NSRegularExpression.escapedPattern(for: String(ch)) + "+"
+            }.joined()
+            let pattern = "\\b" + fuzzy + "\\b"
+            guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
+
+            regex.enumerateMatches(in: text, options: [], range: fullRange) { match, _, _ in
+                guard let range = match?.range else { return }
+                let overlaps = occupiedRanges.contains { NSIntersectionRange($0, range).length > 0 }
+                if overlaps { return }
+
+                results.append((data: slangData, range: range))
+                occupiedRanges.append(range)
+            }
+        }
+
+        return results
+    }
     
     private func filterSlangBasedOnSentiment(
         _ found: [(data: SlangData, range: NSRange)],
+        in text: String,
         sentiment: SentimentType?
     ) -> [SlangData] {
-        let grouped = Dictionary(grouping: found, by: { $0.data.slang.lowercased() })
-        
+        let grouped = Dictionary(grouping: found, by: { $0.data.slang.normalizedForSlangMatching() })
+
         return grouped.values.compactMap { group in
-            let variants = group.map { $0.data }
-            if variants.count == 1 {
-                return variants.first
+            guard let firstRange = group.first?.range, let swiftRange = Range(firstRange, in: text) else {
+                return group.first?.data
             }
-            
-            return selectVariant(from: variants, sentiment: sentiment)
+            let token = String(text[swiftRange])
+            return selectVariantFromGroup(group.map { $0.data }, inputToken: token, sentiment: sentiment)
         }
     }
     
-    private func selectVariant(from variants: [SlangData], sentiment: SentimentType?) -> SlangData? {
-        if let sentiment = sentiment {
-            if let exact = variants.first(where: { $0.sentiment == sentiment }) {
-                return exact
-            }
-            if let neutral = variants.first(where: { $0.sentiment == .neutral }) {
-                return neutral
-            }
-            return variants.first
-        } else {
-            return variants.first(where: { $0.sentiment == .neutral }) ?? variants.first
+    private func selectVariantFromGroup(
+        _ variants: [SlangData],
+        inputToken: String,
+        sentiment: SentimentType?
+    ) -> SlangData? {
+        let lowerToken = inputToken.lowercased()
+
+        if let exact = variants.first(where: { $0.slang.lowercased() == lowerToken }) {
+            return exact
         }
+
+        let target = lowerToken.maxRepeatRun()
+        let sorted = variants.sorted { a, b in
+            let da = abs(a.slang.lowercased().maxRepeatRun() - target)
+            let db = abs(b.slang.lowercased().maxRepeatRun() - target)
+            if da != db { return da < db }
+
+            let sa = (a.sentiment == sentiment) ? 0 : 1
+            let sb = (b.sentiment == sentiment) ? 0 : 1
+            if sa != sb { return sa < sb }
+
+            let na = (a.sentiment == .neutral) ? 0 : 1
+            let nb = (b.sentiment == .neutral) ? 0 : 1
+            if na != nb { return na < nb }
+
+            return a.slang.count > b.slang.count
+        }
+
+        return sorted.first ?? variants.first
     }
     
     private func deduplicateAndSortSlangs(
