@@ -17,6 +17,9 @@ struct TranslateInputSection: View {
     @FocusState private var isKeyboardActive: Bool
     @Binding var shouldPlaySequentialAnimation: Bool
     @Binding var dynamicTextStyle: Font.TextStyle
+    @State private var pulse = false
+    @State private var dragTranslation: CGSize = .zero
+    @State private var isCancelling: Bool = false
     
     var body: some View {
         VStack {
@@ -46,7 +49,7 @@ struct TranslateInputSection: View {
                     .allowsHitTesting(!(viewModel.isRecording || viewModel.isTranscribing))
                 
                 if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isRecording || viewModel.isTranscribing {
-                    Text(viewModel.isTranscribing ? "Decoding what you mean ..." : (viewModel.isRecording ? "Still yapping? I'm hearing..." : "Heard a slang you don't get? Type here"))
+                    Text(viewModel.isTranscribing ? "Decoding your meaning ..." : (viewModel.isRecording ? "Still yapping ..." : "Heard a slang you don't get? Type here"))
                         .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
                         .foregroundColor(Color.textDisable)
                         .padding(.horizontal, 5)
@@ -65,27 +68,6 @@ struct TranslateInputSection: View {
             .padding(.horizontal)
             
             Spacer()
-            
-            HStack(spacing: 12) {
-                Button {
-                    if viewModel.isRecording {
-                        viewModel.stopRecordingAndTranscribe()
-                    } else {
-                        viewModel.startRecording()
-                    }
-                } label: {
-                    HStack {
-                        Image(systemName: viewModel.isRecording ? "stop.circle" : "mic")
-                        Text(viewModel.isRecording ? "Stop & Transcribe" : "Speak")
-                    }
-                    .padding(.vertical, 14)
-                    .frame(maxWidth: 314, minHeight: 60)
-                }
-                .foregroundColor((colorScheme == .dark) ? AppColor.Button.Text.primary : .white)
-                .background(viewModel.isRecording ? AppColor.Button.secondary : AppColor.Button.primary)
-                .clipShape(RoundedRectangle(cornerRadius: 30))
-                .accessibilityLabel(viewModel.isRecording ? "Stop recording and transcribe" : "Start recording")
-            }
             
             Button {
                 UIApplication.shared.dismissKeyboard()
@@ -114,6 +96,77 @@ struct TranslateInputSection: View {
             .accessibilityLabel("Translate button")
             .accessibilityInputLabels(["Translate button"])
             .accessibilityHidden(false)
+        }
+        .overlay(alignment: .bottom) {
+            ZStack {
+                if viewModel.isRecording {
+                    Circle()
+                        .stroke(AppColor.Button.primary.opacity(0.7), lineWidth: 3)
+                        .frame(width: 160, height: 160)
+                        .scaleEffect(pulse ? 1.4 : 1.0)
+                        .opacity(pulse ? 0 : 1)
+                        .animation(.easeOut(duration: 1).repeatForever(autoreverses: false), value: pulse)
+                        .onAppear { pulse = true }
+                        .onDisappear { pulse = false }
+                }
+
+                Circle()
+                    .fill(Color.clear)
+                    .frame(width: 340, height: 340)
+                    .contentShape(Circle())
+                    .opacity(0.001)
+                    .onLongPressGesture(minimumDuration: 0.6, maximumDistance: 50, pressing: { _ in }, perform: {
+                        if !viewModel.isRecording {
+                            viewModel.startRecording()
+                        }
+                    })
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { value in
+                                dragTranslation = value.translation
+                                if viewModel.isRecording {
+                                    isCancelling = dragTranslation.width > 80
+                                }
+                            }
+                            .onEnded { _ in
+                                if viewModel.isRecording {
+                                    if isCancelling {
+                                        viewModel.stopRecording()
+                                    } else {
+                                        viewModel.stopRecordingAndTranscribe()
+                                    }
+                                }
+                                dragTranslation = .zero
+                                isCancelling = false
+                            }
+                    )
+
+                if viewModel.isRecording {
+                    VStack(spacing: 6) {
+                        Circle()
+                            .fill(AppColor.Button.primary)
+                            .frame(width: 14, height: 14)
+                            .shadow(color: AppColor.Button.primary.opacity(0.3), radius: 6)
+                        Text("Recording")
+                            .font(.caption)
+                            .foregroundColor(Color.textDisable)
+                    }
+                }
+
+                if viewModel.isRecording {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(isCancelling ? .red : Color.textDisable)
+                            .font(.title3)
+                            .scaleEffect(isCancelling ? 1.1 : 1.0)
+                            .padding(.trailing, 24)
+                            .opacity(1)
+                    }
+                }
+            }
+            .accessibilityLabel("Hold to speak")
+            .padding(.bottom, 0)
         }
         .padding()
         .contentShape(Rectangle())
