@@ -99,8 +99,6 @@ struct DictionaryDetail: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             Spacer()
-            
-            
         }
         .onAppear() {
             self.slangData = popupManager.getSlangData()

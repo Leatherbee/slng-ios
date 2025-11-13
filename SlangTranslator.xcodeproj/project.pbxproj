@@ -91,10 +91,13 @@
 				Shared/Data/Model/SlangModel.swift,
 				Shared/Data/Model/TranslationModel.swift,
 				Shared/Domain/Entities/SlangData.swift,
+				Shared/Domain/Entities/TranscriptionResponse.swift,
 				Shared/Domain/Entities/TranslationData.swift,
 				Shared/Domain/Entities/TranslationResult.swift,
 				Shared/Domain/Repositories/SlangRepository.swift,
+				Shared/Domain/Repositories/SpeechToTextRepository.swift,
 				Shared/Domain/Repositories/TranslationRepository.swift,
+				Shared/Domain/UseCases/TranscribeSpeechUseCase.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
@@ -111,10 +114,13 @@
 				Shared/Data/Model/SlangModel.swift,
 				Shared/Data/Model/TranslationModel.swift,
 				Shared/Domain/Entities/SlangData.swift,
+				Shared/Domain/Entities/TranscriptionResponse.swift,
 				Shared/Domain/Entities/TranslationData.swift,
 				Shared/Domain/Entities/TranslationResult.swift,
 				Shared/Domain/Repositories/SlangRepository.swift,
+				Shared/Domain/Repositories/SpeechToTextRepository.swift,
 				Shared/Domain/Repositories/TranslationRepository.swift,
+				Shared/Domain/UseCases/TranscribeSpeechUseCase.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
@@ -660,6 +666,7 @@
 				INFOPLIST_FILE = SlangTranslator/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SLNG;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = Test;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -704,6 +711,7 @@
 				INFOPLIST_FILE = SlangTranslator/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SLNG;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = Test;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

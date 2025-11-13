@@ -42,9 +42,11 @@ struct TranslateInputSection: View {
                     .accessibilityLabel("Input text to translate")
                     .accessibilityInputLabels(["Input text"])
                     .accessibilityAddTraits(.allowsDirectInteraction)
+                    .opacity((viewModel.isRecording || viewModel.isTranscribing) ? 0 : 1)
+                    .allowsHitTesting(!(viewModel.isRecording || viewModel.isTranscribing))
                 
-                if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    Text("Heard a slang you don't get? Type here")
+                if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isRecording || viewModel.isTranscribing {
+                    Text(viewModel.isTranscribing ? "Decoding what you mean ..." : (viewModel.isRecording ? "Still yapping? I'm hearing..." : "Heard a slang you don't get? Type here"))
                         .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
                         .foregroundColor(Color.textDisable)
                         .padding(.horizontal, 5)
@@ -54,7 +56,7 @@ struct TranslateInputSection: View {
                         .accessibilityHint("Type a slang word you want to translate")
                         .accessibilityHidden(false)
                     
-                    if !isKeyboardActive && !reduceMotion {
+                    if !isKeyboardActive && !reduceMotion && !viewModel.isRecording && !viewModel.isTranscribing {
                         BlinkingCursor()
                             .padding(.horizontal, -3)
                     }
@@ -63,6 +65,27 @@ struct TranslateInputSection: View {
             .padding(.horizontal)
             
             Spacer()
+            
+            HStack(spacing: 12) {
+                Button {
+                    if viewModel.isRecording {
+                        viewModel.stopRecordingAndTranscribe()
+                    } else {
+                        viewModel.startRecording()
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: viewModel.isRecording ? "stop.circle" : "mic")
+                        Text(viewModel.isRecording ? "Stop & Transcribe" : "Speak")
+                    }
+                    .padding(.vertical, 14)
+                    .frame(maxWidth: 314, minHeight: 60)
+                }
+                .foregroundColor((colorScheme == .dark) ? AppColor.Button.Text.primary : .white)
+                .background(viewModel.isRecording ? AppColor.Button.secondary : AppColor.Button.primary)
+                .clipShape(RoundedRectangle(cornerRadius: 30))
+                .accessibilityLabel(viewModel.isRecording ? "Stop recording and transcribe" : "Start recording")
+            }
             
             Button {
                 UIApplication.shared.dismissKeyboard()
@@ -87,7 +110,7 @@ struct TranslateInputSection: View {
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 30))
             }
-            .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isRecording || viewModel.isLoading)
             .accessibilityLabel("Translate button")
             .accessibilityInputLabels(["Translate button"])
             .accessibilityHidden(false)

@@ -30,7 +30,7 @@ struct TranslateView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.black.opacity(0.1))
                 .ignoresSafeArea()
-            } else if viewModel.isLoading {
+            } else if viewModel.isLoading && !viewModel.isTranscribing {
                 TranslateLoadingSection(
                     viewModel: viewModel,
                     textNamespace: textNamespace,
