@@ -34,6 +34,11 @@ final class TranslateViewModel: ObservableObject {
     
     private var translateSentenceUseCase: TranslateSentenceUseCase?
     private var speechUseCase: TranscribeSpeechUseCase?
+
+    func prewarmPermissions() {
+        audioRecorder.requestPermission { _ in }
+        speechStreamingManager.requestAuthorization { _ in }
+    }
     
     init() {
         Task {

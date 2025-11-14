@@ -15,6 +15,7 @@ struct TranslateView: View {
     @State private var dynamicTextStyle: Font.TextStyle = .largeTitle
     @State private var shouldPlaySequentialAnimation = false
     @State private var fontSizeWorkItem: DispatchWorkItem?
+    @AppStorage("hasRequestedSpeechMic", store: UserDefaults.shared) private var hasRequestedSpeechMic = false
     
     var body: some View {
         ZStack {
@@ -56,6 +57,18 @@ struct TranslateView: View {
         }
         .background(Color.backgroundPrimary)
         .animation(.easeInOut(duration: 0.25), value: viewModel.isTranslated)
+        .onAppear {
+            if !hasRequestedSpeechMic {
+                viewModel.prewarmPermissions()
+                hasRequestedSpeechMic = true
+            }
+        }
+        .onAppear {
+            if !hasRequestedSpeechMic {
+                viewModel.prewarmPermissions()
+                hasRequestedSpeechMic = true
+            }
+        }
     }
         
     private func adjustFontSizeDebounced() {

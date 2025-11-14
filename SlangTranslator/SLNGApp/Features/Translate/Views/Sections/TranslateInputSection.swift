@@ -49,7 +49,7 @@ struct TranslateInputSection: View {
                     .allowsHitTesting(!(viewModel.isRecording || viewModel.isTranscribing))
                 
                 if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isRecording || viewModel.isTranscribing {
-                    Text(viewModel.isTranscribing ? "Decoding your meaning ..." : (viewModel.isRecording ? "Still yapping ..." : "Heard a slang you don't get? Type here"))
+                    Text(viewModel.isTranscribing ? "Okay… I’m piecing that together..." : (viewModel.isRecording ? "Alright, I'm all ears..." : "Heard a slang you don't get? Type here"))
                         .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
                         .foregroundColor(Color.textDisable)
                         .padding(.horizontal, 5)
@@ -96,6 +96,7 @@ struct TranslateInputSection: View {
             .accessibilityLabel("Translate button")
             .accessibilityInputLabels(["Translate button"])
             .accessibilityHidden(false)
+            .zIndex(10)
         }
         .overlay(alignment: .bottom) {
             ZStack {
@@ -112,8 +113,8 @@ struct TranslateInputSection: View {
 
                 Circle()
                     .fill(Color.clear)
-                    .frame(width: 340, height: 340)
-                    .contentShape(Circle())
+                    .frame(width: 280, height: 280)
+                    .contentShape(.circle)
                     .opacity(0.001)
                     .onLongPressGesture(minimumDuration: 0.6, maximumDistance: 50, pressing: { _ in }, perform: {
                         if !viewModel.isRecording {
@@ -166,7 +167,8 @@ struct TranslateInputSection: View {
                 }
             }
             .accessibilityLabel("Hold to speak")
-            .padding(.bottom, 0)
+            .padding(.bottom, 40)
+            .zIndex(1)
         }
         .padding()
         .contentShape(Rectangle())
