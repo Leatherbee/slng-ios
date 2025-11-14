@@ -1,160 +1,147 @@
 //
-//  DictionaryView.swift
+//  DictionaryOptimized.swift
 //  SlangTranslator
 //
-//  Created by Filza Rizki Ramadhan on 21/10/25.
+//  Created by Filza Rizki Ramadhan on 07/11/25.
+//  Optimized for large data sets and alphabet jumping.
 //
 
 import SwiftUI
-import AVFoundation
+import CoreHaptics
 import SwiftData
+import AVFoundation
 internal import Combine
+
 struct DictionaryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(PopupManager.self) private var popupManager
-    @StateObject private var viewModel: DictionaryViewModel
-    let letters: [String] = (97...122).compactMap { String(UnicodeScalar($0)) }
-    init() {
-        let context = ModelContext(SharedModelContainer.shared.container)
-        _viewModel = StateObject(wrappedValue: DictionaryViewModel(context: context))
-    }
-    @State var letterActive: String = "g"
-    private let indexWord = "abcdefghijklmnopqrstuvwxyz"
-    
+    @State private var selected = 2
+    @StateObject private var viewModel = DictionaryViewModel()
+    @State private var scrollToIndexTrigger: Int? = nil
+    @StateObject private var keyboardObserver = KeyboardObserver()
+
     var body: some View {
         ZStack(alignment: .topLeading){
-            VStack(spacing: 0){
-                VStack {
-                    HStack(alignment: .center) {
-                        slangPickerView()
-                        alphabetSidebar
+            VStack(spacing: 24) {
+                HStack {
+                    SwiftUIWheelPicker(
+                        items: viewModel.filtered.map { $0.slang },
+                        selection: $selected,
+                        scrollToIndexTrigger: $scrollToIndexTrigger,
+                        onSelectedTap: { index in
+                            if viewModel.filtered.indices.contains(index) {
+                                let slangData = viewModel.filtered[selected]
+                                popupManager.setSlangData(viewModel.filtered[selected])
+                                popupManager.isPresented.toggle()
+                            }
+                        }
+                    ) { (item: String, idx: Int, isSelected: Bool) in
+                        let distance = abs(selected - idx)
+                        let (fontSize, rowHeight, opacity): (CGFloat, CGFloat, Double)
+                        switch distance {
+                        case 0: (fontSize, rowHeight, opacity) = (64, 76, 1.0)
+                        case 1: (fontSize, rowHeight, opacity) = (48, 57, 0.8)
+                        case 2: (fontSize, rowHeight, opacity) = (34, 48, 0.6)
+                        case 3: (fontSize, rowHeight, opacity) = (28, 41, 0.4)
+                        case 4: (fontSize, rowHeight, opacity) = (20, 33, 0.2)
+                        default: (fontSize, rowHeight, opacity) = (20, 33, 0.0)
+                        }
+
+                        return AnyView(
+                            HStack(spacing: 32) {
+                                Text(item)
+                                    .font(.system(size: fontSize, weight: isSelected ? .bold : .medium, design: .serif))
+                                    .frame(height: rowHeight)
+                                    .padding(.leading, 8)
+                                    .opacity(opacity)
+                                    .scaleEffect(isSelected ? 1.1 : 1.0)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+                                    .layoutPriority(1)
+
+                                if isSelected {
+                                    Image(systemName: "arrow.right")
+                                        .resizable()
+                                        .frame(width: 48, height: 24)
+                                        .foregroundColor(.primary)
+                                        .transition(.asymmetric(
+                                            insertion: .move(edge: .trailing).combined(with: .opacity),
+                                            removal: .opacity
+                                        ))
+                                        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isSelected)
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        )
                     }
+
+                    .frame(height: 573)
+                    .frame(maxWidth: .infinity)
+                    .clipped()
+
+                    optimizedAlphabetSidebar
                 }
-                
-                VStack {
-                    VStack{
-                        searchBar
-                            .keyboardAdaptive()
-                    }
-                    .background(AppColor.Background.primary)
-                    .padding(.top, -220)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(.clear)
+
+                searchBar
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding()
+            .padding(.bottom, keyboardObserver.height)
             .background(AppColor.Background.primary)
-            VStack{
-                Text(activeLetter) .font(.system(size: 64, design: .serif))
-                    .foregroundColor(AppColor.Text.secondary)
-                    .id(activeLetter)
-                    .transition(.opacity.combined(with: .scale))
-                    .animation(.easeInOut(duration: 0.25), value: activeLetter)
+            .task {
+                viewModel.setContext(context: modelContext)
+                viewModel.loadData()
             }
-            .padding(.top, 150)
-            .padding(.leading)
-        }
-    }
-}
-struct KeyboardAdaptive: ViewModifier {
-    @State private var keyboardHeight: CGFloat = 0
-    private var keyboardPublisher: AnyPublisher<CGFloat, Never> {
-        Publishers.Merge(
-            NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
-                .compactMap { $0.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect }
-                .map { $0.height },
-            NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
-                .map { _ in CGFloat(0) }
-        ).eraseToAnyPublisher()
-    }
-
-    func body(content: Content) -> some View {
-        content
-            .padding(.bottom, keyboardHeight)
-            .onReceive(keyboardPublisher) { self.keyboardHeight = $0 }
-            .animation(.easeOut(duration: 0.25), value: keyboardHeight)
-    }
-}
-
-extension View {
-    func keyboardAdaptive() -> some View {
-        self.modifier(KeyboardAdaptive())
-    }
-}
-
-extension DictionaryView {
-    @ViewBuilder
-    private func slangPickerView() -> some View {
-        let slangs = viewModel.filteredSlangs.map { $0.slang }
-        
-        if !slangs.isEmpty {
-            LargeWheelPicker(
-                selection: $viewModel.selectedIndex,
-                viewModel: viewModel,
-                popupManager: popupManager,
-                data: slangs
-            )
-            .frame(maxWidth: .infinity)
-            .frame(height: 1000)
-        } else {
-            Text("No results")
-                .foregroundColor(.gray)
-                .frame(maxWidth: .infinity, maxHeight: 800)
-        }
-    }
-    
-    private var alphabetSidebar: some View {
-        let letters: [String] = (97...122).compactMap { String(UnicodeScalar($0)) }
-        
-        return VStack(spacing: 0) {
-            ForEach(letters, id: \.self) { letter in
-                AlphabetLetterView(
-                    letter: letter,
-                    isActive: viewModel.isLetterActive(letter),
-                    isDragging: viewModel.dragActiveLetter == letter
-                )
-            }
-        }
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { gesture in
-                    let y = gesture.location.y
-                    let index = Int((y / 18).rounded(.down))
-                    if (0..<letters.count).contains(index) {
-                        viewModel.handleLetterDrag(letters[index])
+            .onChange(of: viewModel.filtered) {
+                // Pastikan selection selalu valid terhadap hasil filter
+                let count = viewModel.filtered.count
+                if count == 0 {
+                    selected = 0
+                    viewModel.activeLetter = nil
+                } else if selected >= count {
+                    selected = max(0, count - 1)
+                }
+                // Scroll agar item tetap berada di tengah setelah filter berubah
+                scrollToIndexTrigger = selected
+                // Update active letter berdasarkan item terpilih
+                if viewModel.filtered.indices.contains(selected) {
+                    if let first = viewModel.filtered[selected].slang.first {
+                        viewModel.activeLetter = String(first).lowercased()
                     }
                 }
-                .onEnded { _ in
-                    viewModel.handleLetterDragEnd()
+            }
+            .onChange(of: selected) {
+                // Ketika pilihan berubah karena scroll, update huruf aktif
+                if viewModel.filtered.indices.contains(selected) {
+                    if let first = viewModel.filtered[selected].slang.first {
+                        viewModel.activeLetter = String(first).lowercased()
+                    }
                 }
-        )
-        .padding(.trailing, 6)
-    }
-    
-    private struct AlphabetLetterView: View {
-        let letter: String
-        let isActive: Bool
-        let isDragging: Bool
-        
-        var body: some View {
-            Text(letter.uppercased())
-                .font(.system(size: 11, design: .serif))
-                .foregroundColor(isActive ? AppColor.Button.Text.primary : AppColor.Text.secondary)
-                .frame(width: 20, height: 18)
-                .background(
-                    Circle().fill(isActive ? AppColor.Text.primary : .clear)
-                )
-                .scaleEffect(isDragging ? 2.0 : 1.0)
-                .animation(.spring(response: 0.25, dampingFraction: 0.6), value: isDragging)
+            }
+            
+            VStack{
+                let displayLetter: String = {
+                    if let l = viewModel.activeLetter { return l }
+                    if viewModel.filtered.indices.contains(selected), let first = viewModel.filtered[selected].slang.first { return String(first).lowercased() }
+                    return ""
+                }()
+                Text(displayLetter.uppercased())
+                    .font(.system(size: 64, design: .serif))
+                    .foregroundColor(AppColor.Text.secondary)
+            }
+            .frame(width: 128, height: 128)
+            .background(.clear)
+            .clipShape(.circle)
         }
+        .background(AppColor.Background.primary)
+       
     }
-    
+
     private var searchBar: some View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .frame(width: 17)
                 .foregroundColor(.gray)
-            
+
             TextField("Search", text: $viewModel.searchText)
                 .autocapitalization(.none)
                 .padding(.vertical, 8)
@@ -165,197 +152,529 @@ extension DictionaryView {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
         .background(Color.gray.opacity(0.32))
         .cornerRadius(100)
-        .padding(.horizontal)
-        .padding(.bottom, 8)
     }
-    
-    var activeLetter: String {
-        guard viewModel.selectedIndex < viewModel.filteredSlangs.count else { return "" }
-        return String(viewModel.filteredSlangs[viewModel.selectedIndex].slang.prefix(1).uppercased())
+ 
+    private var optimizedAlphabetSidebar: some View {
+        let letters: [String] = (97...122).compactMap { String(UnicodeScalar($0)) }
+
+        return GeometryReader { geo in
+            VStack(spacing: 0) {
+                ForEach(letters, id: \.self) { letter in
+                    Text(letter)
+                        .font(.system(size: 11, design: .serif))
+                        .foregroundColor(viewModel.activeLetter == letter ? AppColor.Button.Text.primary : AppColor.Text.secondary)
+                        .frame(width: 20, height: 18)
+                        .background(
+                            Circle().fill(viewModel.activeLetter == letter ? AppColor.Text.primary : .clear)
+                        )
+                }
+            }
+            .frame(width: 20, height: geo.size.height, alignment: .center)
+            .contentShape(Rectangle()) // make whole area tappable
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { g in
+                        let localY = g.location.y
+                        let step = max(1.0, geo.size.height / CGFloat(letters.count))
+                        var index = Int((localY / step).rounded(.down))
+                        index = min(max(0, index), letters.count - 1)
+                        let letter = letters[index]
+                        // only update if changed to reduce overhead
+                        if viewModel.activeLetter != letter || !viewModel.isDraggingLetter {
+                            viewModel.handleLetterDrag(letter)
+                            if let jumpIndex = viewModel.indexForLetter(letter) {
+                                scrollToIndexTrigger = jumpIndex
+                            }
+                        }
+                    }
+                    .onEnded { _ in
+                        viewModel.handleLetterDragEnd()
+                    }
+            )
+            .padding(.trailing, 6)
+        }
+        .frame(width: 26) // keep a stable width
     }
 }
 
-struct LargeWheelPicker: View {
-    @Binding var selection: Int
-    let viewModel: DictionaryViewModel
-    let popupManager: PopupManager
-    let data: [String]
-    @State private var audioPlayer: AVAudioPlayer?
-    private let rowHeight: CGFloat = 80
-    private let spacing: CGFloat = 16
+// MARK: - Ultra Smooth Sound Manager dengan Advanced Audio Engine
+class SoundManager {
+    static let shared = SoundManager()
     
-    // Cache posisi scroll (agar tidak hitung tiap frame)
-    @State private var lastOffset: CGFloat = 0
-    @State private var isUpdating = false
+    // Expanded audio player pool untuk ultra smooth playback
+    private var audioPlayers: [AVAudioPlayer] = []
+    private let poolSize = 8 // Lebih banyak player untuk smoothness maksimal
+    private var currentPlayerIndex = 0
     
-    var body: some View {
-        GeometryReader { geo in
-            ScrollViewReader { proxy in
-                ScrollView(.vertical, showsIndicators: false) {
-                    GeometryReader { scrollGeo in
-                        Color.clear
-                            .preference(key: ScrollOffsetKey.self, value: scrollGeo.frame(in: .global).minY)
-                    }
-                    .frame(height: 0)
-                    
-                    LazyVStack(spacing: spacing) {
-                        // buffer atas
-                        ForEach(0..<3, id: \.self) { _ in
-                            Color.clear.frame(height: rowHeight)
-                        }
-                        
-                        ForEach(data.indices, id: \.self) { index in
-                            item(for: index, geometry: geo)
-                                .frame(height: rowHeight)
-                                .id(index)
-                        }
-                        
-                        // buffer bawah
-                        ForEach(0..<3, id: \.self) { _ in
-                            Color.clear.frame(height: rowHeight)
-                        }
-                    }
-                }
-                .onPreferenceChange(ScrollOffsetKey.self) { offset in
-                    throttledUpdate(offset: offset, geometry: geo)
-                }
-                .onChange(of: selection) {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                        proxy.scrollTo(selection, anchor: .center)
-                    }
-                }
-                .onAppear {
-                    prepareSound()
-                    proxy.scrollTo(selection, anchor: .center)
-                }
-            }
-        }
-        .frame(height: 700)
-    }
+    // Advanced velocity tracking dengan smoothing
+    private var lastPlayTime: TimeInterval = 0
+    private var scrollVelocity: Double = 0
+    private var velocityHistory: [Double] = []
+    private let maxVelocityHistory = 5 // Lebih banyak history untuk smoothing lebih baik
+    private var smoothedVelocity: Double = 0
     
-    // MARK: - Throttled offset update
-    private func throttledUpdate(offset: CGFloat, geometry: GeometryProxy) {
-        guard !isUpdating else { return }
-        isUpdating = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) { // ±60 fps update max
-            updateSelection(geometry: geometry)
-            lastOffset = offset
-            isUpdating = false
+    // Exponential smoothing untuk velocity (lebih responsive)
+    private let smoothingFactor: Double = 0.3
+    
+    // Ultra dynamic intervals dengan lebih banyak gradasi
+    private var dynamicInterval: TimeInterval {
+        switch smoothedVelocity {
+        case 0..<0.2:      return 0.07   // Sangat lambat
+        case 0.2..<0.4:    return 0.06   // Lambat
+        case 0.4..<0.6:    return 0.05  // Sedang lambat
+        case 0.6..<0.8:    return 0.04  // Sedang
+        case 0.8..<1.2:    return 0.03  // Sedang cepat
+        case 1.2..<2.0:    return 0.02  // Cepat
+        case 2.0..<3.5:    return 0.018  // Sangat cepat
+        default:           return 0.013  // Ultra cepat
         }
     }
     
-    private func updateSelection(geometry: GeometryProxy) {
-        let viewCenter = geometry.frame(in: .global).midY
-        var closestIndex: Int?
-        var minDistance: CGFloat = .infinity
-        for index in data.indices {
-            let itemY = geometry.frame(in: .global).minY + CGFloat(index) * (rowHeight + spacing) + (rowHeight / 2)
-            let distance = abs(itemY - viewCenter)
-            if distance < minDistance {
-                minDistance = distance
-                closestIndex = index
-            }
-        }
-        if let newIndex = closestIndex, newIndex != selection {
-            selection = newIndex
-            viewModel.selectedIndex = newIndex
+    // Volume curve yang lebih smooth dengan easing
+    private var adaptiveVolume: Float {
+        let normalizedVelocity = min(smoothedVelocity / 4.0, 1.0)
+        // Ease-out curve untuk transisi volume yang lebih smooth
+        let easedValue = 1.0 - pow(normalizedVelocity, 0.7)
+        return Float(0.12 + (easedValue * 0.1)) // Range: 0.12 - 0.28
+    }
+    
+    // Pitch variation untuk variety (optional, bisa di-enable/disable)
+    private var shouldVaryPitch = false
+    
+    private init() {
+        setupAudioSession()
+        createAudioPlayerPool()
+    }
+    
+    private func setupAudioSession() {
+        do {
+            // Optimize audio session untuk low latency
+            try AVAudioSession.sharedInstance().setCategory(
+                .ambient,
+                mode: .default,
+                options: [.mixWithOthers, .allowBluetooth]
+            )
+            try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.005) // Low latency
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Audio session setup failed: \(error)")
         }
     }
     
-    // MARK: - Item View
-    private func item(for index: Int, geometry: GeometryProxy) -> some View {
-        GeometryReader { itemGeo in
-            let itemCenter = itemGeo.frame(in: .global).midY
-            let viewCenter = geometry.frame(in: .global).midY
-            let distance = abs(itemCenter - viewCenter)
-            let normalized = min(distance / 150, 1)
-            let scale = 1.0 - (normalized * 0.4)
-            let opacity = 1.0 - (normalized * 0.6)
-            let isFocused = scale > 0.9
-            
-            Button {
-                if isFocused {
-                    if let slangData = viewModel.getSlang(at: index) {
-                        popupManager.setSlangData(slangData)
-                        popupManager.isPresented.toggle()
-                    }
-                } else {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                        selection = index
-                    }
-                    playClickSound()
-                }
-            } label: {
-                HStack(spacing: 4) {
-                    Text(data[index])
-                        .font(.system(size: {
-                            switch scale {
-                            case ...0.6: return 33
-                            case 0.61...0.7: return 34
-                            case 0.8...0.9: return 38
-                            default: return 48
-                            }
-                        }(), weight: .medium, design: .serif))
-                        .opacity(opacity)
-                        .foregroundColor(AppColor.Text.primary)
-                        .lineLimit(1)
-                        .animation(.easeInOut(duration: 0.2), value: scale)
-                    
-                    if isFocused {
-                        Image("arrowHome")
-                            .resizable()
-                            .frame(width: 64, height: 18)
-                            .tint(AppColor.Text.primary)
-                            .transition(.asymmetric(
-                                insertion: .move(edge: .trailing).combined(with: .opacity),
-                                removal: .opacity
-                            ))
-                            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isFocused)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .onChange(of: isFocused) {
-                if isFocused {
-                    playClickSound()
-                    let generator = UIImpactFeedbackGenerator(style: .light)
-                    generator.impactOccurred()
-                    if index == data.count - 1 {
-                        selection = index
-                    }
-                }
+    private func createAudioPlayerPool() {
+        guard let url = Bundle.main.url(forResource: "click-1", withExtension: "wav") else {
+            print("Sound file not found")
+            return
+        }
+        
+        // Create larger pool with optimized settings
+        for _ in 0..<poolSize {
+            do {
+                let player = try AVAudioPlayer(contentsOf: url)
+                player.prepareToPlay()
+                player.volume = 0.25
+                player.numberOfLoops = 0
+                player.enableRate = shouldVaryPitch // Enable pitch variation if needed
+                audioPlayers.append(player)
+            } catch {
+                print("Failed to create audio player: \(error)")
             }
         }
     }
-
-    private func prepareSound() {
-        guard let url = Bundle.main.url(forResource: "picker", withExtension: "mp3") else { return }
-        audioPlayer = try? AVAudioPlayer(contentsOf: url)
-        audioPlayer?.prepareToPlay()
-        audioPlayer?.volume = 1.0
+    
+    // Exponential moving average untuk velocity smoothing
+    func updateScrollVelocity(_ velocity: Double) {
+        let newVelocity = abs(velocity)
+        
+        // Exponential smoothing
+        if smoothedVelocity == 0 {
+            smoothedVelocity = newVelocity
+        } else {
+            smoothedVelocity = (smoothingFactor * newVelocity) + ((1 - smoothingFactor) * smoothedVelocity)
+        }
+        
+        // Keep history for additional smoothing
+        velocityHistory.append(newVelocity)
+        if velocityHistory.count > maxVelocityHistory {
+            velocityHistory.removeFirst()
+        }
+        
+        scrollVelocity = newVelocity
     }
     
-    private func playClickSound() {
-        guard let player = audioPlayer else { return }
+    // Ultra smooth playback dengan advanced features
+    func playClick(withVelocity velocity: Double = 0) {
+        let currentTime = CACurrentMediaTime()
+        
+        // Update velocity dengan smoothing
+        if velocity > 0 {
+            updateScrollVelocity(velocity)
+        }
+        
+        // Ultra adaptive throttling
+        guard currentTime - lastPlayTime >= dynamicInterval else { return }
+        lastPlayTime = currentTime
+        
+        guard !audioPlayers.isEmpty else { return }
+        
+        // Round-robin through player pool
+        let player = audioPlayers[currentPlayerIndex]
+        currentPlayerIndex = (currentPlayerIndex + 1) % audioPlayers.count
+        
+        // Stop player jika masih playing (untuk ultra responsive sound)
+        if player.isPlaying {
+            player.stop()
+        }
+        
+        // Apply adaptive volume dengan smooth transition
+        player.volume = adaptiveVolume
+        
+        // Optional: Vary pitch slightly untuk variety (more natural feel)
+        if shouldVaryPitch {
+            let pitchVariation = 0.95 + (CGFloat.random(in: 0...0.1))
+            player.rate = Float(pitchVariation)
+        }
+        
+        // Reset and play
         player.currentTime = 0
         player.play()
     }
-}
-
-// MARK: - Scroll Offset Key
-private struct ScrollOffsetKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
+    
+    // Smooth velocity decay saat tidak ada input
+    func decayVelocity() {
+        smoothedVelocity *= 0.85 // Decay factor
+        if smoothedVelocity < 0.01 {
+            smoothedVelocity = 0
+        }
+    }
+    
+    // Reset dengan smooth transition
+    func resetVelocity() {
+        // Smooth decay instead of instant reset
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            for _ in 0..<10 {
+                self.decayVelocity()
+                Thread.sleep(forTimeInterval: 0.02)
+            }
+            self.velocityHistory.removeAll()
+            self.scrollVelocity = 0
+            self.smoothedVelocity = 0
+        }
+    }
+    
+    // System sound alternative dengan ultra smooth haptic
+    func playSystemClick(intensity: CGFloat = 0.5) {
+        AudioServicesPlaySystemSound(1104)
+        
+        // Ultra smooth haptic dengan proper intensity
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.prepare()
+        generator.impactOccurred(intensity: intensity)
+    }
+    
+    // Enable/disable pitch variation
+    func setPitchVariation(enabled: Bool) {
+        shouldVaryPitch = enabled
+        for player in audioPlayers {
+            player.enableRate = enabled
+        }
     }
 }
 
+// MARK: - Ultra Smooth SwiftUIWheelPicker
+public struct SwiftUIWheelPicker<Item>: View {
+    private let items: [Item]
+    @Binding private var selection: Int
+    private let content: (Item, Int, Bool) -> AnyView
+    private let onSelectedTap: ((Int) -> Void)?
+    
+    @Binding var scrollToIndexTrigger: Int?
+    
+    @State private var centers: [Int: CGFloat] = [:]
+    @State private var scrollProxy: ScrollViewProxy? = nil
+    @State private var dragging = false
+    @State private var engine = UIImpactFeedbackGenerator(style: .light)
+    
+    @State private var visibleRange: Range<Int> = 0..<10
+    @State private var containerCenterY: CGFloat = 0
+    
+    // Ultra smooth sound tracking
+    private let soundManager = SoundManager.shared
+    @State private var lastSelectionTime: TimeInterval = 0
+    @State private var selectionVelocity: Double = 0
+    @State private var velocityUpdateTimer: Timer?
+    @State private var lastSelection: Int = 0
+    
+    // Smooth animation tracking
+    @State private var isQuickScrolling = false
 
+    public init(
+        items: [Item],
+        selection: Binding<Int>,
+        scrollToIndexTrigger: Binding<Int?> = .constant(nil),
+        onSelectedTap: ((Int) -> Void)? = nil,
+        content: @escaping (Item, Int, Bool) -> AnyView
+    ) {
+        self.items = items
+        self._selection = selection
+        self._scrollToIndexTrigger = scrollToIndexTrigger
+        self.onSelectedTap = onSelectedTap
+        self.content = content
+    }
+    
+    public var body: some View {
+        GeometryReader { outerGeo in
+            ZStack {
+                ScrollViewReader { proxy in
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack(spacing: 24) {
+                            Color.clear.frame(height: outerGeo.size.height / 2)
+                            
+                            ForEach(items.indices, id: \.self) { idx in
+                                itemRow(for: idx)
+                                    .background(
+                                        GeometryReader { geo in
+                                            let midY = geo.frame(in: .global).midY
+                                            Color.clear
+                                                .preference(
+                                                    key: RowCenterKey.self,
+                                                    value: [RowCenter(id: idx, midY: midY)]
+                                                )
+                                        }
+                                    )
+                            }
+                            
+                            Color.clear.frame(height: outerGeo.size.height / 2)
+                        }
+                    }
+                    .onAppear {
+                        scrollProxy = proxy
+                        engine.prepare()
+                        lastSelection = selection
+                        
+                        // Setup continuous velocity updates untuk smoothness
+                        setupVelocityTimer()
+                        
+                        DispatchQueue.main.async {
+                            proxy.scrollTo(selection, anchor: .center)
+                        }
+                    }
+                    .onDisappear {
+                        velocityUpdateTimer?.invalidate()
+                    }
+                    .onPreferenceChange(RowCenterKey.self) { values in
+                        guard !dragging else { return }
+                        guard !values.isEmpty else { return }
+                        
+                        let filtered = values.filter { visibleRange.contains($0.id) }
+                        for v in filtered {
+                            centers[v.id] = v.midY
+                        }
+                        containerCenterY = outerGeo.frame(in: .global).midY
+                        updateSelection(containerCenterY: containerCenterY, shouldFeedback: false)
+                    }
+                    .gesture(
+                        DragGesture(minimumDistance: 1, coordinateSpace: .global)
+                            .onChanged { _ in
+                                if !dragging {
+                                    dragging = true
+                                    isQuickScrolling = true
+                                }
+                            }
+                            .onEnded { _ in
+                                dragging = false
+                                
+                                // Smooth velocity reset dengan decay
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    isQuickScrolling = false
+                                    soundManager.resetVelocity()
+                                    lastSelectionTime = 0
+                                    selectionVelocity = 0
+                                }
+                                
+                                snapToNearest(containerCenterY: outerGeo.frame(in: .global).midY)
+                            }
+                    )
+                }
+            }
+        }
+        .onChange(of: scrollToIndexTrigger) {
+            guard let index = scrollToIndexTrigger else { return }
+            scrollToIndex(index, animated: true)
+            scrollToIndexTrigger = nil
+        }
+    }
 
+    @ViewBuilder
+    private func itemRow(for idx: Int) -> some View {
+        let isSelected = idx == selection
+        content(items[idx], idx, isSelected)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                if isSelected {
+                    onSelectedTap?(idx)
+                } else {
+                    updateSelection(to: idx, animated: true)
+                }
+            }
+            .onAppear {
+                updateVisibleRange(around: idx)
+            }
+    }
+    
+    // Setup timer untuk continuous velocity smoothing
+    private func setupVelocityTimer() {
+        velocityUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.016, repeats: true) { _ in
+            if !dragging && selectionVelocity > 0.01 {
+                soundManager.decayVelocity()
+            }
+        }
+    }
+
+    private func updateSelection(containerCenterY: CGFloat, shouldFeedback: Bool) {
+        guard !centers.isEmpty else { return }
+        let visibleCenters = centers.filter { visibleRange.contains($0.key) }
+        guard let nearest = visibleCenters.min(by: {
+            abs($0.value - containerCenterY) < abs($1.value - containerCenterY)
+        })?.key else { return }
+
+        if nearest != selection {
+            let currentTime = CACurrentMediaTime()
+            
+            // Hitung velocity dengan smoothing lebih baik
+            if lastSelectionTime > 0 {
+                let timeDelta = currentTime - lastSelectionTime
+                let indexDelta = abs(nearest - lastSelection)
+                
+                // Velocity berdasarkan jarak dan waktu
+                let rawVelocity = timeDelta > 0 ? Double(indexDelta) / timeDelta : 0
+                
+                // Smooth velocity calculation
+                selectionVelocity = (selectionVelocity * 0.6) + (rawVelocity * 0.4)
+            }
+            
+            lastSelectionTime = currentTime
+            lastSelection = selection
+            selection = nearest
+            
+            // Ultra smooth sound playback
+            DispatchQueue.global(qos: .userInteractive).async {
+                soundManager.playClick(withVelocity: selectionVelocity)
+            }
+            
+            // Smooth haptic dengan velocity-based intensity
+            if shouldFeedback {
+                let normalizedVelocity = min(selectionVelocity / 15.0, 1.0)
+                let intensity = max(0.2, 1.0 - CGFloat(normalizedVelocity * 0.7))
+                
+                DispatchQueue.main.async {
+                    engine.impactOccurred(intensity: intensity)
+                }
+            }
+        }
+    }
+
+    private func snapToNearest(containerCenterY: CGFloat) {
+        guard !centers.isEmpty else { return }
+        let visibleCenters = centers.filter { visibleRange.contains($0.key) }
+        guard let nearest = visibleCenters.min(by: {
+            abs($0.value - containerCenterY) < abs($1.value - containerCenterY)
+        })?.key else { return }
+        updateSelection(to: nearest, animated: true)
+    }
+
+    private func updateSelection(to newIndex: Int, animated: Bool) {
+        guard newIndex >= 0 && newIndex < items.count else { return }
+        selection = newIndex
+        updateVisibleRange(around: newIndex)
+        guard let proxy = scrollProxy else { return }
+        
+        // Smooth animation dengan variable duration
+        let distance = abs(newIndex - lastSelection)
+        let duration: Double = animated ? min(0.3, max(0.15, Double(distance) * 0.02)) : 0
+        
+        withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
+            proxy.scrollTo(newIndex, anchor: .center)
+        }
+        
+        // Gentle haptic
+        engine.impactOccurred(intensity: 0.6)
+    }
+
+    public func scrollToIndex(_ index: Int, animated: Bool = true) {
+        guard index >= 0 && index < items.count else { return }
+        selection = index
+        updateVisibleRange(around: index)
+        guard let proxy = scrollProxy else { return }
+        
+        // Ultra smooth animation untuk jump
+        let distance = abs(index - selection)
+        let baseDuration = distance > 100 ? 0.2 : 0.3
+        let duration = animated ? baseDuration : 0
+        
+        withAnimation(.interpolatingSpring(stiffness: 280, damping: 28)) {
+            proxy.scrollTo(index, anchor: .center)
+        }
+        
+        engine.impactOccurred(intensity: 0.5)
+    }
+
+    private func updateVisibleRange(around index: Int) {
+        let buffer = 15
+        let start = max(0, index - buffer)
+        let end = min(items.count, index + buffer)
+        visibleRange = start..<end
+    }
+}
+
+private struct RowCenter: Equatable { let id: Int; let midY: CGFloat }
+private struct RowCenterKey: PreferenceKey {
+    static var defaultValue: [RowCenter] = []
+    static func reduce(value: inout [RowCenter], nextValue: () -> [RowCenter]) {
+        value.append(contentsOf: nextValue())
+    }
+}
+// MARK: - Keyboard Observer
+final class KeyboardObserver: ObservableObject {
+    @Published var height: CGFloat = 0
+    private var cancellables: Set<AnyCancellable> = []
+
+    init() {
+        let willChange = NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)
+        let willHide = NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
+
+        willChange
+            .merge(with: willHide)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] notification in
+                guard let self = self else { return }
+                self.updateHeight(from: notification)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func updateHeight(from notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect) ?? .zero
+        let screenHeight = UIScreen.main.bounds.height
+        let isHidden = endFrame.origin.y >= screenHeight
+        let bottomSafeArea = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?
+            .safeAreaInsets.bottom ?? 0
+
+        let rawHeight = isHidden ? 0 : endFrame.height
+        height = max(0, rawHeight - bottomSafeArea)
+    }
+}
+// Preview
 #Preview {
     DictionaryView()
         .environment(PopupManager())

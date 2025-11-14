@@ -5,10 +5,10 @@
 //  Created by Filza Rizki Ramadhan on 28/10/25.
 //
 import SwiftUI
-
+import Foundation
 struct DictionaryDetail: View {
     @Environment(PopupManager.self) private var popupManager
-    @State private var slangData: SlangData?
+    @State private var slangData: SlangModel?
     @State private var showCloseButton: Bool = false
     @StateObject private var viewModel = DictionaryDetailViewModel()
     @State private var showInfoSheet: Bool = false
@@ -47,19 +47,19 @@ struct DictionaryDetail: View {
             GeometryReader { geo in
                 VStack{
                     VStack(spacing: 32){
-                        Text(slangData?.slang ?? "Tes")
+                        Text(slangData?.slang ?? "Gokil")
                             .font(.system(size: 64, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
                             .textSelection(.enabled)
                         VStack(spacing: 24){
-                            Text(slangData?.translationEN ?? "Lorem ipsum dolor sit amet")
+                            Text(slangData?.translationEN ?? "crazy, impressive")
                                 .font(.system(size: 18, design: .serif))
                                 .foregroundColor(AppColor.Text.primary)
                                 .multilineTextAlignment(.center)
                                 .lineLimit(nil)
                                 .textSelection(.enabled)
-                            Text(slangData?.exampleEN ?? "Lorem ipsum")
-                                .font(.system(size: 20, design: .serif))
+                            Text(slangData?.exampleEN ?? "Used to describe something or someone that is crazy in a fun, impressive, or amusing way. ")
+                                .font(.system(size: 14, design: .serif))
                                 .foregroundColor(AppColor.Text.primary)
                                 .multilineTextAlignment(.center)
                                 .lineLimit(nil)
@@ -68,6 +68,7 @@ struct DictionaryDetail: View {
                     }
                 }
                 .padding(.top ,geo.size.height * 0.20)
+                .padding(.horizontal)
                 .frame(maxWidth: geo.size.width, maxHeight: geo.size.height, alignment: .top)
                
             }
@@ -75,27 +76,37 @@ struct DictionaryDetail: View {
             VStack{
                 Spacer()
                     .frame(height: 450)
-                HStack(spacing: 32){
-                    Button{
-                        showInfoSheet.toggle()
-                    }label: {
-                        Image("info-icon")
-                            .resizable()
-                            .frame(width: 33, height: 33)
+                VStack(spacing:64){
+                    VStack(spacing: 16){
+                        Text("Similar")
+                            .font(.system(size: 18, design: .serif))
+                            .multilineTextAlignment(.center)
                             .foregroundColor(AppColor.Text.primary)
+                        similiarList
                     }
-                    
-                    Button{
-                        if let text = slangData?.slang {
-                            viewModel.speak(text)
+                    HStack(spacing: 32){
+                        Button{
+                            showInfoSheet.toggle()
+                        }label: {
+                            Image("info-icon")
+                                .resizable()
+                                .frame(width: 33, height: 33)
+                                .foregroundColor(AppColor.Text.primary)
                         }
-                    } label: {
-                        Image("speaker-icon")
-                            .resizable()
-                            .frame(width: 33, height: 33)
-                            .foregroundColor(AppColor.Text.primary)
+                        
+                        Button{
+                            if let text = slangData?.slang {
+                                viewModel.speak(text)
+                            }
+                        } label: {
+                            Image("speaker-icon")
+                                .resizable()
+                                .frame(width: 33, height: 33)
+                                .foregroundColor(AppColor.Text.primary)
+                        }
                     }
                 }
+             
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             Spacer()
@@ -150,9 +161,13 @@ struct DictionaryDetail: View {
                         } label: {
                             Image(systemName: "xmark")
                                 .font(.system(size: 17))
-                                .foregroundColor(AppColor.Text.primary.opacity(0.6))
-                                .frame(width: 44, height: 44)
+                             
+                            
                         }
+                        .frame(width: 44, height: 44)
+                        .foregroundColor(AppColor.Text.primary.opacity(0.6))
+                        .clipShape(.circle)
+                      
                     }
                 }
             }
@@ -160,23 +175,76 @@ struct DictionaryDetail: View {
             .presentationDragIndicator(.visible)
         }
     }
+    
+    private var similiarList: some View {
+        HStack(spacing: 8){
+            similiarButton(title: "Goks")
+            similiarButton(title: "Gwokil")
+            similiarButton(title: "Gokilll")
+        }
+    }
+    
+    private struct similiarButton:  View {
+        let title: String
+        var body: some View {
+            Button {
+                
+            } label: {
+                Text(title)
+                    .font(.system(size: 16, design: .serif))
+                    .foregroundColor(AppColor.Text.primary)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .overlay {
+                RoundedRectangle(cornerRadius: 37)
+                    .inset(by: 0.5)
+                    .stroke(
+                        AppColor.Button.primary
+                    )
+            }
+            
+
+        }
+    }
 }
 
-#Preview {
-    let popupManager = PopupManager()
-    popupManager.setSlangData(
-        SlangData(
-            slang: "Gokil",
-            translationID: "OKE",
-            translationEN: "OKAY",
-            contextID: "Gokil kamu pecah",
-            contextEN: "Used to express excitement or disbelief",
-            exampleID: "Gokil, kamu keren banget!",
-            exampleEN: "Wow, you’re amazing!",
-            sentiment: .negative
-        )
+struct DictionaryDetail_Previews: PreviewProvider {
+
+    // Mock Data
+    static let mockSlang = SlangModel(
+        id: UUID(),
+        slang: "anjeng",
+        translationID: "anjing",
+        translationEN: "crazy, impressive",
+        contextID: "Dalam konteks bercanda antar teman, kadang digunakan secara akrab untuk mengekspresikan keterkejutan atau kekaguman tanpa maksud menghina.",
+        contextEN: "In friendly banter, sometimes used playfully to express surprise or amazement without offensive intent.",
+        exampleID: "Anjeng, lo keren banget sih!",
+        exampleEN: "Damn, you're so cool!",
+        sentiment: .positive
     )
-    
-    return DictionaryDetail()
-        .environment(popupManager)
+
+    // Mock PopupManager
+    class MockPopupManager: PopupManager {
+        override func getSlangData() -> SlangModel? {
+            return mockSlang
+        }
+    }
+
+    static var previews: some View {
+        DictionaryDetail()
+            .environment(PopupManager())
+            .previewDevice("iPhone 15 Pro")
+            .preferredColorScheme(.light)
+    }
 }
+
+
+//"slang":"anjeng",
+//"translationID":"anjing",
+//"translationEN":"dog",
+//"contextID":"Dalam konteks bercanda antar teman, kadang digunakan secara akrab untuk mengekspresikan keterkejutan atau kekaguman tanpa maksud menghina.",
+//"contextEN":"In friendly banter, sometimes used playfully to express surprise or amazement without offensive intent.",
+//"exampleID":"Anjeng, lo keren banget sih!",
+//"exampleEN":"Damn, you're so cool!",
+//"sentiment":"positive"

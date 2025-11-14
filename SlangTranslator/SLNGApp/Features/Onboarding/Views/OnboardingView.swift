@@ -11,7 +11,7 @@ import Lottie
 struct OnboardingView: View {
     @Environment(\.colorScheme) var colorScheme
     @State var isSecondPage: Bool = true
-    @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 1
+    @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 2
     @State var trialKeyboardText: String = ""
     @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
 
@@ -100,7 +100,7 @@ struct OnboardingView: View {
                     .foregroundStyle(AppColor.Text.secondary)
                     .font(.caption)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     
             }
             .padding(.bottom)
@@ -230,11 +230,13 @@ struct OnBoardingPage<Content: View>: View {
                     Text(onBoardingTitle)
                         .font(.system(.largeTitle, design: .serif, weight: .bold))
                         .foregroundColor(AppColor.Text.primary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     Text(onBoardingContent)
                         .font(.subheadline)
                         .foregroundColor(AppColor.Text.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(.horizontal, 10)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Button {
                     if pageNumber < 6 {
@@ -258,9 +260,11 @@ struct OnBoardingPage<Content: View>: View {
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
             }
-            .padding()
-            .padding(.bottom, 33)
+            .frame(maxWidth: .infinity)
         }
+        .padding()
+        .padding(.bottom, 33)
+        .frame(maxWidth: .infinity)
     }
 }
 

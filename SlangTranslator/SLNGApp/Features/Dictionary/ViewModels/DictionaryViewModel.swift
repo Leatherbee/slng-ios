@@ -1,8 +1,8 @@
 //
-//  DictionaryViewModel.swift
+//  WheelPickerDictionaryViewModel.swift
 //  SlangTranslator
 //
-//  Created by Filza Rizki Ramadhan on 21/10/25.
+//  Created by Filza Rizki Ramadhan on 07/11/25.
 //
 
 import Foundation
@@ -11,102 +11,72 @@ internal import Combine
 
 @MainActor
 final class DictionaryViewModel: ObservableObject {
-    @Published var allSlangs: [SlangData] = []      // semua data
-    @Published var slangs: [SlangData] = []         // data paginated
-    @Published var filteredSlangs: [SlangData] = [] // hasil filter (yang ditampilkan)
+    @Published var data: [SlangModel] = []
     @Published var searchText: String = ""
-    @Published var selectedIndex: Int = 0
-    @Published var dragActiveLetter: String? = nil
-
-    private let slangRepo: SlangRepositoryImpl
-    private var cancellables = Set<AnyCancellable>()
-    private var isLoading: Bool = false
-
-    private var offset: Int = 0
-    private var totalCount: Int = 0
-    private let pageSize: Int = 100
-
-    init(context: ModelContext) {
-        self.slangRepo = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
+    @Published var filtered: [SlangModel] = []
+    @Published var activeLetter: String? = nil
+    @Published var isDraggingLetter: Bool = false
+    
+    private var slangRepo: SlangSwiftDataImpl?
+    private var context: ModelContext?
+    private var cancellables: Set<AnyCancellable> = []
+    
+    init() {
         setupSearch()
-        Task { await loadInitial() }
     }
-
-    func loadInitial() async {
-        guard !isLoading else { return }
-        isLoading = true
-        offset = 0
- 
-        allSlangs = slangRepo.loadAll()
-        totalCount = allSlangs.count
- 
-        slangs = Array(allSlangs)
-        applyFilter()
-        isLoading = false
+    
+    func setContext(context: ModelContext) {
+        self.context = context
+        self.slangRepo = SlangSwiftDataImpl(context: context)
     }
- 
-
-    func getSlang(at index: Int) -> SlangData? {
-        guard index >= 0, index < filteredSlangs.count else { return nil }
-        let s = filteredSlangs[index]
-        return SlangData(
-            id: s.id,
-            slang: s.slang,
-            translationID: s.translationID,
-            translationEN: s.translationEN,
-            contextID: s.contextID,
-            contextEN: s.contextEN,
-            exampleID: s.exampleID,
-            exampleEN: s.exampleEN,
-            sentiment: s.sentiment
-        )
+    
+    func loadData() {
+        guard let slangRepo = slangRepo else { return }
+        let allData = slangRepo.fetchAll()
+        data = allData
+        filtered = allData
     }
-
-    func isLetterActive(_ letter: String) -> Bool {
-        guard selectedIndex < filteredSlangs.count else { return false }
-        return filteredSlangs[selectedIndex].slang.lowercased().hasPrefix(letter.lowercased())
-    }
-
+    
     func handleLetterDrag(_ letter: String) {
-        dragActiveLetter = letter
-        if let index = allSlangs.firstIndex(where: {
-            $0.slang.lowercased().hasPrefix(letter.lowercased())
-        }) {
-            selectedIndex = index
-            // Jika belum terload sampai huruf ini, muat datanya
-            if index >= slangs.count {
-                let nextOffset = min(index + pageSize, allSlangs.count)
-                slangs = Array(allSlangs.prefix(nextOffset))
-                applyFilter()
-            }
-        }
+        activeLetter = letter
+        isDraggingLetter = true
     }
 
     func handleLetterDragEnd() {
-        dragActiveLetter = nil
+        isDraggingLetter = false
     }
 
+    /// Cari index pertama dari slang yang dimulai dengan huruf tertentu pada list yang sedang ditampilkan
+    func indexForLetter(_ letter: String) -> Int? {
+        let lower = letter.lowercased()
+        return filtered.firstIndex(where: { $0.slang.lowercased().hasPrefix(lower) })
+    }
+
+    /// Setup reactive search pipeline
     private func setupSearch() {
         $searchText
-            .debounce(for: .milliseconds(250), scheduler: DispatchQueue.main)
+            .debounce(for: .milliseconds(150), scheduler: RunLoop.main)
             .removeDuplicates()
-            .sink { [weak self] _ in
-                self?.applyFilter()
+            .sink { [weak self] text in
+                guard let self = self else { return }
+                let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                if q.isEmpty {
+                    self.filtered = self.data
+                } else {
+                    let lower = q.lowercased()
+                    self.filtered = self.data.filter { item in
+                        // Cocokkan ke beberapa field utama
+                        if item.slang.lowercased().contains(lower) { return true }
+                        if item.translationID.lowercased().contains(lower) { return true }
+                        if item.translationEN.lowercased().contains(lower) { return true }
+                        if item.contextID.lowercased().contains(lower) { return true }
+                        if item.contextEN.lowercased().contains(lower) { return true }
+                        if item.exampleID.lowercased().contains(lower) { return true }
+                        if item.exampleEN.lowercased().contains(lower) { return true }
+                        return false
+                    }
+                }
             }
             .store(in: &cancellables)
-    }
-
-    private func applyFilter() {
-        let keyword = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        if keyword.isEmpty {
-            filteredSlangs = slangs
-        } else {
-            // Cari dari semua data
-            filteredSlangs = allSlangs.filter {
-                $0.slang.localizedCaseInsensitiveContains(keyword) ||
-                $0.translationID.localizedCaseInsensitiveContains(keyword) ||
-                $0.translationEN.localizedCaseInsensitiveContains(keyword)
-            }
-        }
     }
 }
