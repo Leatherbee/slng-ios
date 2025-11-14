@@ -49,7 +49,7 @@ struct TranslateInputSection: View {
                     .allowsHitTesting(!(viewModel.isRecording || viewModel.isTranscribing))
                 
                 if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isRecording || viewModel.isTranscribing {
-                    Text(viewModel.isTranscribing ? "Decoding your meaning ..." : (viewModel.isRecording ? "Still yapping ..." : "Heard a slang you don't get? Type here"))
+                    Text(viewModel.isTranscribing ? "Catching the meaning…" : (viewModel.isRecording ? "I’m catching every word…" : "Confused by a slang? Drop it here"))
                         .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
                         .foregroundColor(Color.textDisable)
                         .padding(.horizontal, 5)
@@ -100,19 +100,33 @@ struct TranslateInputSection: View {
         .overlay(alignment: .bottom) {
             ZStack {
                 if viewModel.isRecording {
-                    Circle()
-                        .stroke(AppColor.Button.primary.opacity(0.7), lineWidth: 3)
-                        .frame(width: 160, height: 160)
-                        .scaleEffect(pulse ? 1.4 : 1.0)
-                        .opacity(pulse ? 0 : 1)
-                        .animation(.easeOut(duration: 1).repeatForever(autoreverses: false), value: pulse)
+                    SunburstImplosionView(color: AppColor.Button.primary, animated: !reduceMotion)
+                        .frame(width: 180, height: 180)
                         .onAppear { pulse = true }
                         .onDisappear { pulse = false }
+
+                    VStack(spacing: 10) {
+                        ZStack {
+                            Circle()
+                                .fill(AppColor.Button.primary)
+                                .frame(width: 44, height: 44)
+                            Circle()
+                                .stroke(AppColor.Button.primary.opacity(0.7), lineWidth: 3)
+                                .frame(width: 64, height: 64)
+                                .scaleEffect(pulse ? 1.3 : 0.9)
+                                .opacity(pulse ? 0.2 : 0.8)
+                        }
+                        .animation(.easeInOut(duration: 1.2).repeatForever(autoreverses: true), value: pulse)
+
+                        Text("Recording")
+                            .font(.caption)
+                            .foregroundColor(Color.textDisable)
+                    }
                 }
 
                 Circle()
                     .fill(Color.clear)
-                    .frame(width: 340, height: 340)
+                    .frame(width: 280, height: 280)
                     .contentShape(Circle())
                     .opacity(0.001)
                     .onLongPressGesture(minimumDuration: 0.6, maximumDistance: 50, pressing: { _ in }, perform: {
@@ -141,17 +155,7 @@ struct TranslateInputSection: View {
                             }
                     )
 
-                if viewModel.isRecording {
-                    VStack(spacing: 6) {
-                        Circle()
-                            .fill(AppColor.Button.primary)
-                            .frame(width: 14, height: 14)
-                            .shadow(color: AppColor.Button.primary.opacity(0.3), radius: 6)
-                        Text("Recording")
-                            .font(.caption)
-                            .foregroundColor(Color.textDisable)
-                    }
-                }
+                
 
                 if viewModel.isRecording {
                     HStack {
@@ -166,10 +170,73 @@ struct TranslateInputSection: View {
                 }
             }
             .accessibilityLabel("Hold to speak")
-            .padding(.bottom, 0)
+            .padding(.bottom, 100)
         }
         .padding()
         .contentShape(Rectangle())
         .onTapGesture { UIApplication.shared.dismissKeyboard() }
+    }
+}
+
+struct SunburstImplosionView: View {
+    var color: Color
+    var animated: Bool = true
+    @State private var progress: CGFloat = 1
+    @State private var shrink: CGFloat = 0
+    @State private var layerScales: [CGFloat] = []
+    @State private var layers: [RayLayer] = []
+    @State private var loop = false
+    var body: some View {
+        ZStack {
+            ForEach(Array(layers.enumerated()), id: \.element.id) { index, layer in
+                VariableSunburstShape(
+                    seed: layer.seed,
+                    progress: progress,
+                    shrink: shrink,
+                    scale: index < layers.count ? layerScales[index] : layer.scale
+                )
+                .fill(color.opacity(layer.opacity))
+            }
+        }
+        .onAppear {
+            setupLayers()
+            layerScales = layers.map { $0.scale }
+            if animated {
+                loop = true
+                runCycle()
+            } else {
+                progress = 1
+                shrink = 0
+            }
+        }
+        .onDisappear { loop = false }
+    }
+    private func runCycle() {
+        if !loop { return }
+        progress = 1
+        shrink = 0
+        withAnimation(.easeInOut(duration: 3.0)) {
+            progress = 0.12
+            shrink = 0.6
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            if !loop { return }
+            withAnimation(.easeOut(duration: 0.2)) {
+                progress = 0.0
+                shrink = 1
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                if loop { runCycle() }
+            }
+        }
+    }
+    private func setupLayers() {
+        layers = [
+            RayLayer(seed: Int.random(in: 0...10_000), scale: 0.3, opacity: 0.25, delay: 0.00),
+            RayLayer(seed: Int.random(in: 0...10_000), scale: 0.45, opacity: 0.4, delay: 0.01),
+            RayLayer(seed: Int.random(in: 0...10_000), scale: 0.6, opacity: 0.55, delay: 0.02),
+            RayLayer(seed: Int.random(in: 0...10_000), scale: 0.75, opacity: 0.7, delay: 0.03),
+            RayLayer(seed: Int.random(in: 0...10_000), scale: 0.9, opacity: 0.85, delay: 0.04)
+        ]
     }
 }
