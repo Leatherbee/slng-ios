@@ -19,6 +19,10 @@ struct DictionaryView: View {
     @StateObject private var viewModel = DictionaryViewModel()
     @State private var scrollToIndexTrigger: Int? = nil
     @StateObject private var keyboardObserver = KeyboardObserver()
+    private static let letters: [String] = (97...122).compactMap { String(UnicodeScalar($0)) }
+    @State private var lastOverlayLetter: String = ""
+    @State private var jumpAnimated: Bool = true
+    @State private var lastJumpTime: CFTimeInterval = 0
 
     var body: some View {
         ZStack(alignment: .topLeading){
@@ -28,6 +32,7 @@ struct DictionaryView: View {
                         items: viewModel.filtered.map { $0.slang },
                         selection: $selected,
                         scrollToIndexTrigger: $scrollToIndexTrigger,
+                        jumpAnimated: $jumpAnimated,
                         onSelectedTap: { index in
                             if viewModel.filtered.indices.contains(index) {
                                 let slangData = viewModel.filtered[selected]
@@ -91,6 +96,13 @@ struct DictionaryView: View {
                 viewModel.setContext(context: modelContext)
                 viewModel.loadData()
             }
+            .onAppear {
+                if let l = viewModel.activeLetter, !l.isEmpty {
+                    lastOverlayLetter = l
+                } else if viewModel.filtered.indices.contains(selected), let first = viewModel.filtered[selected].slang.first {
+                    lastOverlayLetter = String(first).lowercased()
+                }
+            }
             .onChange(of: viewModel.filtered) {
                 // Pastikan selection selalu valid terhadap hasil filter
                 let count = viewModel.filtered.count
@@ -102,27 +114,25 @@ struct DictionaryView: View {
                 }
                 // Scroll agar item tetap berada di tengah setelah filter berubah
                 scrollToIndexTrigger = selected
-                // Update active letter berdasarkan item terpilih
-                if viewModel.filtered.indices.contains(selected) {
-                    if let first = viewModel.filtered[selected].slang.first {
-                        viewModel.activeLetter = String(first).lowercased()
-                    }
-                }
+                updateActiveLetterFromSelection()
             }
             .onChange(of: selected) {
                 // Ketika pilihan berubah karena scroll, update huruf aktif
-                if viewModel.filtered.indices.contains(selected) {
-                    if let first = viewModel.filtered[selected].slang.first {
-                        viewModel.activeLetter = String(first).lowercased()
-                    }
+                updateActiveLetterFromSelection()
+            }
+            .onChange(of: viewModel.activeLetter) {
+                if let l = viewModel.activeLetter, !l.isEmpty {
+                    lastOverlayLetter = l
+                } else if viewModel.filtered.indices.contains(selected), let first = viewModel.filtered[selected].slang.first {
+                    lastOverlayLetter = String(first).lowercased()
                 }
             }
+            .animation(nil, value: viewModel.filtered)
             
             VStack{
                 let displayLetter: String = {
-                    if let l = viewModel.activeLetter { return l }
-                    if viewModel.filtered.indices.contains(selected), let first = viewModel.filtered[selected].slang.first { return String(first).lowercased() }
-                    return ""
+                    if let l = viewModel.activeLetter, !l.isEmpty { return l }
+                    return lastOverlayLetter
                 }()
                 Text(displayLetter.uppercased())
                     .font(.system(size: 64, design: .serif))
@@ -159,8 +169,7 @@ struct DictionaryView: View {
     }
  
     private var optimizedAlphabetSidebar: some View {
-        let letters: [String] = (97...122).compactMap { String(UnicodeScalar($0)) }
-
+        let letters = Self.letters
         return GeometryReader { geo in
             VStack(spacing: 0) {
                 ForEach(letters, id: \.self) { letter in
@@ -186,18 +195,34 @@ struct DictionaryView: View {
                         // only update if changed to reduce overhead
                         if viewModel.activeLetter != letter || !viewModel.isDraggingLetter {
                             viewModel.handleLetterDrag(letter)
+                            jumpAnimated = false
                             if let jumpIndex = viewModel.indexForLetter(letter) {
-                                scrollToIndexTrigger = jumpIndex
+                                if selected != jumpIndex && scrollToIndexTrigger != jumpIndex {
+                                    // throttle jump frequency to reduce work
+                                    let now = CACurrentMediaTime()
+                                    if now - lastJumpTime > 0.05 {
+                                        lastJumpTime = now
+                                        scrollToIndexTrigger = jumpIndex
+                                    }
+                                }
                             }
                         }
                     }
                     .onEnded { _ in
                         viewModel.handleLetterDragEnd()
+                        jumpAnimated = true
                     }
             )
             .padding(.trailing, 6)
         }
         .frame(width: 26) // keep a stable width
+    }
+
+    private func updateActiveLetterFromSelection() {
+        guard viewModel.filtered.indices.contains(selected) else { return }
+        if let first = viewModel.filtered[selected].slang.first {
+            viewModel.activeLetter = String(first).lowercased()
+        }
     }
 }
 
@@ -394,6 +419,7 @@ public struct SwiftUIWheelPicker<Item>: View {
     private let onSelectedTap: ((Int) -> Void)?
     
     @Binding var scrollToIndexTrigger: Int?
+    @Binding var jumpAnimated: Bool
     
     @State private var centers: [Int: CGFloat] = [:]
     @State private var scrollProxy: ScrollViewProxy? = nil
@@ -417,12 +443,14 @@ public struct SwiftUIWheelPicker<Item>: View {
         items: [Item],
         selection: Binding<Int>,
         scrollToIndexTrigger: Binding<Int?> = .constant(nil),
+        jumpAnimated: Binding<Bool> = .constant(true),
         onSelectedTap: ((Int) -> Void)? = nil,
         content: @escaping (Item, Int, Bool) -> AnyView
     ) {
         self.items = items
         self._selection = selection
         self._scrollToIndexTrigger = scrollToIndexTrigger
+        self._jumpAnimated = jumpAnimated
         self.onSelectedTap = onSelectedTap
         self.content = content
     }
@@ -599,7 +627,7 @@ public struct SwiftUIWheelPicker<Item>: View {
         let distance = abs(newIndex - lastSelection)
         let duration: Double = animated ? min(0.3, max(0.15, Double(distance) * 0.02)) : 0
         
-        withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
+        withAnimation(.easeOut(duration: 0.2)) {
             proxy.scrollTo(newIndex, anchor: .center)
         }
         
@@ -613,20 +641,25 @@ public struct SwiftUIWheelPicker<Item>: View {
         updateVisibleRange(around: index)
         guard let proxy = scrollProxy else { return }
         
-        // Ultra smooth animation untuk jump
-        let distance = abs(index - selection)
-        let baseDuration = distance > 100 ? 0.2 : 0.3
-        let duration = animated ? baseDuration : 0
-        
-        withAnimation(.interpolatingSpring(stiffness: 280, damping: 28)) {
-            proxy.scrollTo(index, anchor: .center)
+        // Ultra smooth animation untuk jump, bisa dimatikan saat drag alphabet
+        let shouldAnimate = animated && jumpAnimated
+        if shouldAnimate {
+            withAnimation(.easeOut(duration: 0.18)) {
+                proxy.scrollTo(index, anchor: .center)
+            }
+        } else {
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                proxy.scrollTo(index, anchor: .center)
+            }
         }
         
         engine.impactOccurred(intensity: 0.5)
     }
 
     private func updateVisibleRange(around index: Int) {
-        let buffer = 15
+        let buffer = 10
         let start = max(0, index - buffer)
         let end = min(items.count, index + buffer)
         visibleRange = start..<end
