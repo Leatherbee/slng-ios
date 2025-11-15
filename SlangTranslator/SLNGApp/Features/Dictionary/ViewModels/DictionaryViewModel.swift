@@ -16,6 +16,8 @@ final class DictionaryViewModel: ObservableObject {
     @Published var filtered: [SlangModel] = []
     @Published var activeLetter: String? = nil
     @Published var isDraggingLetter: Bool = false
+    @Published var canonicalGroups: [(canonical: String, variants: [SlangModel])] = []
+    @Published var filteredCanonicals: [(canonical: String, variants: [SlangModel])] = []
     
     private var slangRepo: SlangSwiftDataImpl?
     private var context: ModelContext?
@@ -32,9 +34,9 @@ final class DictionaryViewModel: ObservableObject {
     
     func loadData() {
         guard let slangRepo = slangRepo else { return }
-        let allData = slangRepo.fetchAll()
-        data = allData
-        filtered = allData
+        let groups = slangRepo.fetchGroupedByCanonical()
+        canonicalGroups = groups
+        filteredCanonicals = groups
     }
     
     func handleLetterDrag(_ letter: String) {
@@ -49,7 +51,7 @@ final class DictionaryViewModel: ObservableObject {
     /// Cari index pertama dari slang yang dimulai dengan huruf tertentu pada list yang sedang ditampilkan
     func indexForLetter(_ letter: String) -> Int? {
         let lower = letter.lowercased()
-        return filtered.firstIndex(where: { $0.slang.lowercased().hasPrefix(lower) })
+        return filteredCanonicals.firstIndex(where: { $0.canonical.lowercased().hasPrefix(lower) })
     }
 
     /// Setup reactive search pipeline
@@ -60,21 +62,11 @@ final class DictionaryViewModel: ObservableObject {
             .sink { [weak self] text in
                 guard let self = self else { return }
                 let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard let slangRepo = self.slangRepo else { return }
                 if q.isEmpty {
-                    self.filtered = self.data
+                    self.filteredCanonicals = self.canonicalGroups
                 } else {
-                    let lower = q.lowercased()
-                    self.filtered = self.data.filter { item in
-                        // Cocokkan ke beberapa field utama
-                        if item.slang.lowercased().contains(lower) { return true }
-                        if item.translationID.lowercased().contains(lower) { return true }
-                        if item.translationEN.lowercased().contains(lower) { return true }
-                        if item.contextID.lowercased().contains(lower) { return true }
-                        if item.contextEN.lowercased().contains(lower) { return true }
-                        if item.exampleID.lowercased().contains(lower) { return true }
-                        if item.exampleEN.lowercased().contains(lower) { return true }
-                        return false
-                    }
+                    self.filteredCanonicals = slangRepo.fetchGroupedByCanonical(offset: 0, keyword: q)
                 }
             }
             .store(in: &cancellables)

@@ -17,8 +17,8 @@ struct SlangTranslatorApp: App {
     
     init() {
         let container = SharedModelContainer.shared.container
-        let dataSlangRpository = SlangSwiftData(container: container)
-        _ = dataSlangRpository.loadAll()
+        let repo = SlangRepositoryImpl(container: container)
+        _ = repo.loadAll()
     }
     
     var body: some Scene {

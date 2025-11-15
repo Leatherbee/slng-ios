@@ -2,14 +2,19 @@
 //  SlangModel.swift
 //  SlangTranslator
 //
-//  Created by Filza Rizki Ramadhan on 05/11/25.
+//  Created by Pramuditha Muhammad Ikhwan on 04/11/25.
 //
-import SwiftData
+
 import Foundation
+import SwiftData
+
 @Model
-class SlangModel {
-    var id: UUID
+final class SlangModel: Equatable {
+    @Attribute(.unique) var id: UUID
+    var canonicalForm: String
+    var canonicalPronunciation: String
     var slang: String
+    var pronunciation: String
     var translationID: String
     var translationEN: String
     var contextID: String
@@ -18,9 +23,23 @@ class SlangModel {
     var exampleEN: String
     var sentiment: SentimentType
     
-    init(id: UUID, slang: String, translationID: String, translationEN: String, contextID: String, contextEN: String, exampleID: String, exampleEN: String, sentiment: SentimentType) {
+    init(id: UUID,
+         canonicalForm: String,
+         canonicalPronunciation: String,
+         slang: String,
+         pronunciation: String,
+         translationID: String,
+         translationEN: String,
+         contextID: String,
+         contextEN: String,
+         exampleID: String,
+         exampleEN: String,
+         sentiment: SentimentType) {
         self.id = id
+        self.canonicalForm = canonicalForm
+        self.canonicalPronunciation = canonicalPronunciation
         self.slang = slang
+        self.pronunciation = pronunciation
         self.translationID = translationID
         self.translationEN = translationEN
         self.contextID = contextID

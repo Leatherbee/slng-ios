@@ -9,6 +9,9 @@ import Foundation
 struct DictionaryDetail: View {
     @Environment(PopupManager.self) private var popupManager
     @State private var slangData: SlangModel?
+    @State private var variants: [SlangModel] = []
+    @State private var selectedVariantIndex: Int = 0
+    @State private var canonicalForm: String = ""
     @State private var showCloseButton: Bool = false
     @StateObject private var viewModel = DictionaryDetailViewModel()
     @State private var showInfoSheet: Bool = false
@@ -47,18 +50,19 @@ struct DictionaryDetail: View {
             GeometryReader { geo in
                 VStack{
                     VStack(spacing: 32){
-                        Text(slangData?.slang ?? "Gokil")
+                        let current = variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex] : slangData
+                        Text(current?.slang ?? "")
                             .font(.system(size: 64, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
                             .textSelection(.enabled)
                         VStack(spacing: 24){
-                            Text(slangData?.translationEN ?? "crazy, impressive")
+                            Text(current?.translationEN ?? "")
                                 .font(.system(size: 18, design: .serif))
                                 .foregroundColor(AppColor.Text.primary)
                                 .multilineTextAlignment(.center)
                                 .lineLimit(nil)
                                 .textSelection(.enabled)
-                            Text(slangData?.exampleEN ?? "Used to describe something or someone that is crazy in a fun, impressive, or amusing way. ")
+                            Text(current?.exampleEN ?? "")
                                 .font(.system(size: 14, design: .serif))
                                 .foregroundColor(AppColor.Text.primary)
                                 .multilineTextAlignment(.center)
@@ -82,7 +86,13 @@ struct DictionaryDetail: View {
                             .font(.system(size: 18, design: .serif))
                             .multilineTextAlignment(.center)
                             .foregroundColor(AppColor.Text.primary)
-                        similiarList
+                        HStack(spacing: 8){
+                            ForEach(Array(variants.enumerated()), id: \.offset) { idx, v in
+                                similiarButton(title: v.slang) {
+                                    selectedVariantIndex = idx
+                                }
+                            }
+                        }
                     }
                     HStack(spacing: 32){
                         Button{
@@ -95,9 +105,8 @@ struct DictionaryDetail: View {
                         }
                         
                         Button{
-                            if let text = slangData?.slang {
-                                viewModel.speak(text)
-                            }
+                            let current = variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex] : slangData
+                            if let text = current?.slang { viewModel.speak(text) }
                         } label: {
                             Image("speaker-icon")
                                 .resizable()
@@ -115,6 +124,9 @@ struct DictionaryDetail: View {
         }
         .onAppear() {
             self.slangData = popupManager.getSlangData()
+            self.variants = popupManager.getVariants()
+            self.canonicalForm = popupManager.getCanonicalForm() ?? ""
+            if !variants.isEmpty { selectedVariantIndex = 0 }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 withAnimation(.easeIn(duration: 0.3)) {
@@ -130,7 +142,8 @@ struct DictionaryDetail: View {
                             .font(.system(size: 17, design: .serif))
                             .bold().italic()
                             .foregroundColor(AppColor.Text.primary)
-                        Text(slangData?.contextEN ?? "")
+                        let current = variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex] : slangData
+                        Text(current?.contextEN ?? "")
                             .font(.system(size: 17, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
                     }
@@ -141,8 +154,8 @@ struct DictionaryDetail: View {
                             .bold().italic()
                             .foregroundColor(AppColor.Text.primary)
                         Text("""
-                        "\(slangData?.exampleEN ?? "")"
-                        "\(slangData?.exampleID ?? "")"
+                        "\(variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex].exampleEN : slangData?.exampleEN ?? "")"
+                        "\(variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex].exampleID : slangData?.exampleID ?? "")"
                         """)
                         .font(.system(size: 17, design: .serif))
                         .foregroundColor(AppColor.Text.primary)
@@ -176,20 +189,11 @@ struct DictionaryDetail: View {
         }
     }
     
-    private var similiarList: some View {
-        HStack(spacing: 8){
-            similiarButton(title: "Goks")
-            similiarButton(title: "Gwokil")
-            similiarButton(title: "Gokilll")
-        }
-    }
-    
     private struct similiarButton:  View {
         let title: String
+        let onTap: () -> Void
         var body: some View {
-            Button {
-                
-            } label: {
+            Button { onTap() } label: {
                 Text(title)
                     .font(.system(size: 16, design: .serif))
                     .foregroundColor(AppColor.Text.primary)
@@ -203,41 +207,39 @@ struct DictionaryDetail: View {
                         AppColor.Button.primary
                     )
             }
-            
-
         }
     }
 }
-
-struct DictionaryDetail_Previews: PreviewProvider {
-
-    // Mock Data
-    static let mockSlang = SlangModel(
-        id: UUID(),
-        slang: "anjeng",
-        translationID: "anjing",
-        translationEN: "crazy, impressive",
-        contextID: "Dalam konteks bercanda antar teman, kadang digunakan secara akrab untuk mengekspresikan keterkejutan atau kekaguman tanpa maksud menghina.",
-        contextEN: "In friendly banter, sometimes used playfully to express surprise or amazement without offensive intent.",
-        exampleID: "Anjeng, lo keren banget sih!",
-        exampleEN: "Damn, you're so cool!",
-        sentiment: .positive
-    )
-
-    // Mock PopupManager
-    class MockPopupManager: PopupManager {
-        override func getSlangData() -> SlangModel? {
-            return mockSlang
-        }
-    }
-
-    static var previews: some View {
-        DictionaryDetail()
-            .environment(PopupManager())
-            .previewDevice("iPhone 15 Pro")
-            .preferredColorScheme(.light)
-    }
-}
+//
+//struct DictionaryDetail_Previews: PreviewProvider {
+//
+//    // Mock Data
+//    static let mockSlang = SlangModel(
+//        id: UUID(),
+//        slang: "anjeng",
+//        translationID: "anjing",
+//        translationEN: "crazy, impressive",
+//        contextID: "Dalam konteks bercanda antar teman, kadang digunakan secara akrab untuk mengekspresikan keterkejutan atau kekaguman tanpa maksud menghina.",
+//        contextEN: "In friendly banter, sometimes used playfully to express surprise or amazement without offensive intent.",
+//        exampleID: "Anjeng, lo keren banget sih!",
+//        exampleEN: "Damn, you're so cool!",
+//        sentiment: .positive
+//    )
+//
+//    // Mock PopupManager
+//    class MockPopupManager: PopupManager {
+//        override func getSlangData() -> SlangModel? {
+//            return mockSlang
+//        }
+//    }
+//
+//    static var previews: some View {
+//        DictionaryDetail()
+//            .environment(PopupManager())
+//            .previewDevice("iPhone 15 Pro")
+//            .preferredColorScheme(.light)
+//    }
+//}
 
 
 //"slang":"anjeng",
