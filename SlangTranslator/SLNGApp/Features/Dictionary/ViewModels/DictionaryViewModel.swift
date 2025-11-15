@@ -9,22 +9,6 @@ import Foundation
 import SwiftData
 internal import Combine
 
-enum DictionaryDisplayMode {
-    case allVariants    // Show all variants separately (like before)
-    case groupedByCanonical // Show grouped by canonical form (new)
-}
-
-struct SlangGrouped: Identifiable {
-    let id = UUID()
-    let canonicalForm: String
-    let canonicalPronunciation: String
-    let variants: [SlangData]
-    
-    var primaryVariant: SlangData {
-        variants.first ?? variants[0]
-    }
-}
-
 @MainActor
 final class DictionaryViewModel: ObservableObject {
     @Published var data: [SlangModel] = []
