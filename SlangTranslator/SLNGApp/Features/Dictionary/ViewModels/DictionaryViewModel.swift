@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 internal import Combine
+import FirebaseAnalytics
 
 @MainActor
 final class DictionaryViewModel: ObservableObject {
@@ -42,6 +43,7 @@ final class DictionaryViewModel: ObservableObject {
     func handleLetterDrag(_ letter: String) {
         activeLetter = letter
         isDraggingLetter = true
+        Analytics.logEvent("dictionary_jump_letter", parameters: ["letter": letter])
     }
 
     func handleLetterDragEnd() {
@@ -67,6 +69,10 @@ final class DictionaryViewModel: ObservableObject {
                     self.filteredCanonicals = self.canonicalGroups
                 } else {
                     self.filteredCanonicals = slangRepo.fetchGroupedByCanonical(offset: 0, keyword: q)
+                    Analytics.logEvent("dictionary_search", parameters: [
+                        "query_length": q.count,
+                        "result_count": self.filteredCanonicals.count
+                    ])
                 }
             }
             .store(in: &cancellables)

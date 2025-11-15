@@ -54,6 +54,9 @@ struct NormalKeyboardSection: View {
         .background(style.keyboardBackground)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .onTapGesture {
+            let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+            let countKey = "analytics.feature_used.explain_mode.count"
+            defaults.set(defaults.integer(forKey: countKey) + 1, forKey: countKey)
             handlePasteAction()
         }
     }
@@ -102,6 +105,9 @@ struct NormalKeyboardSection: View {
             
             PlainKeyButton(label: nil, systemName: "face.smiling", width: 48, height: 44, fontSize: 18) {
                 vm.changeDisplayMode(.emoji)
+                let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+                let countKey = "analytics.feature_used.emoji_mode.count"
+                defaults.set(defaults.integer(forKey: countKey) + 1, forKey: countKey)
             }
             PlainKeyButton(label: "space", systemName: nil, width: 150, height: 44, fontSize: 17) { insertText(" ") }
             PlainKeyButton(label: "return", systemName: nil, width: 76, height: 44, fontSize: 17) { insertText("\n") }
@@ -209,12 +215,16 @@ struct KeyRowView: View {
 
 struct NextKeyboardButtonOverlay: UIViewRepresentable {
     let action: Selector
+    let onTap: (() -> Void)? = nil
     
     func makeUIView(context: Context) -> UIButton {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "globe"), for: .normal)
         button.tintColor = .label
         button.addTarget(nil, action: action, for: .allTouchEvents)
+        if let onTap {
+            button.addAction(UIAction { _ in onTap() }, for: .touchUpInside)
+        }
         return button
     }
     

@@ -11,21 +11,27 @@ import CoreHaptics
 import SwiftData
 import AVFoundation
 internal import Combine
+import FirebaseAnalytics
 
 struct DictionaryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(PopupManager.self) private var popupManager
+    @Binding var searchText: String
     @State private var selected = 2
     @StateObject private var viewModel = DictionaryViewModel()
     @State private var scrollToIndexTrigger: Int? = nil
-    @StateObject private var keyboardObserver = KeyboardObserver()
     private static let letters: [String] = (97...122).compactMap { String(UnicodeScalar($0)) }
     @State private var lastOverlayLetter: String = ""
     @State private var jumpAnimated: Bool = true
     @State private var lastJumpTime: CFTimeInterval = 0
 
     var body: some View {
-        ZStack(alignment: .topLeading){
+        ZStack(alignment: .topLeading) {
+            // Background layer
+            AppColor.Background.primary
+                .ignoresSafeArea()
+            
+            // Main content
             VStack(spacing: 24) {
                 HStack {
                     SwiftUIWheelPicker(
@@ -38,26 +44,29 @@ struct DictionaryView: View {
                                 let group = viewModel.filteredCanonicals[selected]
                                 popupManager.setCanonicalForm(group.canonical)
                                 popupManager.setVariants(group.variants)
+                                Analytics.logEvent("dictionary_item_viewed", parameters: [
+                                    "variants_count": group.variants.count
+                                ])
                                 popupManager.isPresented.toggle()
                             }
                         }
                     ) { (item: String, idx: Int, isSelected: Bool) in
                         let distance = abs(selected - idx)
-                        let (fontSize, rowHeight, opacity): (CGFloat, CGFloat, Double)
+                        let rowHeight: CGFloat = 48
+                        let (fontSize, opacity): (CGFloat, Double)
                         switch distance {
-                        case 0: (fontSize, rowHeight, opacity) = (64, 76, 1.0)
-                        case 1: (fontSize, rowHeight, opacity) = (48, 57, 0.8)
-                        case 2: (fontSize, rowHeight, opacity) = (34, 48, 0.6)
-                        case 3: (fontSize, rowHeight, opacity) = (28, 41, 0.4)
-                        case 4: (fontSize, rowHeight, opacity) = (20, 33, 0.2)
-                        default: (fontSize, rowHeight, opacity) = (20, 33, 0.0)
+                        case 0: (fontSize, opacity) = (64, 1.0)
+                        case 1: (fontSize, opacity) = (48, 0.8)
+                        case 2: (fontSize, opacity) = (34, 0.6)
+                        case 3: (fontSize, opacity) = (28, 0.4)
+                        case 4: (fontSize, opacity) = (20, 0.2)
+                        default: (fontSize, opacity) = (20, 0.0)
                         }
 
                         return AnyView(
                             HStack(spacing: 32) {
                                 Text(item)
                                     .font(.system(size: fontSize, weight: isSelected ? .bold : .medium, design: .serif))
-                                    .frame(height: rowHeight)
                                     .padding(.leading, 8)
                                     .opacity(opacity)
                                     .scaleEffect(isSelected ? 1.1 : 1.0)
@@ -77,60 +86,21 @@ struct DictionaryView: View {
                                         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isSelected)
                                 }
                             }
+                            .frame(height: rowHeight)
                             .frame(maxWidth: .infinity, alignment: .center)
                         )
                     }
-
                     .frame(height: 573)
                     .frame(maxWidth: .infinity)
                     .clipped()
 
                     optimizedAlphabetSidebar
                 }
-
-                searchBar
             }
             .padding()
-            .padding(.bottom, keyboardObserver.height)
-            .background(AppColor.Background.primary)
-            .task {
-                viewModel.setContext(context: modelContext)
-                viewModel.loadData()
-            }
-            .onAppear {
-                if let l = viewModel.activeLetter, !l.isEmpty {
-                    lastOverlayLetter = l
-                } else if viewModel.filteredCanonicals.indices.contains(selected), let first = viewModel.filteredCanonicals[selected].canonical.first {
-                    lastOverlayLetter = String(first).lowercased()
-                }
-            }
-            .onChange(of: viewModel.filteredCanonicals.map { $0.canonical }) {
-                // Pastikan selection selalu valid terhadap hasil filter
-                let count = viewModel.filteredCanonicals.count
-                if count == 0 {
-                    selected = 0
-                    viewModel.activeLetter = nil
-                } else if selected >= count {
-                    selected = max(0, count - 1)
-                }
-                // Scroll agar item tetap berada di tengah setelah filter berubah
-                scrollToIndexTrigger = selected
-                updateActiveLetterFromSelection()
-            }
-            .onChange(of: selected) {
-                // Ketika pilihan berubah karena scroll, update huruf aktif
-                updateActiveLetterFromSelection()
-            }
-            .onChange(of: viewModel.activeLetter) {
-                if let l = viewModel.activeLetter, !l.isEmpty {
-                    lastOverlayLetter = l
-                } else if viewModel.filteredCanonicals.indices.contains(selected), let first = viewModel.filteredCanonicals[selected].canonical.first {
-                    lastOverlayLetter = String(first).lowercased()
-                }
-            }
-            .animation(nil, value: viewModel.filteredCanonicals.map { $0.canonical })
             
-            VStack{
+            // Letter overlay - MUST be separate to avoid blocking search
+            VStack {
                 let displayLetter: String = {
                     if let l = viewModel.activeLetter, !l.isEmpty { return l }
                     return lastOverlayLetter
@@ -138,37 +108,79 @@ struct DictionaryView: View {
                 Text(displayLetter.uppercased())
                     .font(.system(size: 64, design: .serif))
                     .foregroundColor(AppColor.Text.secondary)
+                    .allowsHitTesting(false) // PENTING: jangan block interaction
             }
             .frame(width: 128, height: 128)
             .background(.clear)
             .clipShape(.circle)
+            .allowsHitTesting(false) // PENTING: jangan block interaction
         }
-        .background(AppColor.Background.primary)
-       
-    }
-
-    private var searchBar: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "magnifyingglass")
-                .frame(width: 17)
-                .foregroundColor(.gray)
-
-            TextField("Search", text: $viewModel.searchText)
-                .autocapitalization(.none)
-                .padding(.vertical, 8)
-                .font(.caption)
-                .frame(height: 22)
-                .frame(maxWidth: .infinity)
-                .foregroundColor(.gray)
+        .safeAreaInset(edge: .bottom) {
+            HStack {
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.gray)
+                    TextField("Search", text: $searchText)
+                        .textFieldStyle(.plain)
+                        .autocorrectionDisabled()
+                    if !searchText.isEmpty {
+                        Button(action: { searchText = "" }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.gray)
+                        }
+                    }
+                }
+                .padding(8)
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+                .padding(.horizontal)
+            }
+            .padding(.vertical, 8)
+            .background(Color(.systemBackground))
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 8)
-        .frame(height: 50)
-        .frame(maxWidth: .infinity)
-        .background(Color.gray.opacity(0.32))
-        .cornerRadius(100)
+        .task {
+            viewModel.setContext(context: modelContext)
+            viewModel.loadData()
+        }
+        .onAppear {
+            if let l = viewModel.activeLetter, !l.isEmpty {
+                lastOverlayLetter = l
+            } else if viewModel.filteredCanonicals.indices.contains(selected), let first = viewModel.filteredCanonicals[selected].canonical.first {
+                lastOverlayLetter = String(first).lowercased()
+            }
+            Analytics.logEvent("dictionary_open", parameters: ["source": "tab"])
+            viewModel.searchText = searchText
+        }
+        .onDisappear {
+            Analytics.logEvent("dictionary_close", parameters: ["source": "tab"])
+        }
+        .onChange(of: searchText) {
+            viewModel.searchText = searchText
+        }
+        .onChange(of: viewModel.filteredCanonicals.map { $0.canonical }) {
+            let count = viewModel.filteredCanonicals.count
+            if count == 0 {
+                selected = 0
+                viewModel.activeLetter = nil
+            } else if selected >= count {
+                selected = max(0, count - 1)
+            }
+            scrollToIndexTrigger = selected
+            updateActiveLetterFromSelection()
+        }
+        .onChange(of: selected) {
+            updateActiveLetterFromSelection()
+        }
+        .onChange(of: viewModel.activeLetter) {
+            if let l = viewModel.activeLetter, !l.isEmpty {
+                lastOverlayLetter = l
+            } else if viewModel.filteredCanonicals.indices.contains(selected), let first = viewModel.filteredCanonicals[selected].canonical.first {
+                lastOverlayLetter = String(first).lowercased()
+            }
+        }
+        .animation(nil, value: viewModel.filteredCanonicals.map { $0.canonical })
     }
- 
+    
     private var optimizedAlphabetSidebar: some View {
         let letters = Self.letters
         return GeometryReader { geo in
@@ -184,7 +196,7 @@ struct DictionaryView: View {
                 }
             }
             .frame(width: 20, height: geo.size.height, alignment: .center)
-            .contentShape(Rectangle()) // make whole area tappable
+            .contentShape(Rectangle())
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { g in
@@ -193,13 +205,11 @@ struct DictionaryView: View {
                         var index = Int((localY / step).rounded(.down))
                         index = min(max(0, index), letters.count - 1)
                         let letter = letters[index]
-                        // only update if changed to reduce overhead
                         if viewModel.activeLetter != letter || !viewModel.isDraggingLetter {
                             viewModel.handleLetterDrag(letter)
                             jumpAnimated = false
                             if let jumpIndex = viewModel.indexForLetter(letter) {
                                 if selected != jumpIndex && scrollToIndexTrigger != jumpIndex {
-                                    // throttle jump frequency to reduce work
                                     let now = CACurrentMediaTime()
                                     if now - lastJumpTime > 0.05 {
                                         lastJumpTime = now
@@ -216,7 +226,7 @@ struct DictionaryView: View {
             )
             .padding(.trailing, 6)
         }
-        .frame(width: 26) // keep a stable width
+        .frame(width: 26)
     }
 
     private func updateActiveLetterFromSelection() {
@@ -461,6 +471,7 @@ public struct SwiftUIWheelPicker<Item>: View {
             ZStack {
                 ScrollViewReader { proxy in
                     ScrollView(.vertical, showsIndicators: false) {
+                        let itemHeight: CGFloat = 48
                         LazyVStack(spacing: 24) {
                             Color.clear.frame(height: outerGeo.size.height / 2)
                             
@@ -499,7 +510,6 @@ public struct SwiftUIWheelPicker<Item>: View {
                     .onPreferenceChange(RowCenterKey.self) { values in
                         guard !dragging else { return }
                         guard !values.isEmpty else { return }
-                        
                         let filtered = values.filter { visibleRange.contains($0.id) }
                         for v in filtered {
                             centers[v.id] = v.midY
@@ -657,6 +667,10 @@ public struct SwiftUIWheelPicker<Item>: View {
         }
         
         engine.impactOccurred(intensity: 0.5)
+
+        DispatchQueue.main.async {
+            snapToNearest(containerCenterY: containerCenterY > 0 ? containerCenterY : 0)
+        }
     }
 
     private func updateVisibleRange(around index: Int) {
@@ -709,7 +723,7 @@ final class KeyboardObserver: ObservableObject {
     }
 }
 // Preview
-#Preview {
-    DictionaryView()
-        .environment(PopupManager())
-}
+//#Preview {
+//    DictionaryView()
+//        .environment(PopupManager())
+//}

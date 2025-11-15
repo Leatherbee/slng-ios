@@ -69,6 +69,13 @@ struct SlangKeyboardView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.mode)
+        .onChange(of: scheme) { _, newScheme in
+            let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+            let key = "analytics.theme_switch.count"
+            defaults.set(defaults.integer(forKey: key) + 1, forKey: key)
+            let detailKey = "analytics.theme_switch.last_params"
+            defaults.set(["theme": newScheme == .dark ? "dark" : "light"], forKey: detailKey)
+        }
     }
 }
 

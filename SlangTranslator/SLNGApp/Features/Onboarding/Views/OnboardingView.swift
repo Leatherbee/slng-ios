@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Lottie
+import FirebaseAnalytics
 
 struct OnboardingView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -14,6 +15,7 @@ struct OnboardingView: View {
     @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 2
     @State var trialKeyboardText: String = ""
     @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
+    
 
     @FocusState private var focusedField: Bool
     
@@ -82,6 +84,9 @@ struct OnboardingView: View {
             
             VStack(spacing: 16){
                 Button {
+                    Analytics.logEvent("tutorial_begin", parameters: [
+                        "source": "onboarding"
+                    ])
                     pageNumber+=1
                 } label: {
                     Text("Get Started")
@@ -192,6 +197,9 @@ struct OnboardingView: View {
             Button {
                 @AppStorage("hasOnboarded") var hasOnboarded = false
                 hasOnboarded = true
+                Analytics.logEvent("tutorial_complete", parameters: [
+                    "source": "onboarding"
+                ])
             } label: {
                 HStack {
                     Text("Continue")
@@ -244,6 +252,9 @@ struct OnBoardingPage<Content: View>: View {
                     }
                     else{
                         hasOnboarded = true
+                        Analytics.logEvent("tutorial_complete", parameters: [
+                            "source": "onboarding"
+                        ])
                     }
                 } label: {
                     HStack {

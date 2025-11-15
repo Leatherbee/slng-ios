@@ -14,6 +14,15 @@ class KeyboardViewController: UIInputViewController {
     private var keyboardHeight: CGFloat = 270
     private var viewModelRef: SlangKeyboardViewModel?
     private let textChecker = UITextChecker()
+    private func recordExtEvent(_ name: String, params: [String: String]? = nil) {
+        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+        let countKey = "analytics/.\(name)/.count"
+        defaults.set(defaults.integer(forKey: countKey) + 1, forKey: countKey)
+        if let params {
+            let dictKey = "analytics/.\(name)/.last_params"
+            defaults.set(params, forKey: dictKey)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,17 +40,17 @@ class KeyboardViewController: UIInputViewController {
         self.viewModelRef = viewModel
         
         // Read settings from App Group UserDefaults
-        let settings = UserDefaults(suiteName: "group.prammmoe.SLNG")
+        let settings = UserDefaults(suiteName: "group.prammmoe.SLNG")!
         // Register defaults so first run has expected values
-        settings?.register(defaults: [
+        settings.register(defaults: [
             "settings.autoCorrect": true,
             "settings.autoCaps": true,
             "settings.keyboardLayout": "QWERTY"
         ])
         // Use object(forKey:) to distinguish missing keys (nil) from false
-        let autoCorrect = (settings?.object(forKey: "settings.autoCorrect") as? Bool) ?? true
-        let autoCaps = (settings?.object(forKey: "settings.autoCaps") as? Bool) ?? true
-        let layoutRaw = settings?.string(forKey: "settings.keyboardLayout") ?? "QWERTY"
+        let autoCorrect = (settings.object(forKey: "settings.autoCorrect") as? Bool) ?? true
+        let autoCaps = (settings.object(forKey: "settings.autoCaps") as? Bool) ?? true
+        let layoutRaw = settings.string(forKey: "settings.keyboardLayout") ?? "QWERTY"
         
         // Apply settings to VM
         viewModel.applySettings(autoCorrect: autoCorrect, autoCaps: autoCaps, layoutRaw: layoutRaw)
@@ -85,6 +94,9 @@ class KeyboardViewController: UIInputViewController {
         let heightConstraint = view.heightAnchor.constraint(equalToConstant: keyboardHeight)
         heightConstraint.priority = .defaultHigh
         heightConstraint.isActive = true
+        recordExtEvent("keyboard_open", params: [
+            "locale": Locale.current.identifier
+        ])
     }
 
     // MARK: - Auto Correct Handling
@@ -204,6 +216,11 @@ class KeyboardViewController: UIInputViewController {
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        recordExtEvent("keyboard_close", params: nil)
     }
 }
 

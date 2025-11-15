@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Lottie
+import FirebaseAnalytics
 
 struct KeyboardSettingView: View {
     
@@ -87,6 +88,12 @@ struct KeyboardSettingView: View {
                             .tint(.green)
                             .accessibilityIdentifier("KeyboardSettingView.AutoCapslockToggle")
                             .accessibilityInputLabels(["Auto Caps", "Auto Capitalization"]) 
+                            .onChange(of: autoCapslock) { _, newValue in
+                                Analytics.logEvent("settings_changed", parameters: [
+                                    "setting_name": "auto_capslock",
+                                    "state": newValue ? "enabled" : "disabled"
+                                ])
+                            }
                     }
                     .padding()
                     .background(Color(.systemGray6))
@@ -114,6 +121,10 @@ struct KeyboardSettingView: View {
                                             withAnimation(.easeInOut) {
                                                 keyboardLayoutRaw = layout.rawValue
                                             }
+                                            Analytics.logEvent("settings_changed", parameters: [
+                                                "setting_name": "keyboard_layout",
+                                                "state": layout.rawValue
+                                            ])
                                         }
                                     Text(layout.rawValue)
                                         .font(.footnote)

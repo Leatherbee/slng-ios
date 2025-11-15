@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import Foundation
+import FirebaseAnalytics
 struct DictionaryDetail: View {
     @Environment(PopupManager.self) private var popupManager
     @State private var slangData: SlangModel?
@@ -28,6 +29,7 @@ struct DictionaryDetail: View {
                     HStack{
                         Spacer()
                         Button {
+                            Analytics.logEvent("dictionary_detail_close", parameters: ["source": "popup"]) 
                             popupManager.isPresented.toggle()
                         } label: {
                             Image(systemName: "xmark")
@@ -89,6 +91,7 @@ struct DictionaryDetail: View {
                         HStack(spacing: 8){
                             ForEach(Array(variants.enumerated()), id: \.offset) { idx, v in
                                 similiarButton(title: v.slang) {
+                                    Analytics.logEvent("dictionary_similar_selected", parameters: ["index": idx]) 
                                     selectedVariantIndex = idx
                                 }
                             }
@@ -96,6 +99,7 @@ struct DictionaryDetail: View {
                     }
                     HStack(spacing: 32){
                         Button{
+                            Analytics.logEvent("dictionary_info_sheet_open", parameters: ["source": "detail"]) 
                             showInfoSheet.toggle()
                         }label: {
                             Image("info-icon")
@@ -105,6 +109,7 @@ struct DictionaryDetail: View {
                         }
                         
                         Button{
+                            Analytics.logEvent("dictionary_pronounce", parameters: ["source": "detail"]) 
                             let current = variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex] : slangData
                             if let text = current?.slang { viewModel.speak(text) }
                         } label: {
@@ -127,6 +132,9 @@ struct DictionaryDetail: View {
             self.variants = popupManager.getVariants()
             self.canonicalForm = popupManager.getCanonicalForm() ?? ""
             if !variants.isEmpty { selectedVariantIndex = 0 }
+            Analytics.logEvent("dictionary_detail_open", parameters: [
+                "variants_count": variants.count
+            ])
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 withAnimation(.easeIn(duration: 0.3)) {
