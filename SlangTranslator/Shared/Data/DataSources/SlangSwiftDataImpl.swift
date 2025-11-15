@@ -76,15 +76,40 @@ final class SlangSwiftDataImpl {
     
     // NEW: Fetch grouped by canonical form (for dictionary view)
     func fetchGroupedByCanonical(offset: Int = 0, keyword: String? = nil) -> [(canonical: String, variants: [SlangModel])] {
-        let allSlangs = fetch(offset: offset, keyword: keyword)
+        let allSlangs: [SlangModel]
+        if let keyword, !keyword.isEmpty {
+            allSlangs = fetchAllMatching(keyword: keyword)
+        } else {
+            allSlangs = fetchAll()
+        }
         
-        // Group by canonicalForm
         let grouped = Dictionary(grouping: allSlangs, by: { $0.canonicalForm })
         
-        // Sort by canonical form and convert to array of tuples
         return grouped
             .sorted { $0.key < $1.key }
             .map { (canonical: $0.key, variants: $0.value.sorted { $0.slang < $1.slang }) }
+    }
+    
+    // NEW: Fetch all rows matching keyword without pagination
+    private func fetchAllMatching(keyword: String) -> [SlangModel] {
+        let predicate = #Predicate<SlangModel> { slang in
+            slang.slang.localizedStandardContains(keyword) ||
+            slang.canonicalForm.localizedStandardContains(keyword) ||
+            slang.translationID.localizedStandardContains(keyword) ||
+            slang.translationEN.localizedStandardContains(keyword) ||
+            slang.contextID.localizedStandardContains(keyword) ||
+            slang.contextEN.localizedStandardContains(keyword)
+        }
+        
+        let descriptor = FetchDescriptor<SlangModel>(
+            predicate: predicate,
+            sortBy: [
+                SortDescriptor(\.canonicalForm, order: .forward),
+                SortDescriptor(\.slang, order: .forward)
+            ]
+        )
+        
+        return (try? context.fetch(descriptor)) ?? []
     }
     
     func totalCount(keyword: String? = nil) -> Int {

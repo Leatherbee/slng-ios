@@ -12,17 +12,6 @@ internal import Combine
 @MainActor
 final class DictionaryViewModel: ObservableObject {
     @Published var data: [SlangModel] = []
-
-    @Published var displayMode: DictionaryDisplayMode = .groupedByCanonical
-    
-    @Published var allSlangs: [SlangData] = []      // semua data
-    @Published var slangs: [SlangData] = []         // data paginated
-    @Published var filteredSlangs: [SlangData] = [] // hasil filter (yang ditampilkan)
-    
-    @Published var allGroups: [SlangGrouped] = []
-    @Published var groups: [SlangGrouped] = []
-    @Published var filteredGroups: [SlangGrouped] = []
-    
     @Published var searchText: String = ""
     @Published var filtered: [SlangModel] = []
     @Published var activeLetter: String? = nil
