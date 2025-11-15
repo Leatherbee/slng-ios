@@ -12,17 +12,6 @@ internal import Combine
 @MainActor
 final class DictionaryViewModel: ObservableObject {
     @Published var data: [SlangModel] = []
-
-    @Published var displayMode: DictionaryDisplayMode = .groupedByCanonical
-    
-    @Published var allSlangs: [SlangData] = []      // semua data
-    @Published var slangs: [SlangData] = []         // data paginated
-    @Published var filteredSlangs: [SlangData] = [] // hasil filter (yang ditampilkan)
-    
-    @Published var allGroups: [SlangGrouped] = []
-    @Published var groups: [SlangGrouped] = []
-    @Published var filteredGroups: [SlangGrouped] = []
-    
     @Published var searchText: String = ""
     @Published var filtered: [SlangModel] = []
     @Published var activeLetter: String? = nil
@@ -48,9 +37,6 @@ final class DictionaryViewModel: ObservableObject {
         let groups = slangRepo.fetchGroupedByCanonical()
         canonicalGroups = groups
         filteredCanonicals = groups
-        let allData = slangRepo.fetchAll()
-        data = allData
-        filtered = allData
     }
     
     func handleLetterDrag(_ letter: String) {
@@ -66,7 +52,6 @@ final class DictionaryViewModel: ObservableObject {
     func indexForLetter(_ letter: String) -> Int? {
         let lower = letter.lowercased()
         return filteredCanonicals.firstIndex(where: { $0.canonical.lowercased().hasPrefix(lower) })
-        return filtered.firstIndex(where: { $0.slang.lowercased().hasPrefix(lower) })
     }
 
     /// Setup reactive search pipeline

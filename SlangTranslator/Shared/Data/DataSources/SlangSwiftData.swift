@@ -43,7 +43,7 @@ final class SlangSwiftData {
         guard !isLoaded else { return nil }
         isLoaded = true
 
-        guard let url = Bundle.main.url(forResource: "slng_data_v1.1", withExtension: "json"),
+        guard let url = Bundle.main.url(forResource: "slng_data_v1.2", withExtension: "json"),
               let stream = InputStream(url: url) else {
             print("Slang JSON not found!")
             return nil
