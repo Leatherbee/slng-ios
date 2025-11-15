@@ -5,15 +5,18 @@
 //  Created by Filza Rizki Ramadhan on 28/10/25.
 //
 import SwiftUI
+import SwiftData
 
 struct DictionaryDetail: View {
     @Environment(PopupManager.self) private var popupManager
+    @Environment(\.modelContext) private var modelContext
     @State private var slangData: SlangData?
     @State private var showCloseButton: Bool = false
     @StateObject private var viewModel = DictionaryDetailViewModel()
     @State private var showInfoSheet: Bool = false
     @State private var sheetHeight: CGFloat = 300
     @Environment(\.colorScheme) var colorScheme
+    @State private var variants: [String] = []
     var body: some View {
         ZStack{
             VStack(spacing: 64){
@@ -47,10 +50,18 @@ struct DictionaryDetail: View {
             GeometryReader { geo in
                 VStack{
                     VStack(spacing: 32){
-                        Text(slangData?.slang ?? "Tes")
+                        Text(slangData?.canonicalForm ?? "Tes")
                             .font(.system(size: 64, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
                             .textSelection(.enabled)
+                        if !variants.isEmpty {
+                            Text(variants.joined(separator: " • "))
+                                .font(.system(size: 16, design: .serif))
+                                .foregroundColor(AppColor.Text.secondary)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(nil)
+                                .textSelection(.enabled)
+                        }
                         VStack(spacing: 24){
                             Text(slangData?.translationEN ?? "Lorem ipsum dolor sit amet")
                                 .font(.system(size: 18, design: .serif))
@@ -102,6 +113,17 @@ struct DictionaryDetail: View {
         }
         .onAppear() {
             self.slangData = popupManager.getSlangData()
+            if let canonical = self.slangData?.canonicalForm {
+                let predicate = #Predicate<SlangModel> { slang in
+                    slang.canonicalForm == canonical
+                }
+                let descriptor = FetchDescriptor<SlangModel>(
+                    predicate: predicate,
+                    sortBy: [SortDescriptor(\.slang, order: .forward)]
+                )
+                let models = (try? modelContext.fetch(descriptor)) ?? []
+                self.variants = models.map { $0.slang }
+            }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 withAnimation(.easeIn(duration: 0.3)) {
@@ -160,21 +182,21 @@ struct DictionaryDetail: View {
     }
 }
 
-#Preview {
-    let popupManager = PopupManager()
-    popupManager.setSlangData(
-        SlangData(
-            slang: "Gokil",
-            translationID: "OKE",
-            translationEN: "OKAY",
-            contextID: "Gokil kamu pecah",
-            contextEN: "Used to express excitement or disbelief",
-            exampleID: "Gokil, kamu keren banget!",
-            exampleEN: "Wow, you’re amazing!",
-            sentiment: .negative
-        )
-    )
-    
-    return DictionaryDetail()
-        .environment(popupManager)
-}
+//#Preview {
+//    let popupManager = PopupManager()
+//    popupManager.setSlangData(
+//        SlangData(
+//            slang: "Gokil",
+//            translationID: "OKE",
+//            translationEN: "OKAY",
+//            contextID: "Gokil kamu pecah",
+//            contextEN: "Used to express excitement or disbelief",
+//            exampleID: "Gokil, kamu keren banget!",
+//            exampleEN: "Wow, you’re amazing!",
+//            sentiment: .negative
+//        )
+//    )
+//    
+//    return DictionaryDetail()
+//        .environment(popupManager)
+//}

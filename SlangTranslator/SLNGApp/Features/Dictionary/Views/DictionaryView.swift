@@ -85,14 +85,21 @@ extension View {
 extension DictionaryView {
     @ViewBuilder
     private func slangPickerView() -> some View {
-        let slangs = viewModel.filteredSlangs.map { $0.slang }
+        let items: [String] = {
+            switch viewModel.displayMode {
+            case .allVariants:
+                return viewModel.filteredSlangs.map { $0.slang }
+            case .groupedByCanonical:
+                return viewModel.filteredGroups.map { $0.canonicalForm }
+            }
+        }()
         
-        if !slangs.isEmpty {
+        if !items.isEmpty {
             LargeWheelPicker(
                 selection: $viewModel.selectedIndex,
                 viewModel: viewModel,
                 popupManager: popupManager,
-                data: slangs
+                data: items
             )
             .frame(maxWidth: .infinity)
             .frame(height: 1000)
@@ -172,8 +179,14 @@ extension DictionaryView {
     }
     
     var activeLetter: String {
-        guard viewModel.selectedIndex < viewModel.filteredSlangs.count else { return "" }
-        return String(viewModel.filteredSlangs[viewModel.selectedIndex].slang.prefix(1).uppercased())
+        switch viewModel.displayMode {
+        case .allVariants:
+            guard viewModel.selectedIndex < viewModel.filteredSlangs.count else { return "" }
+            return String(viewModel.filteredSlangs[viewModel.selectedIndex].slang.prefix(1).uppercased())
+        case .groupedByCanonical:
+            guard viewModel.selectedIndex < viewModel.filteredGroups.count else { return "" }
+            return String(viewModel.filteredGroups[viewModel.selectedIndex].canonicalForm.prefix(1).uppercased())
+        }
     }
 }
 

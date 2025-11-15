@@ -53,22 +53,29 @@ final class SlangSwiftData {
         defer { stream.close() }
 
         do {
-            guard let array = try JSONSerialization.jsonObject(with: stream, options: []) as? [Any] else {
-                print("Invalid JSON format")
-                return nil
-            }
-
-            let decoder = JSONDecoder()
+            // Decode using SlangData helper method
+            let allSlangData = try SlangData.decodeFromStream(stream)
+            
+            // Convert SlangData to SlangModel
             var temp: [SlangModel] = []
-            temp.reserveCapacity(array.count)
+            temp.reserveCapacity(allSlangData.count)
 
-            for case let dict as [String: Any] in array {
-                if let data = try? JSONSerialization.data(withJSONObject: dict, options: []),
-                   let slangData = try? decoder.decode(SlangData.self, from: data) {
-                    // Convert ke model SwiftData
-                    let slang = SlangModel(id: slangData.id, slang: slangData.slang, translationID: slangData.translationID, translationEN: slangData.translationEN, contextID: slangData.contextID, contextEN: slangData.contextEN, exampleID: slangData.exampleID, exampleEN: slangData.exampleEN, sentiment: slangData.sentiment)
-                    temp.append(slang)
-                }
+            for slangData in allSlangData {
+                let slangModel = SlangModel(
+                    id: slangData.id,
+                    canonicalForm: slangData.canonicalForm,
+                    canonicalPronunciation: slangData.canonicalPronunciation,
+                    slang: slangData.slang,
+                    pronunciation: slangData.pronunciation,
+                    translationID: slangData.translationID,
+                    translationEN: slangData.translationEN,
+                    contextID: slangData.contextID,
+                    contextEN: slangData.contextEN,
+                    exampleID: slangData.exampleID,
+                    exampleEN: slangData.exampleEN,
+                    sentiment: slangData.sentiment
+                )
+                temp.append(slangModel)
             }
 
             print("Finished decoding \(temp.count) slangs from JSON.")
