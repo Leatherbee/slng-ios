@@ -69,12 +69,19 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
         var results: [(data: SlangData, range: NSRange)] = []
         let fullRange = NSRange(location: 0, length: text.utf16.count)
 
-        let orderedSlangs = slangs.sorted { $0.slang.count > $1.slang.count }
+        // Group slangs by their base form (not normalized, to match exact spellings)
+        let slangsByBase = Dictionary(grouping: slangs, by: { $0.slang.lowercased() })
+        
+        // Get unique base forms sorted by length (longest first)
+        let uniqueBases = Array(Set(slangs.map { $0.slang.lowercased() }))
+            .sorted { $0.count > $1.count }
+        
         var occupiedRanges: [NSRange] = []
 
-        for slangData in orderedSlangs {
-            let slang = slangData.slang.lowercased()
-            let pattern = "\\b\(NSRegularExpression.escapedPattern(for: slang))\\b"
+        for baseSlang in uniqueBases {
+            guard let variants = slangsByBase[baseSlang] else { continue }
+            
+            let pattern = "\\b\(NSRegularExpression.escapedPattern(for: baseSlang))\\b"
             guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
 
             regex.enumerateMatches(in: text, options: [], range: fullRange) { match, _, _ in
@@ -82,7 +89,10 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
                 let overlaps = occupiedRanges.contains { NSIntersectionRange($0, range).length > 0 }
                 if overlaps { return }
 
-                results.append((data: slangData, range: range))
+                // Add ALL variants (different sentiments) for this match
+                for variant in variants {
+                    results.append((data: variant, range: range))
+                }
                 occupiedRanges.append(range)
             }
         }
@@ -98,11 +108,20 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
         var results: [(data: SlangData, range: NSRange)] = []
         let fullRange = NSRange(location: 0, length: text.utf16.count)
 
-        let orderedSlangs = slangs.sorted { $0.slang.count > $1.slang.count }
+        // Group slangs by their normalized form to find all variants
+        let slangsByNormalized = Dictionary(grouping: slangs, by: { $0.slang.normalizedForSlangMatching() })
+        
+        // Get unique normalized forms sorted by length (longest first)
+        let uniqueNormalized = Array(Set(slangs.map { $0.slang.normalizedForSlangMatching() }))
+            .sorted { $0.count > $1.count }
+        
         var occupiedRanges: [NSRange] = existingRanges
 
-        for slangData in orderedSlangs {
-            let base = slangData.slang.lowercased()
+        for normalizedSlang in uniqueNormalized {
+            guard let variants = slangsByNormalized[normalizedSlang],
+                  let firstVariant = variants.first else { continue }
+            
+            let base = firstVariant.slang.lowercased()
             let fuzzy = base.map { ch in
                 NSRegularExpression.escapedPattern(for: String(ch)) + "+"
             }.joined()
@@ -114,7 +133,10 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
                 let overlaps = occupiedRanges.contains { NSIntersectionRange($0, range).length > 0 }
                 if overlaps { return }
 
-                results.append((data: slangData, range: range))
+                // Add ALL variants (different sentiments) for this match
+                for variant in variants {
+                    results.append((data: variant, range: range))
+                }
                 occupiedRanges.append(range)
             }
         }
@@ -122,7 +144,7 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
         return results
     }
     
-    // Group by normalized slang, but handle sentiment with canonical awareness
+    // Fixed filterSlangBasedOnSentiment - properly handles sentiment in all cases
     private func filterSlangBasedOnSentiment(
         _ found: [(data: SlangData, range: NSRange)],
         in text: String,
@@ -132,15 +154,21 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
         let grouped = Dictionary(grouping: found, by: { $0.data.slang.normalizedForSlangMatching() })
 
         return grouped.values.compactMap { group in
-            guard let firstRange = group.first?.range, let swiftRange = Range(firstRange, in: text) else {
-                return group.first?.data
+            guard let firstRange = group.first?.range,
+                  let swiftRange = Range(firstRange, in: text) else {
+                // Even when range conversion fails, use sentiment-aware selection
+                return selectVariantFromGroup(
+                    group.map { $0.data },
+                    inputToken: group.first?.data.slang ?? "",
+                    sentiment: sentiment
+                )
             }
             let token = String(text[swiftRange])
             return selectVariantFromGroup(group.map { $0.data }, inputToken: token, sentiment: sentiment)
         }
     }
-    
-    // Original sorting strategy from Test.swift
+
+    // Fixed version of selectVariantFromGroup with proper sentiment prioritization
     private func selectVariantFromGroup(
         _ variants: [SlangData],
         inputToken: String,
@@ -151,47 +179,56 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
         let variantsDesc = variants.map { "\($0.slang):\($0.sentiment.rawValue)" }.joined(separator: ", ")
         print("Debug selecting variant for token=\(lowerToken) sentiment=\(sRaw)")
         print("Debug variants for token=\(lowerToken) -> \(variantsDesc)")
+        
         let exactMatches = variants.filter { $0.slang.lowercased() == lowerToken }
+        
         if !exactMatches.isEmpty {
+            // Priority 1: Exact match with matching sentiment
             if let s = sentiment, let pick = exactMatches.first(where: { $0.sentiment == s }) {
-                print("Debug chosen variant=\(pick.slang) sentiment=\(pick.sentiment.rawValue)")
+                print("Debug chosen variant=\(pick.slang) sentiment=\(pick.sentiment.rawValue) reason=exact+sentiment")
                 return pick
             }
+            
+            // Priority 2: Exact match with neutral sentiment
             if let pickNeutral = exactMatches.first(where: { $0.sentiment == .neutral }) {
-                print("Debug chosen variant=\(pickNeutral.slang) sentiment=\(pickNeutral.sentiment.rawValue)")
+                print("Debug chosen variant=\(pickNeutral.slang) sentiment=\(pickNeutral.sentiment.rawValue) reason=exact+neutral")
                 return pickNeutral
             }
+            
+            // Priority 3: Any exact match (longest)
             let pick = exactMatches.max(by: { $0.slang.count < $1.slang.count })!
-            print("Debug chosen variant=\(pick.slang) sentiment=\(pick.sentiment.rawValue)")
+            print("Debug chosen variant=\(pick.slang) sentiment=\(pick.sentiment.rawValue) reason=exact+longest")
             return pick
         }
 
+        // For fuzzy/elongation matches
         let target = lowerToken.maxRepeatRun()
         let sorted = variants.sorted { a, b in
-            // Closest character repetition pattern
+            // Priority 1: Closest character repetition pattern
             let da = abs(a.slang.lowercased().maxRepeatRun() - target)
             let db = abs(b.slang.lowercased().maxRepeatRun() - target)
             if da != db { return da < db }
 
-            // Prefer matching sentiment when available
+            // Priority 2: STRONGLY prefer matching sentiment
             if let s = sentiment {
                 let sa = (a.sentiment == s) ? 0 : 1
                 let sb = (b.sentiment == s) ? 0 : 1
                 if sa != sb { return sa < sb }
             }
 
-            // Prefer neutral as fallback
+            // Priority 3: Prefer neutral as fallback
             let na = (a.sentiment == .neutral) ? 0 : 1
             let nb = (b.sentiment == .neutral) ? 0 : 1
             if na != nb { return na < nb }
 
-            // Longer slang is more specific
+            // Priority 4: Longer slang is more specific
             return a.slang.count > b.slang.count
         }
 
         let chosen = sorted.first ?? variants.first
         let chosenSent = chosen?.sentiment.rawValue ?? "nil"
-        print("Debug chosen variant=\(chosen?.slang ?? "-") sentiment=\(chosenSent)")
+        let reason = chosen == sorted.first ? "fuzzy+sorted" : "fallback"
+        print("Debug chosen variant=\(chosen?.slang ?? "-") sentiment=\(chosenSent) reason=\(reason)")
         return chosen
     }
     
