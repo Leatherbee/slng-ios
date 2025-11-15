@@ -185,8 +185,8 @@ struct TranslateInputSection: View {
 
                 Circle()
                     .fill(Color.clear)
-                    .frame(width: 340, height: 340)
-                    .contentShape(Circle())
+                    .frame(width: 280, height: 280)
+                    .contentShape(.circle)
                     .opacity(0.001)
                     .onLongPressGesture(minimumDuration: 0.6, maximumDistance: 50, pressing: { _ in }, perform: {
                         if !viewModel.isRecording {
@@ -239,7 +239,8 @@ struct TranslateInputSection: View {
                 }
             }
             .accessibilityLabel("Hold to speak")
-            .padding(.bottom, 0)
+            .padding(.bottom, 40)
+            .zIndex(1)
         }
         .padding()
         .contentShape(Rectangle())
