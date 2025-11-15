@@ -17,6 +17,7 @@ struct DictionaryDetail: View {
     @State private var showInfoSheet: Bool = false
     @State private var sheetHeight: CGFloat = 300
     @Environment(\.colorScheme) var colorScheme
+    @State private var variants: [String] = []
     var body: some View {
         ZStack{
             VStack(spacing: 64){
@@ -55,6 +56,14 @@ struct DictionaryDetail: View {
                             .font(.system(size: 64, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
                             .textSelection(.enabled)
+                        if !variants.isEmpty {
+                            Text(variants.joined(separator: " • "))
+                                .font(.system(size: 16, design: .serif))
+                                .foregroundColor(AppColor.Text.secondary)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(nil)
+                                .textSelection(.enabled)
+                        }
                         VStack(spacing: 24){
                             Text(current?.translationEN ?? "")
                                 .font(.system(size: 18, design: .serif))
