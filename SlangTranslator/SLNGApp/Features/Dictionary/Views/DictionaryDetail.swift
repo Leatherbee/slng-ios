@@ -5,18 +5,18 @@
 //  Created by Filza Rizki Ramadhan on 28/10/25.
 //
 import SwiftUI
-import SwiftData
-
+import Foundation
 struct DictionaryDetail: View {
     @Environment(PopupManager.self) private var popupManager
-    @Environment(\.modelContext) private var modelContext
-    @State private var slangData: SlangData?
+    @State private var slangData: SlangModel?
+    @State private var variants: [SlangModel] = []
+    @State private var selectedVariantIndex: Int = 0
+    @State private var canonicalForm: String = ""
     @State private var showCloseButton: Bool = false
     @StateObject private var viewModel = DictionaryDetailViewModel()
     @State private var showInfoSheet: Bool = false
     @State private var sheetHeight: CGFloat = 300
     @Environment(\.colorScheme) var colorScheme
-    @State private var variants: [String] = []
     var body: some View {
         ZStack{
             VStack(spacing: 64){
@@ -50,27 +50,20 @@ struct DictionaryDetail: View {
             GeometryReader { geo in
                 VStack{
                     VStack(spacing: 32){
-                        Text(slangData?.canonicalForm ?? "Tes")
+                        let current = variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex] : slangData
+                        Text(current?.slang ?? "")
                             .font(.system(size: 64, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
                             .textSelection(.enabled)
-                        if !variants.isEmpty {
-                            Text(variants.joined(separator: " • "))
-                                .font(.system(size: 16, design: .serif))
-                                .foregroundColor(AppColor.Text.secondary)
-                                .multilineTextAlignment(.center)
-                                .lineLimit(nil)
-                                .textSelection(.enabled)
-                        }
                         VStack(spacing: 24){
-                            Text(slangData?.translationEN ?? "Lorem ipsum dolor sit amet")
+                            Text(current?.translationEN ?? "")
                                 .font(.system(size: 18, design: .serif))
                                 .foregroundColor(AppColor.Text.primary)
                                 .multilineTextAlignment(.center)
                                 .lineLimit(nil)
                                 .textSelection(.enabled)
-                            Text(slangData?.exampleEN ?? "Lorem ipsum")
-                                .font(.system(size: 20, design: .serif))
+                            Text(current?.exampleEN ?? "")
+                                .font(.system(size: 14, design: .serif))
                                 .foregroundColor(AppColor.Text.primary)
                                 .multilineTextAlignment(.center)
                                 .lineLimit(nil)
@@ -79,6 +72,7 @@ struct DictionaryDetail: View {
                     }
                 }
                 .padding(.top ,geo.size.height * 0.20)
+                .padding(.horizontal)
                 .frame(maxWidth: geo.size.width, maxHeight: geo.size.height, alignment: .top)
                
             }
@@ -86,44 +80,53 @@ struct DictionaryDetail: View {
             VStack{
                 Spacer()
                     .frame(height: 450)
-                HStack(spacing: 32){
-                    Button{
-                        showInfoSheet.toggle()
-                    }label: {
-                        Image("info-icon")
-                            .resizable()
-                            .frame(width: 33, height: 33)
+                VStack(spacing:64){
+                    VStack(spacing: 16){
+                        Text("Similar")
+                            .font(.system(size: 18, design: .serif))
+                            .multilineTextAlignment(.center)
                             .foregroundColor(AppColor.Text.primary)
-                    }
-                    
-                    Button{
-                        if let text = slangData?.slang {
-                            viewModel.speak(text)
+                        HStack(spacing: 8){
+                            ForEach(Array(variants.enumerated()), id: \.offset) { idx, v in
+                                similiarButton(title: v.slang) {
+                                    selectedVariantIndex = idx
+                                }
+                            }
                         }
-                    } label: {
-                        Image("speaker-icon")
-                            .resizable()
-                            .frame(width: 33, height: 33)
-                            .foregroundColor(AppColor.Text.primary)
+                    }
+                    HStack(spacing: 32){
+                        Button{
+                            showInfoSheet.toggle()
+                        }label: {
+                            Image("info-icon")
+                                .resizable()
+                                .frame(width: 33, height: 33)
+                                .foregroundColor(AppColor.Text.primary)
+                        }
+                        
+                        Button{
+                            let current = variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex] : slangData
+                            if let text = current?.slang { viewModel.speak(text) }
+                        } label: {
+                            Image("speaker-icon")
+                                .resizable()
+                                .frame(width: 33, height: 33)
+                                .foregroundColor(AppColor.Text.primary)
+                        }
                     }
                 }
+             
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             Spacer()
+            
+            
         }
         .onAppear() {
             self.slangData = popupManager.getSlangData()
-            if let canonical = self.slangData?.canonicalForm {
-                let predicate = #Predicate<SlangModel> { slang in
-                    slang.canonicalForm == canonical
-                }
-                let descriptor = FetchDescriptor<SlangModel>(
-                    predicate: predicate,
-                    sortBy: [SortDescriptor(\.slang, order: .forward)]
-                )
-                let models = (try? modelContext.fetch(descriptor)) ?? []
-                self.variants = models.map { $0.slang }
-            }
+            self.variants = popupManager.getVariants()
+            self.canonicalForm = popupManager.getCanonicalForm() ?? ""
+            if !variants.isEmpty { selectedVariantIndex = 0 }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 withAnimation(.easeIn(duration: 0.3)) {
@@ -139,7 +142,8 @@ struct DictionaryDetail: View {
                             .font(.system(size: 17, design: .serif))
                             .bold().italic()
                             .foregroundColor(AppColor.Text.primary)
-                        Text(slangData?.contextEN ?? "")
+                        let current = variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex] : slangData
+                        Text(current?.contextEN ?? "")
                             .font(.system(size: 17, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
                     }
@@ -150,8 +154,8 @@ struct DictionaryDetail: View {
                             .bold().italic()
                             .foregroundColor(AppColor.Text.primary)
                         Text("""
-                        "\(slangData?.exampleEN ?? "")"
-                        "\(slangData?.exampleID ?? "")"
+                        "\(variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex].exampleEN : slangData?.exampleEN ?? "")"
+                        "\(variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex].exampleID : slangData?.exampleID ?? "")"
                         """)
                         .font(.system(size: 17, design: .serif))
                         .foregroundColor(AppColor.Text.primary)
@@ -170,9 +174,13 @@ struct DictionaryDetail: View {
                         } label: {
                             Image(systemName: "xmark")
                                 .font(.system(size: 17))
-                                .foregroundColor(AppColor.Text.primary.opacity(0.6))
-                                .frame(width: 44, height: 44)
+                             
+                            
                         }
+                        .frame(width: 44, height: 44)
+                        .foregroundColor(AppColor.Text.primary.opacity(0.6))
+                        .clipShape(.circle)
+                      
                     }
                 }
             }
@@ -180,23 +188,65 @@ struct DictionaryDetail: View {
             .presentationDragIndicator(.visible)
         }
     }
+    
+    private struct similiarButton:  View {
+        let title: String
+        let onTap: () -> Void
+        var body: some View {
+            Button { onTap() } label: {
+                Text(title)
+                    .font(.system(size: 16, design: .serif))
+                    .foregroundColor(AppColor.Text.primary)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .overlay {
+                RoundedRectangle(cornerRadius: 37)
+                    .inset(by: 0.5)
+                    .stroke(
+                        AppColor.Button.primary
+                    )
+            }
+        }
+    }
 }
-
-//#Preview {
-//    let popupManager = PopupManager()
-//    popupManager.setSlangData(
-//        SlangData(
-//            slang: "Gokil",
-//            translationID: "OKE",
-//            translationEN: "OKAY",
-//            contextID: "Gokil kamu pecah",
-//            contextEN: "Used to express excitement or disbelief",
-//            exampleID: "Gokil, kamu keren banget!",
-//            exampleEN: "Wow, you’re amazing!",
-//            sentiment: .negative
-//        )
+//
+//struct DictionaryDetail_Previews: PreviewProvider {
+//
+//    // Mock Data
+//    static let mockSlang = SlangModel(
+//        id: UUID(),
+//        slang: "anjeng",
+//        translationID: "anjing",
+//        translationEN: "crazy, impressive",
+//        contextID: "Dalam konteks bercanda antar teman, kadang digunakan secara akrab untuk mengekspresikan keterkejutan atau kekaguman tanpa maksud menghina.",
+//        contextEN: "In friendly banter, sometimes used playfully to express surprise or amazement without offensive intent.",
+//        exampleID: "Anjeng, lo keren banget sih!",
+//        exampleEN: "Damn, you're so cool!",
+//        sentiment: .positive
 //    )
-//    
-//    return DictionaryDetail()
-//        .environment(popupManager)
+//
+//    // Mock PopupManager
+//    class MockPopupManager: PopupManager {
+//        override func getSlangData() -> SlangModel? {
+//            return mockSlang
+//        }
+//    }
+//
+//    static var previews: some View {
+//        DictionaryDetail()
+//            .environment(PopupManager())
+//            .previewDevice("iPhone 15 Pro")
+//            .preferredColorScheme(.light)
+//    }
 //}
+
+
+//"slang":"anjeng",
+//"translationID":"anjing",
+//"translationEN":"dog",
+//"contextID":"Dalam konteks bercanda antar teman, kadang digunakan secara akrab untuk mengekspresikan keterkejutan atau kekaguman tanpa maksud menghina.",
+//"contextEN":"In friendly banter, sometimes used playfully to express surprise or amazement without offensive intent.",
+//"exampleID":"Anjeng, lo keren banget sih!",
+//"exampleEN":"Damn, you're so cool!",
+//"sentiment":"positive"

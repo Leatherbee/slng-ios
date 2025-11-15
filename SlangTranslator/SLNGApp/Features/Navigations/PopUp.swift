@@ -9,7 +9,9 @@ import SwiftUI
 @Observable
 class PopupManager {
     var isPresented: Bool = false
-    var slangData: SlangData?
+    var slangData: SlangModel?
+    var selectedCanonical: String?
+    var variants: [SlangModel] = []
     var popupContent: AnyView = AnyView(EmptyView())
 
     func show<Content: View>(_ view: Content) {
@@ -25,19 +27,35 @@ class PopupManager {
         }
     }
     
-    func setSlangData(_ slangData: SlangData) {
+    func setSlangData(_ slangData: SlangModel) {
         self.slangData = slangData
     }
     
-    func getSlangData() -> SlangData? {
+    func getSlangData() -> SlangModel? {
         return slangData
     }
     
-    func setData(slangData: SlangData) {
+    func setData(slangData: SlangModel) {
         self.slangData = slangData
     }
     
-    func getData() -> SlangData? {
+    func getData() -> SlangModel? {
         return slangData
+    }
+
+    func setCanonicalForm(_ canonical: String) {
+        self.selectedCanonical = canonical
+    }
+    
+    func getCanonicalForm() -> String? {
+        return selectedCanonical
+    }
+    
+    func setVariants(_ variants: [SlangModel]) {
+        self.variants = variants
+    }
+    
+    func getVariants() -> [SlangModel] {
+        return variants
     }
 }

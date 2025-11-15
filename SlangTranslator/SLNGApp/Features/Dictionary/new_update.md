@@ -1,3 +1,255 @@
+```swift
+//
+//  DictionaryDetail.swift
+//  SlangTranslator
+//
+//  Created by Filza Rizki Ramadhan on 28/10/25.
+//
+import SwiftUI
+import Foundation
+struct DictionaryDetail: View {
+    @Environment(PopupManager.self) private var popupManager
+    @State private var slangData: SlangModel?
+    @State private var showCloseButton: Bool = false
+    @StateObject private var viewModel = DictionaryDetailViewModel()
+    @State private var showInfoSheet: Bool = false
+    @State private var sheetHeight: CGFloat = 300
+    @Environment(\.colorScheme) var colorScheme
+    var body: some View {
+        ZStack{
+            VStack(spacing: 64){
+                if !showCloseButton{
+                    Spacer()
+                        .frame(width: 43, height: 43)
+                }
+                if showCloseButton {
+                    HStack{
+                        Spacer()
+                        Button {
+                            popupManager.isPresented.toggle()
+                        } label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 17, weight: .medium))
+                                .foregroundColor(AppColor.Button.Text.primary)
+                        }
+                        .frame(width: 43, height: 43)
+                        .background(AppColor.Button.primary)
+                        .cornerRadius(9999)
+                        .transition(.opacity)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                Spacer()
+            }
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(AppColor.Background.secondary)
+            
+            GeometryReader { geo in
+                VStack{
+                    VStack(spacing: 32){
+                        Text(slangData?.slang ?? "Gokil")
+                            .font(.system(size: 64, design: .serif))
+                            .foregroundColor(AppColor.Text.primary)
+                            .textSelection(.enabled)
+                        VStack(spacing: 24){
+                            Text(slangData?.translationEN ?? "crazy, impressive")
+                                .font(.system(size: 18, design: .serif))
+                                .foregroundColor(AppColor.Text.primary)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(nil)
+                                .textSelection(.enabled)
+                            Text(slangData?.exampleEN ?? "Used to describe something or someone that is crazy in a fun, impressive, or amusing way. ")
+                                .font(.system(size: 14, design: .serif))
+                                .foregroundColor(AppColor.Text.primary)
+                                .multilineTextAlignment(.center)
+                                .lineLimit(nil)
+                                .textSelection(.enabled)
+                        }
+                    }
+                }
+                .padding(.top ,geo.size.height * 0.20)
+                .padding(.horizontal)
+                .frame(maxWidth: geo.size.width, maxHeight: geo.size.height, alignment: .top)
+               
+            }
+           
+            VStack{
+                Spacer()
+                    .frame(height: 450)
+                VStack(spacing:64){
+                    VStack(spacing: 16){
+                        Text("Similar")
+                            .font(.system(size: 18, design: .serif))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(AppColor.Text.primary)
+                        similiarList
+                    }
+                    HStack(spacing: 32){
+                        Button{
+                            showInfoSheet.toggle()
+                        }label: {
+                            Image("info-icon")
+                                .resizable()
+                                .frame(width: 33, height: 33)
+                                .foregroundColor(AppColor.Text.primary)
+                        }
+                        
+                        Button{
+                            if let text = slangData?.slang {
+                                viewModel.speak(text)
+                            }
+                        } label: {
+                            Image("speaker-icon")
+                                .resizable()
+                                .frame(width: 33, height: 33)
+                                .foregroundColor(AppColor.Text.primary)
+                        }
+                    }
+                }
+             
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            Spacer()
+            
+            
+        }
+        .onAppear() {
+            self.slangData = popupManager.getSlangData()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                withAnimation(.easeIn(duration: 0.3)) {
+                    self.showCloseButton = true
+                }
+            }
+        }
+        .sheet(isPresented: $showInfoSheet) {
+            NavigationView {
+                VStack(alignment: .leading, spacing: 24) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Context")
+                            .font(.system(size: 17, design: .serif))
+                            .bold().italic()
+                            .foregroundColor(AppColor.Text.primary)
+                        Text(slangData?.contextEN ?? "")
+                            .font(.system(size: 17, design: .serif))
+                            .foregroundColor(AppColor.Text.primary)
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Example")
+                            .font(.system(size: 17, design: .serif))
+                            .bold().italic()
+                            .foregroundColor(AppColor.Text.primary)
+                        Text("""
+                        "\(slangData?.exampleEN ?? "")"
+                        "\(slangData?.exampleID ?? "")"
+                        """)
+                        .font(.system(size: 17, design: .serif))
+                        .foregroundColor(AppColor.Text.primary)
+                        .multilineTextAlignment(.leading)
+                    }
+
+                    Spacer(minLength: 0)
+                }
+                .padding()
+                .navigationTitle("Explanation")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            showInfoSheet.toggle()
+                        } label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 17))
+                             
+                            
+                        }
+                        .frame(width: 44, height: 44)
+                        .foregroundColor(AppColor.Text.primary.opacity(0.6))
+                        .clipShape(.circle)
+                      
+                    }
+                }
+            }
+            .presentationDetents([.fraction(0.4)])
+            .presentationDragIndicator(.visible)
+        }
+    }
+    
+    private var similiarList: some View {
+        HStack(spacing: 8){
+            similiarButton(title: "Goks")
+            similiarButton(title: "Gwokil")
+            similiarButton(title: "Gokilll")
+        }
+    }
+    
+    private struct similiarButton:  View {
+        let title: String
+        var body: some View {
+            Button {
+                
+            } label: {
+                Text(title)
+                    .font(.system(size: 16, design: .serif))
+                    .foregroundColor(AppColor.Text.primary)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .overlay {
+                RoundedRectangle(cornerRadius: 37)
+                    .inset(by: 0.5)
+                    .stroke(
+                        AppColor.Button.primary
+                    )
+            }
+            
+
+        }
+    }
+}
+
+struct DictionaryDetail_Previews: PreviewProvider {
+
+    // Mock Data
+    static let mockSlang = SlangModel(
+        id: UUID(),
+        slang: "anjeng",
+        translationID: "anjing",
+        translationEN: "crazy, impressive",
+        contextID: "Dalam konteks bercanda antar teman, kadang digunakan secara akrab untuk mengekspresikan keterkejutan atau kekaguman tanpa maksud menghina.",
+        contextEN: "In friendly banter, sometimes used playfully to express surprise or amazement without offensive intent.",
+        exampleID: "Anjeng, lo keren banget sih!",
+        exampleEN: "Damn, you're so cool!",
+        sentiment: .positive
+    )
+
+    // Mock PopupManager
+    class MockPopupManager: PopupManager {
+        override func getSlangData() -> SlangModel? {
+            return mockSlang
+        }
+    }
+
+    static var previews: some View {
+        DictionaryDetail()
+            .environment(PopupManager())
+            .previewDevice("iPhone 15 Pro")
+            .preferredColorScheme(.light)
+    }
+}
+
+
+//"slang":"anjeng",
+//"translationID":"anjing",
+//"translationEN":"dog",
+//"contextID":"Dalam konteks bercanda antar teman, kadang digunakan secara akrab untuk mengekspresikan keterkejutan atau kekaguman tanpa maksud menghina.",
+//"contextEN":"In friendly banter, sometimes used playfully to express surprise or amazement without offensive intent.",
+//"exampleID":"Anjeng, lo keren banget sih!",
+//"exampleEN":"Damn, you're so cool!",
+//"sentiment":"positive"
+
 //
 //  DictionaryOptimized.swift
 //  SlangTranslator
@@ -29,15 +281,14 @@ struct DictionaryView: View {
             VStack(spacing: 24) {
                 HStack {
                     SwiftUIWheelPicker(
-                        items: viewModel.filteredCanonicals.map { $0.canonical },
+                        items: viewModel.filtered.map { $0.slang },
                         selection: $selected,
                         scrollToIndexTrigger: $scrollToIndexTrigger,
                         jumpAnimated: $jumpAnimated,
                         onSelectedTap: { index in
-                            if viewModel.filteredCanonicals.indices.contains(index) {
-                                let group = viewModel.filteredCanonicals[selected]
-                                popupManager.setCanonicalForm(group.canonical)
-                                popupManager.setVariants(group.variants)
+                            if viewModel.filtered.indices.contains(index) {
+                                let slangData = viewModel.filtered[selected]
+                                popupManager.setSlangData(viewModel.filtered[selected])
                                 popupManager.isPresented.toggle()
                             }
                         }
@@ -100,13 +351,13 @@ struct DictionaryView: View {
             .onAppear {
                 if let l = viewModel.activeLetter, !l.isEmpty {
                     lastOverlayLetter = l
-                } else if viewModel.filteredCanonicals.indices.contains(selected), let first = viewModel.filteredCanonicals[selected].canonical.first {
+                } else if viewModel.filtered.indices.contains(selected), let first = viewModel.filtered[selected].slang.first {
                     lastOverlayLetter = String(first).lowercased()
                 }
             }
-            .onChange(of: viewModel.filteredCanonicals.map { $0.canonical }) {
+            .onChange(of: viewModel.filtered) {
                 // Pastikan selection selalu valid terhadap hasil filter
-                let count = viewModel.filteredCanonicals.count
+                let count = viewModel.filtered.count
                 if count == 0 {
                     selected = 0
                     viewModel.activeLetter = nil
@@ -124,11 +375,11 @@ struct DictionaryView: View {
             .onChange(of: viewModel.activeLetter) {
                 if let l = viewModel.activeLetter, !l.isEmpty {
                     lastOverlayLetter = l
-                } else if viewModel.filteredCanonicals.indices.contains(selected), let first = viewModel.filteredCanonicals[selected].canonical.first {
+                } else if viewModel.filtered.indices.contains(selected), let first = viewModel.filtered[selected].slang.first {
                     lastOverlayLetter = String(first).lowercased()
                 }
             }
-            .animation(nil, value: viewModel.filteredCanonicals.map { $0.canonical })
+            .animation(nil, value: viewModel.filtered)
             
             VStack{
                 let displayLetter: String = {
@@ -220,8 +471,8 @@ struct DictionaryView: View {
     }
 
     private func updateActiveLetterFromSelection() {
-        guard viewModel.filteredCanonicals.indices.contains(selected) else { return }
-        if let first = viewModel.filteredCanonicals[selected].canonical.first {
+        guard viewModel.filtered.indices.contains(selected) else { return }
+        if let first = viewModel.filtered[selected].slang.first {
             viewModel.activeLetter = String(first).lowercased()
         }
     }
@@ -713,3 +964,112 @@ final class KeyboardObserver: ObservableObject {
     DictionaryView()
         .environment(PopupManager())
 }
+
+//
+//  DictionaryDetailViewModel.swift
+//  SlangTranslator
+//
+//  Created by Filza Rizki Ramadhan on 03/11/25.
+//
+import Foundation
+import AVFoundation
+internal import Combine
+@MainActor
+final class DictionaryDetailViewModel: ObservableObject {
+    private let synthesizer = AVSpeechSynthesizer()
+    
+    func speak(_ text: String, language: String = "id-ID") {
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: language)
+        utterance.rate = 0.2
+        utterance.pitchMultiplier = 1.0
+        utterance.volume = 1.0
+        
+        synthesizer.speak(utterance)
+    }
+    
+}
+
+//
+//  WheelPickerDictionaryViewModel.swift
+//  SlangTranslator
+//
+//  Created by Filza Rizki Ramadhan on 07/11/25.
+//
+
+import Foundation
+import SwiftData
+internal import Combine
+
+@MainActor
+final class DictionaryViewModel: ObservableObject {
+    @Published var data: [SlangModel] = []
+    @Published var searchText: String = ""
+    @Published var filtered: [SlangModel] = []
+    @Published var activeLetter: String? = nil
+    @Published var isDraggingLetter: Bool = false
+    
+    private var slangRepo: SlangSwiftDataImpl?
+    private var context: ModelContext?
+    private var cancellables: Set<AnyCancellable> = []
+    
+    init() {
+        setupSearch()
+    }
+    
+    func setContext(context: ModelContext) {
+        self.context = context
+        self.slangRepo = SlangSwiftDataImpl(context: context)
+    }
+    
+    func loadData() {
+        guard let slangRepo = slangRepo else { return }
+        let allData = slangRepo.fetchAll()
+        data = allData
+        filtered = allData
+    }
+    
+    func handleLetterDrag(_ letter: String) {
+        activeLetter = letter
+        isDraggingLetter = true
+    }
+
+    func handleLetterDragEnd() {
+        isDraggingLetter = false
+    }
+
+    /// Cari index pertama dari slang yang dimulai dengan huruf tertentu pada list yang sedang ditampilkan
+    func indexForLetter(_ letter: String) -> Int? {
+        let lower = letter.lowercased()
+        return filtered.firstIndex(where: { $0.slang.lowercased().hasPrefix(lower) })
+    }
+
+    /// Setup reactive search pipeline
+    private func setupSearch() {
+        $searchText
+            .debounce(for: .milliseconds(150), scheduler: RunLoop.main)
+            .removeDuplicates()
+            .sink { [weak self] text in
+                guard let self = self else { return }
+                let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                if q.isEmpty {
+                    self.filtered = self.data
+                } else {
+                    let lower = q.lowercased()
+                    self.filtered = self.data.filter { item in
+                        // Cocokkan ke beberapa field utama
+                        if item.slang.lowercased().contains(lower) { return true }
+                        if item.translationID.lowercased().contains(lower) { return true }
+                        if item.translationEN.lowercased().contains(lower) { return true }
+                        if item.contextID.lowercased().contains(lower) { return true }
+                        if item.contextEN.lowercased().contains(lower) { return true }
+                        if item.exampleID.lowercased().contains(lower) { return true }
+                        if item.exampleEN.lowercased().contains(lower) { return true }
+                        return false
+                    }
+                }
+            }
+            .store(in: &cancellables)
+    }
+}
+```

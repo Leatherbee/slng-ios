@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class SlangModel {
+final class SlangModel: Equatable {
     @Attribute(.unique) var id: UUID
     var canonicalForm: String
     var canonicalPronunciation: String
