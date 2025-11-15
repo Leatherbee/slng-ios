@@ -91,13 +91,10 @@
 				Shared/Data/Model/SlangModel.swift,
 				Shared/Data/Model/TranslationModel.swift,
 				Shared/Domain/Entities/SlangData.swift,
-				Shared/Domain/Entities/TranscriptionResponse.swift,
 				Shared/Domain/Entities/TranslationData.swift,
 				Shared/Domain/Entities/TranslationResult.swift,
 				Shared/Domain/Repositories/SlangRepository.swift,
-				Shared/Domain/Repositories/SpeechToTextRepository.swift,
 				Shared/Domain/Repositories/TranslationRepository.swift,
-				Shared/Domain/UseCases/TranscribeSpeechUseCase.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
@@ -114,13 +111,10 @@
 				Shared/Data/Model/SlangModel.swift,
 				Shared/Data/Model/TranslationModel.swift,
 				Shared/Domain/Entities/SlangData.swift,
-				Shared/Domain/Entities/TranscriptionResponse.swift,
 				Shared/Domain/Entities/TranslationData.swift,
 				Shared/Domain/Entities/TranslationResult.swift,
 				Shared/Domain/Repositories/SlangRepository.swift,
-				Shared/Domain/Repositories/SpeechToTextRepository.swift,
 				Shared/Domain/Repositories/TranslationRepository.swift,
-				Shared/Domain/UseCases/TranscribeSpeechUseCase.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
@@ -660,14 +654,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlangTranslator/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SLNG;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We use the microphone to transcribe your speech into text.";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "We use on-device speech recognition to stream text while speaking.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "SLNG uses your microphone only when you choose to record slang so we can convert your speech into text. Nothing is stored or shared.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "SLNG processes your speech locally to understand what you say and turn it into text. Your audio is not saved or uploaded.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -680,7 +674,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
 				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -706,14 +700,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlangTranslator/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SLNG;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We use the microphone to transcribe your speech into text.";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "We use on-device speech recognition to stream text while speaking.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "SLNG uses your microphone only when you choose to record slang so we can convert your speech into text. Nothing is stored or shared.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "SLNG processes your speech locally to understand what you say and turn it into text. Your audio is not saved or uploaded.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -726,7 +720,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
 				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -830,7 +824,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Share Sheet";
@@ -842,7 +836,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator.SLNGShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -866,7 +860,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Share Sheet";
@@ -878,7 +872,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator.SLNGShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -902,7 +896,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Keyboard";
@@ -914,7 +908,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator.KeyboardSlangExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -937,7 +931,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Keyboard";
@@ -949,7 +943,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.Slang.SlangTranslator.KeyboardSlangExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

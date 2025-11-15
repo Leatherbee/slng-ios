@@ -23,7 +23,12 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
 
     func execute(_ text: String) async throws -> TranslationResult {
         let translation = try await translationRepository.translateSentence(text)
+        let trSent = translation.sentiment?.rawValue ?? "nil"
+        print("Debug overall sentence sentiment=\(trSent) text=\(text)")
         let detectedSlangs = findSlang(in: text, matching: translation.sentiment)
+        let sentimentsList = detectedSlangs.map { "\($0.slang):\($0.sentiment.rawValue)" }.joined(separator: ", ")
+        let sentimentsOut = sentimentsList.isEmpty ? "none" : sentimentsList
+        print("Debug detected slangs sentiments=\(sentimentsOut)")
         return TranslationResult(translation: translation, detectedSlangs: detectedSlangs)
     }
     
@@ -135,49 +140,59 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
         }
     }
     
-    // Better variant selection with canonical awareness
+    // Original sorting strategy from Test.swift
     private func selectVariantFromGroup(
         _ variants: [SlangData],
         inputToken: String,
         sentiment: SentimentType?
     ) -> SlangData? {
-        // Edge case: single variant
-        if variants.count == 1 {
-            return variants.first
-        }
-        
         let lowerToken = inputToken.lowercased()
-
-        // Priority 1: Exact match (case-insensitive)
-        if let exact = variants.first(where: { $0.slang.lowercased() == lowerToken }) {
-            return exact
+        let sRaw = sentiment?.rawValue ?? "nil"
+        let variantsDesc = variants.map { "\($0.slang):\($0.sentiment.rawValue)" }.joined(separator: ", ")
+        print("Debug selecting variant for token=\(lowerToken) sentiment=\(sRaw)")
+        print("Debug variants for token=\(lowerToken) -> \(variantsDesc)")
+        let exactMatches = variants.filter { $0.slang.lowercased() == lowerToken }
+        if !exactMatches.isEmpty {
+            if let s = sentiment, let pick = exactMatches.first(where: { $0.sentiment == s }) {
+                print("Debug chosen variant=\(pick.slang) sentiment=\(pick.sentiment.rawValue)")
+                return pick
+            }
+            if let pickNeutral = exactMatches.first(where: { $0.sentiment == .neutral }) {
+                print("Debug chosen variant=\(pickNeutral.slang) sentiment=\(pickNeutral.sentiment.rawValue)")
+                return pickNeutral
+            }
+            let pick = exactMatches.max(by: { $0.slang.count < $1.slang.count })!
+            print("Debug chosen variant=\(pick.slang) sentiment=\(pick.sentiment.rawValue)")
+            return pick
         }
 
-        // Priority 2: Sort by multiple criteria
         let target = lowerToken.maxRepeatRun()
         let sorted = variants.sorted { a, b in
-            // Criterion 1: Closest character repetition pattern (most important for elongation)
+            // Closest character repetition pattern
             let da = abs(a.slang.lowercased().maxRepeatRun() - target)
             let db = abs(b.slang.lowercased().maxRepeatRun() - target)
             if da != db { return da < db }
 
-            // Criterion 2: Matching sentiment (if provided)
-            if let sentiment = sentiment {
-                let sa = (a.sentiment == sentiment) ? 0 : 1
-                let sb = (b.sentiment == sentiment) ? 0 : 1
+            // Prefer matching sentiment when available
+            if let s = sentiment {
+                let sa = (a.sentiment == s) ? 0 : 1
+                let sb = (b.sentiment == s) ? 0 : 1
                 if sa != sb { return sa < sb }
             }
 
-            // Criterion 3: Prefer neutral sentiment as fallback
+            // Prefer neutral as fallback
             let na = (a.sentiment == .neutral) ? 0 : 1
             let nb = (b.sentiment == .neutral) ? 0 : 1
             if na != nb { return na < nb }
 
-            // Criterion 4: Longer slang is more specific
+            // Longer slang is more specific
             return a.slang.count > b.slang.count
         }
 
-        return sorted.first ?? variants.first
+        let chosen = sorted.first ?? variants.first
+        let chosenSent = chosen?.sentiment.rawValue ?? "nil"
+        print("Debug chosen variant=\(chosen?.slang ?? "-") sentiment=\(chosenSent)")
+        return chosen
     }
     
     // Deduplicate by canonicalForm to avoid showing multiple variants of same slang
