@@ -9,22 +9,6 @@ import Foundation
 import SwiftData
 internal import Combine
 
-enum DictionaryDisplayMode {
-    case allVariants    // Show all variants separately (like before)
-    case groupedByCanonical // Show grouped by canonical form (new)
-}
-
-struct SlangGrouped: Identifiable {
-    let id = UUID()
-    let canonicalForm: String
-    let canonicalPronunciation: String
-    let variants: [SlangData]
-    
-    var primaryVariant: SlangData {
-        variants.first ?? variants[0]
-    }
-}
-
 @MainActor
 final class DictionaryViewModel: ObservableObject {
     @Published var data: [SlangModel] = []
@@ -53,6 +37,9 @@ final class DictionaryViewModel: ObservableObject {
         let groups = slangRepo.fetchGroupedByCanonical()
         canonicalGroups = groups
         filteredCanonicals = groups
+        let allData = slangRepo.fetchAll()
+        data = allData
+        filtered = allData
     }
     
     func handleLetterDrag(_ letter: String) {
@@ -68,6 +55,7 @@ final class DictionaryViewModel: ObservableObject {
     func indexForLetter(_ letter: String) -> Int? {
         let lower = letter.lowercased()
         return filteredCanonicals.firstIndex(where: { $0.canonical.lowercased().hasPrefix(lower) })
+        return filtered.firstIndex(where: { $0.slang.lowercased().hasPrefix(lower) })
     }
 
     /// Setup reactive search pipeline
