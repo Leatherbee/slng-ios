@@ -69,6 +69,27 @@ struct TranslateInputSection: View {
             
             Spacer()
             
+            HStack(spacing: 12) {
+                Button {
+                    if viewModel.isRecording {
+                        viewModel.stopRecordingAndTranscribe()
+                    } else {
+                        viewModel.startRecording()
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: viewModel.isRecording ? "stop.circle" : "mic")
+                        Text(viewModel.isRecording ? "Stop & Transcribe" : "Speak")
+                    }
+                    .padding(.vertical, 14)
+                    .frame(maxWidth: 314, minHeight: 60)
+                }
+                .foregroundColor((colorScheme == .dark) ? AppColor.Button.Text.primary : .white)
+                .background(viewModel.isRecording ? AppColor.Button.secondary : AppColor.Button.primary)
+                .clipShape(RoundedRectangle(cornerRadius: 30))
+                .accessibilityLabel(viewModel.isRecording ? "Stop recording and transcribe" : "Start recording")
+            }
+            
             Button {
                 UIApplication.shared.dismissKeyboard()
                 shouldPlaySequentialAnimation = true
