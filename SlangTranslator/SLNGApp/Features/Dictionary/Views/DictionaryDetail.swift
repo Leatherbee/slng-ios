@@ -9,9 +9,12 @@ import Foundation
 struct DictionaryDetail: View {
     @Environment(PopupManager.self) private var popupManager
     @State private var slangData: SlangModel?
+<<<<<<< HEAD
     @State private var variants: [SlangModel] = []
     @State private var selectedVariantIndex: Int = 0
     @State private var canonicalForm: String = ""
+=======
+>>>>>>> 0087c47 (feat: ui dictionary)
     @State private var showCloseButton: Bool = false
     @StateObject private var viewModel = DictionaryDetailViewModel()
     @State private var showInfoSheet: Bool = false
@@ -50,19 +53,31 @@ struct DictionaryDetail: View {
             GeometryReader { geo in
                 VStack{
                     VStack(spacing: 32){
+<<<<<<< HEAD
                         let current = variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex] : slangData
                         Text(current?.slang ?? "")
+=======
+                        Text(slangData?.slang ?? "Gokil")
+>>>>>>> 0087c47 (feat: ui dictionary)
                             .font(.system(size: 64, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
                             .textSelection(.enabled)
                         VStack(spacing: 24){
+<<<<<<< HEAD
                             Text(current?.translationEN ?? "")
+=======
+                            Text(slangData?.translationEN ?? "crazy, impressive")
+>>>>>>> 0087c47 (feat: ui dictionary)
                                 .font(.system(size: 18, design: .serif))
                                 .foregroundColor(AppColor.Text.primary)
                                 .multilineTextAlignment(.center)
                                 .lineLimit(nil)
                                 .textSelection(.enabled)
+<<<<<<< HEAD
                             Text(current?.exampleEN ?? "")
+=======
+                            Text(slangData?.exampleEN ?? "Used to describe something or someone that is crazy in a fun, impressive, or amusing way. ")
+>>>>>>> 0087c47 (feat: ui dictionary)
                                 .font(.system(size: 14, design: .serif))
                                 .foregroundColor(AppColor.Text.primary)
                                 .multilineTextAlignment(.center)
@@ -86,6 +101,7 @@ struct DictionaryDetail: View {
                             .font(.system(size: 18, design: .serif))
                             .multilineTextAlignment(.center)
                             .foregroundColor(AppColor.Text.primary)
+<<<<<<< HEAD
                         HStack(spacing: 8){
                             ForEach(Array(variants.enumerated()), id: \.offset) { idx, v in
                                 similiarButton(title: v.slang) {
@@ -93,6 +109,9 @@ struct DictionaryDetail: View {
                                 }
                             }
                         }
+=======
+                        similiarList
+>>>>>>> 0087c47 (feat: ui dictionary)
                     }
                     HStack(spacing: 32){
                         Button{
@@ -105,8 +124,14 @@ struct DictionaryDetail: View {
                         }
                         
                         Button{
+<<<<<<< HEAD
                             let current = variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex] : slangData
                             if let text = current?.slang { viewModel.speak(text) }
+=======
+                            if let text = slangData?.slang {
+                                viewModel.speak(text)
+                            }
+>>>>>>> 0087c47 (feat: ui dictionary)
                         } label: {
                             Image("speaker-icon")
                                 .resizable()
