@@ -53,15 +53,14 @@ struct DictionaryView: View {
                         }
                     ) { (item: String, idx: Int, isSelected: Bool) in
                         let distance = abs(selected - idx)
-                        let rowHeight: CGFloat = 48
-                        let (fontSize, opacity): (CGFloat, Double)
+                        let (fontSize, opacity, rowHeight): (CGFloat, Double, CGFloat)
                         switch distance {
-                        case 0: (fontSize, opacity) = (64, 1.0)
-                        case 1: (fontSize, opacity) = (48, 0.8)
-                        case 2: (fontSize, opacity) = (34, 0.6)
-                        case 3: (fontSize, opacity) = (28, 0.4)
-                        case 4: (fontSize, opacity) = (20, 0.2)
-                        default: (fontSize, opacity) = (20, 0.0)
+                        case 0: (fontSize, opacity, rowHeight) = (64, 1.0, 76)
+                        case 1: (fontSize, opacity, rowHeight) = (48, 0.8, 57)
+                        case 2: (fontSize, opacity, rowHeight) = (34, 0.6, 58)
+                        case 3: (fontSize, opacity, rowHeight) = (28, 0.4, 41)
+                        case 4: (fontSize, opacity,rowHeight) = (20, 0.2, 33)
+                        default: (fontSize, opacity, rowHeight) = (20, 0.0, 33)
                         }
 
                         return AnyView(
@@ -91,7 +90,7 @@ struct DictionaryView: View {
                             .frame(maxWidth: .infinity, alignment: .center)
                         )
                     }
-                    .frame(height: 573)
+                    .frame(height: 620)
                     .frame(maxWidth: .infinity)
                     .clipped()
 
@@ -446,85 +445,85 @@ public struct SwiftUIWheelPicker<Item>: View {
     
     public var body: some View {
         GeometryReader { outerGeo in
-            ZStack {
-                ScrollViewReader { proxy in
-                    ScrollView(.vertical, showsIndicators: false) {
-                        let itemHeight: CGFloat = 48
-                        LazyVStack(spacing: 24) {
-                            Color.clear.frame(height: outerGeo.size.height / 2)
-                            
-                            ForEach(items.indices, id: \.self) { idx in
-                                itemRow(for: idx)
-                                    .background(
-                                        GeometryReader { geo in
-                                            let midY = geo.frame(in: .global).midY
-                                            Color.clear
-                                                .preference(
-                                                    key: RowCenterKey.self,
-                                                    value: [RowCenter(id: idx, midY: midY)]
-                                                )
-                                        }
-                                    )
-                            }
-                            
-                            Color.clear.frame(height: outerGeo.size.height / 2)
-                        }
-                    }
-                    .onAppear {
-                        scrollProxy = proxy
-                        engine.prepare()
-                        lastSelection = selection
-                        
-                        // Setup continuous velocity updates untuk smoothness
-                        setupVelocityTimer()
-                        
-                        DispatchQueue.main.async {
-                            proxy.scrollTo(selection, anchor: .center)
-                        }
-                    }
-                    .onDisappear {
-                        velocityUpdateTimer?.invalidate()
-                    }
-                    .onPreferenceChange(RowCenterKey.self) { values in
-                        guard !dragging else { return }
-                        guard !values.isEmpty else { return }
-                        let filtered = values.filter { visibleRange.contains($0.id) }
-                        for v in filtered {
-                            centers[v.id] = v.midY
-                        }
-                        containerCenterY = outerGeo.frame(in: .global).midY
-                        updateSelection(containerCenterY: containerCenterY, shouldFeedback: false)
-                    }
-                    .gesture(
-                        DragGesture(minimumDistance: 1, coordinateSpace: .global)
-                            .onChanged { _ in
-                                if !dragging {
-                                    dragging = true
-                                    isQuickScrolling = true
-                                }
-                            }
-                            .onEnded { _ in
-                                dragging = false
-                                
-                                // Smooth velocity reset dengan decay
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                    isQuickScrolling = false
-                                    soundManager.resetVelocity()
-                                    lastSelectionTime = 0
-                                    selectionVelocity = 0
-                                }
-                                
-                                snapToNearest(containerCenterY: outerGeo.frame(in: .global).midY)
-                            }
-                    )
-                }
-            }
-        }
-        .onChange(of: scrollToIndexTrigger) {
-            guard let index = scrollToIndexTrigger else { return }
-            scrollToIndex(index, animated: true)
-            scrollToIndexTrigger = nil
-        }
+                   ZStack {
+                       ScrollViewReader { proxy in
+                           ScrollView(.vertical, showsIndicators: false) {
+                               LazyVStack(spacing: 24) {
+                                   Color.clear.frame(height: outerGeo.size.height / 2)
+                                   
+                                   ForEach(items.indices, id: \.self) { idx in
+                                       itemRow(for: idx)
+                                           .background(
+                                               GeometryReader { geo in
+                                                   let midY = geo.frame(in: .global).midY
+                                                   Color.clear
+                                                       .preference(
+                                                           key: RowCenterKey.self,
+                                                           value: [RowCenter(id: idx, midY: midY)]
+                                                       )
+                                               }
+                                           )
+                                   }
+                                   
+                                   Color.clear.frame(height: outerGeo.size.height / 2)
+                               }
+                           }
+                           .onAppear {
+                               scrollProxy = proxy
+                               engine.prepare()
+                               lastSelection = selection
+                               
+                               // Setup continuous velocity updates untuk smoothness
+                               setupVelocityTimer()
+                               
+                               DispatchQueue.main.async {
+                                   proxy.scrollTo(selection, anchor: .center)
+                               }
+                           }
+                           .onDisappear {
+                               velocityUpdateTimer?.invalidate()
+                           }
+                           .onPreferenceChange(RowCenterKey.self) { values in
+                               guard !dragging else { return }
+                               guard !values.isEmpty else { return }
+                               
+                               let filtered = values.filter { visibleRange.contains($0.id) }
+                               for v in filtered {
+                                   centers[v.id] = v.midY
+                               }
+                               containerCenterY = outerGeo.frame(in: .global).midY
+                               updateSelection(containerCenterY: containerCenterY, shouldFeedback: false)
+                           }
+                           .gesture(
+                               DragGesture(minimumDistance: 1, coordinateSpace: .global)
+                                   .onChanged { _ in
+                                       if !dragging {
+                                           dragging = true
+                                           isQuickScrolling = true
+                                       }
+                                   }
+                                   .onEnded { _ in
+                                       dragging = false
+                                       
+                                       // Smooth velocity reset dengan decay
+                                       DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                           isQuickScrolling = false
+                                           soundManager.resetVelocity()
+                                           lastSelectionTime = 0
+                                           selectionVelocity = 0
+                                       }
+                                       
+                                       snapToNearest(containerCenterY: outerGeo.frame(in: .global).midY)
+                                   }
+                           )
+                       }
+                   }
+               }
+               .onChange(of: scrollToIndexTrigger) {
+                   guard let index = scrollToIndexTrigger else { return }
+                   scrollToIndex(index, animated: true)
+                   scrollToIndexTrigger = nil
+               }
     }
 
     @ViewBuilder
