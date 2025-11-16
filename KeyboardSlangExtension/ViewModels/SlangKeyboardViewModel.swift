@@ -157,6 +157,7 @@ final class SlangKeyboardViewModel: ObservableObject {
         self.detectedSlangs.removeAll()
         
         do {
+            let start = Date()
             let result = try await Task.detached(priority: .userInitiated) { [useCase] in
                 try await useCase.execute(clipboardText)
             }.value
@@ -168,8 +169,20 @@ final class SlangKeyboardViewModel: ObservableObject {
             if result.detectedSlangs.isEmpty {
                 self.translationError = "No slang detected."
             }
+            let ms = Int(Date().timeIntervalSince(start) * 1000)
+            let bucket = ms < 50 ? "<50ms" : ms < 100 ? "50-100ms" : ms < 250 ? "100-250ms" : ms < 500 ? "250-500ms" : ">=500ms"
+            let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+            let key = "analytics.latency_bucket.clipboard_translation.\(bucket).count"
+            defaults.set(defaults.integer(forKey: key) + 1, forKey: key)
+            let netKey = "analytics.network_status.online.count"
+            defaults.set(defaults.integer(forKey: netKey) + 1, forKey: netKey)
         } catch {
             self.translationError = error.localizedDescription
+            let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+            let errKey = "analytics.extension_error.translation_error.count"
+            defaults.set(defaults.integer(forKey: errKey) + 1, forKey: errKey)
+            let netKey = "analytics.network_status.error.count"
+            defaults.set(defaults.integer(forKey: netKey) + 1, forKey: netKey)
         }
     }
 

@@ -43,6 +43,9 @@ struct ExplainModeSection: View {
             withAnimation(.easeInOut(duration: 0.3)) {
                 vm.changeDisplayMode(.normal)
             }
+            let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+            let key = "analytics.feature_used.normal_mode.count"
+            defaults.set(defaults.integer(forKey: key) + 1, forKey: key)
         } label: {
             Image(systemName: "keyboard")
                 .font(.system(size: 17))

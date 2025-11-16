@@ -34,8 +34,7 @@ struct TranslateResultSection: View {
     @State private var audioPlayer: AVAudioPlayer?
     
     var body: some View {
-        NavigationStack {
-            ZStack(alignment: .bottom) {
+        ZStack(alignment: .bottom) {
                 Color.backgroundSecondary.ignoresSafeArea()
                 
                 GeometryReader { screenGeo in
@@ -62,7 +61,7 @@ struct TranslateResultSection: View {
                                     .matchedGeometryEffect(
                                         id: "originalText",
                                         in: textNamespace,
-                                        properties: .frame,
+                                        properties: .position,
                                         anchor: .topLeading
                                     )
                                     .scaleEffect(showPulse ? 0.80 : 1.0)
@@ -267,7 +266,6 @@ struct TranslateResultSection: View {
                 }
             }
             .toolbar(showBottomUI ? .visible : .hidden, for: .tabBar)
-        }
     }
     
     // MARK: Animation Logic

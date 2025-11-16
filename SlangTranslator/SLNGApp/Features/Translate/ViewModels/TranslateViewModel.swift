@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 internal import Combine
 import SwiftData
+import FirebaseAnalytics
 
 @MainActor
 final class TranslateViewModel: ObservableObject {
@@ -36,8 +37,24 @@ final class TranslateViewModel: ObservableObject {
     private var speechUseCase: TranscribeSpeechUseCase?
 
     func prewarmPermissions() {
-        audioRecorder.requestPermission { _ in }
-        speechStreamingManager.requestAuthorization { _ in }
+        Analytics.logEvent("permissions_prompt", parameters: [
+            "permission_type": "microphone"
+        ])
+        audioRecorder.requestPermission { granted in
+            Analytics.logEvent("permissions_response", parameters: [
+                "permission_type": "microphone",
+                "result": granted ? "authorized" : "denied"
+            ])
+        }
+        Analytics.logEvent("permissions_prompt", parameters: [
+            "permission_type": "speech_recognition"
+        ])
+        speechStreamingManager.requestAuthorization { granted in
+            Analytics.logEvent("permissions_response", parameters: [
+                "permission_type": "speech_recognition",
+                "result": granted ? "authorized" : "denied"
+            ])
+        }
     }
     
     init() {
@@ -80,11 +97,19 @@ final class TranslateViewModel: ObservableObject {
         audioRecorder.requestPermission { micGranted in
             if !micGranted {
                 Task { @MainActor in self.errorMessage = "Microphone access denied" }
+                Analytics.logEvent("permissions_response", parameters: [
+                    "permission_type": "microphone",
+                    "result": "denied"
+                ])
                 return
             }
             do {
                 try self.audioRecorder.start()
                 Task { @MainActor in self.isRecording = true }
+                Analytics.logEvent("permissions_response", parameters: [
+                    "permission_type": "microphone",
+                    "result": "authorized"
+                ])
             } catch {
                 Task { @MainActor in self.errorMessage = error.localizedDescription }
             }
@@ -141,6 +166,7 @@ final class TranslateViewModel: ObservableObject {
         slangData.removeAll()
         errorMessage = nil
         
+        let startTime = Date()
         Task {
             do {
                 let result = try await useCase.execute(inputText)
@@ -162,11 +188,26 @@ final class TranslateViewModel: ObservableObject {
                         print("Unknown source")
                     }
                 }
+                let elapsedMs = Int(Date().timeIntervalSince(startTime) * 1000)
+                let bucket: String = elapsedMs < 50 ? "<50ms" : elapsedMs < 100 ? "50-100ms" : elapsedMs < 250 ? "100-250ms" : elapsedMs < 500 ? "250-500ms" : ">=500ms"
+                Analytics.logEvent("latency_bucket", parameters: [
+                    "feature_name": "translation_execute",
+                    "bucket": bucket
+                ])
+                Analytics.logEvent("network_status", parameters: [
+                    "status": "online"
+                ])
             } catch {
                 await MainActor.run {
                     self.errorMessage = error.localizedDescription
                     self.isLoading = false
                 }
+                Analytics.logEvent("network_status", parameters: [
+                    "status": "error"
+                ])
+                Analytics.logEvent("extension_error", parameters: [
+                    "code": "translation_execute_error"
+                ])
             }
         }
     }

@@ -2,7 +2,7 @@
 //  MainTabbedView.swift
 //  SlangTranslator
 //
-//  Created by Filza Rizki Ramadhan on 21/10/25.
+//  Fixed: Wrap each tab with NavigationStack
 //
 
 import SwiftUI
@@ -11,18 +11,21 @@ enum TabSelection: Hashable {
     case translate
     case keyboard
     case dictionary
+    case search
 }
 
 struct MainTabbedView: View {
     @State private var selectedTab: TabSelection = .translate
     @State private var popupManager = PopupManager()
-    @State private var reveal = false
+    @State private var searchText = ""
     
     var body: some View{
-        ZStack{
+        ZStack {
             TabView(selection: $selectedTab) {
                 Tab("Translate", systemImage: "bubbles.and.sparkles", value: .translate) {
-                    TranslateView()
+                    NavigationStack {
+                        TranslateView()
+                    }
                 }
                 .accessibilityLabel("Translate tab")
                 .accessibilityHint("Translate page is selected by default.")
@@ -36,12 +39,22 @@ struct MainTabbedView: View {
                 .accessibilityInputLabels(["Keyboard Tab"])
                 
                 Tab("Dictionary", systemImage: "text.book.closed", value: .dictionary) {
-                    DictionaryView()
+                    DictionaryView(searchText: $searchText)
                         .environment(popupManager)
                 }
                 .accessibilityLabel("Dictionary tab")
                 .accessibilityHint("Dictionary page")
                 .accessibilityInputLabels(["Dictionary Tab"])
+                
+                if selectedTab == .dictionary || selectedTab == .search {
+                    Tab(value: .search, role: .search) {
+                        NavigationStack {
+                            DictionaryView(searchText: $searchText)
+                                .environment(popupManager)
+                        }
+                        .searchable(text: $searchText)
+                    }
+                }
             }
             .tint(.primary)
             
@@ -77,4 +90,3 @@ struct ScaleAndClipModifier: ViewModifier {
         }
     }
 }
-
