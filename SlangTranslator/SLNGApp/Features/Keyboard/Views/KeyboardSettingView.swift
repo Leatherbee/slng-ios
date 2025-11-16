@@ -2,7 +2,7 @@
 //  KeyboardSettingView.swift
 //  SlangTranslator
 //
-//  Created by Pramuditha Muhammad Ikhwan on 04/11/25.
+//  Test searchable di Keyboard tab
 //
 
 import SwiftUI
@@ -13,6 +13,7 @@ struct KeyboardSettingView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @State private var showShareSheetPreview: Bool = false
+    @State private var searchText = "" // ADDED FOR TEST
     
     @AppStorage("settings.autoCorrect", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
     private var autoCorrect: Bool = true
@@ -64,7 +65,7 @@ struct KeyboardSettingView: View {
                                 Text("and select SLNG keyboard")
                             }
                             HStack(spacing: 4) {
-                                Text("or use Share extension")
+                                Text("use Share extension")
                                 Image(systemName: "info.circle")
                                     .foregroundStyle(.blue)
                             }
@@ -87,7 +88,7 @@ struct KeyboardSettingView: View {
                             .padding(.vertical, 2)
                             .tint(.green)
                             .accessibilityIdentifier("KeyboardSettingView.AutoCapslockToggle")
-                            .accessibilityInputLabels(["Auto Caps", "Auto Capitalization"]) 
+                            .accessibilityInputLabels(["Auto Caps", "Auto Capitalization"])
                             .onChange(of: autoCapslock) { _, newValue in
                                 Analytics.logEvent("settings_changed", parameters: [
                                     "setting_name": "auto_capslock",
@@ -157,6 +158,9 @@ struct KeyboardSettingView: View {
             }
             .padding()
         }
+        .navigationTitle("Keyboard Settings") // ADDED
+        .navigationBarTitleDisplayMode(.large) // ADDED
+        .searchable(text: $searchText, prompt: "Test search...") // ADDED
         .sheet(isPresented: $showShareSheetPreview) {
             ShareSheetPreviewSheet()
                 .presentationDetents([.large])
@@ -212,6 +216,7 @@ enum LayoutType: String, CaseIterable {
 }
 
 #Preview {
-    KeyboardSettingView()
+    NavigationStack {
+        KeyboardSettingView()
+    }
 }
-

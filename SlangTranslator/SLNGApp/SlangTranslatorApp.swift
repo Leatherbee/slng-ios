@@ -21,34 +21,19 @@ struct SlangTranslatorApp: App {
         let container = SharedModelContainer.shared.container
         let repo = SlangRepositoryImpl(container: container)
         _ = repo.loadAll()
-        FirebaseApp.configure()
-        Analytics.setAnalyticsCollectionEnabled(true)
     }
     
     var body: some Scene {
         WindowGroup {
-            ZStack{
-                NavigationStack(path: $router.path) {
-                    router.destination(for: router.root)
-                        .navigationDestination(for: Route.self) { route in
-                            router.destination(for: route)
-                        }
-                        .onAppear {
-                            // Decide initial route based on onboarding flag
-                            router.root = hasOnboarded ? .mainTab : .onboarding
-                            flushKeyboardAnalytics()
-                            Analytics.setAnalyticsCollectionEnabled(true)
-                        }
-                        .onChange(of: hasOnboarded) { oldValue, newValue in
-                            // When onboarding completes, switch root to main tab
-                            router.root = newValue ? .mainTab : .onboarding
-                            flushKeyboardAnalytics()
-                        }
+                if hasOnboarded{
+                    MainTabbedView()
+                } else{
+                    OnboardingView()
                 }
-            }
         }
         .modelContainer(container)
     }
+
 
     private func flushKeyboardAnalytics() {
         let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!

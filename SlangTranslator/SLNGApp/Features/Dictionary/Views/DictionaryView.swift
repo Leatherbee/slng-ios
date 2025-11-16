@@ -1,5 +1,5 @@
 //
-//  DictionaryOptimized.swift
+//  DictionaryView.swift
 //  SlangTranslator
 //
 //  Created by Filza Rizki Ramadhan on 07/11/25.
@@ -16,6 +16,7 @@ import FirebaseAnalytics
 struct DictionaryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(PopupManager.self) private var popupManager
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Binding var searchText: String
     @State private var selected = 2
     @StateObject private var viewModel = DictionaryViewModel()
@@ -114,29 +115,6 @@ struct DictionaryView: View {
             .background(.clear)
             .clipShape(.circle)
             .allowsHitTesting(false) // PENTING: jangan block interaction
-        }
-        .safeAreaInset(edge: .bottom) {
-            HStack {
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.gray)
-                    TextField("Search", text: $searchText)
-                        .textFieldStyle(.plain)
-                        .autocorrectionDisabled()
-                    if !searchText.isEmpty {
-                        Button(action: { searchText = "" }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.gray)
-                        }
-                    }
-                }
-                .padding(8)
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
-                .padding(.horizontal)
-            }
-            .padding(.vertical, 8)
-            .background(Color(.systemBackground))
         }
         .task {
             viewModel.setContext(context: modelContext)

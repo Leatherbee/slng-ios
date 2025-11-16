@@ -63,6 +63,7 @@ protocol NavigationRouting: AnyObject {
 
 extension Router: NavigationRouting {}
 
-
-
-
+public enum Route: Hashable {
+    case onboarding
+    case mainTab
+}
