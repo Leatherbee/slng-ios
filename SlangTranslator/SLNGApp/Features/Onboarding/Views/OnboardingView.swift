@@ -12,7 +12,7 @@ import FirebaseAnalytics
 struct OnboardingView: View {
     @Environment(\.colorScheme) var colorScheme
     @State var isSecondPage: Bool = true
-    @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 2
+    @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 1
     @State var trialKeyboardText: String = ""
     @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
     

@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		50F0694B2EC8EEFA00C27E07 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 50F0694A2EC8EEFA00C27E07 /* FirebaseAnalytics */; };
-		50F0694D2EC8EEFA00C27E07 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 50F0694C2EC8EEFA00C27E07 /* FirebaseAnalyticsCore */; };
-		50F0694F2EC8EEFA00C27E07 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 50F0694E2EC8EEFA00C27E07 /* FirebaseAnalyticsIdentitySupport */; };
+		50F060C62ECA61BB0081A1CB /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */; };
+		50F060C82ECA61BB0081A1CB /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */; };
+		50F060CA2ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */; };
 		50FCF7962EBCFD5700B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7952EBCFD5700B2C472 /* OpenAI */; };
 		50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7982EBCFD6900B2C472 /* Lottie */; };
 		50FCF79B2EBCFD7E00B2C472 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF79A2EBCFD7E00B2C472 /* OpenAI */; };
@@ -179,9 +179,9 @@
 			files = (
 				50FCF94C2EBF510E00B2C472 /* EmojiKit in Frameworks */,
 				50FCF7962EBCFD5700B2C472 /* OpenAI in Frameworks */,
-				50F0694F2EC8EEFA00C27E07 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
-				50F0694D2EC8EEFA00C27E07 /* FirebaseAnalyticsCore in Frameworks */,
-				50F0694B2EC8EEFA00C27E07 /* FirebaseAnalytics in Frameworks */,
+				50F060CA2ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport in Frameworks */,
+				50F060C82ECA61BB0081A1CB /* FirebaseAnalyticsCore in Frameworks */,
+				50F060C62ECA61BB0081A1CB /* FirebaseAnalytics in Frameworks */,
 				50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,9 +279,9 @@
 				50FCF7952EBCFD5700B2C472 /* OpenAI */,
 				50FCF7982EBCFD6900B2C472 /* Lottie */,
 				50FCF94B2EBF510E00B2C472 /* EmojiKit */,
-				50F0694A2EC8EEFA00C27E07 /* FirebaseAnalytics */,
-				50F0694C2EC8EEFA00C27E07 /* FirebaseAnalyticsCore */,
-				50F0694E2EC8EEFA00C27E07 /* FirebaseAnalyticsIdentitySupport */,
+				50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */,
+				50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */,
+				50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */,
 			);
 			productName = SlangTranslator;
 			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
@@ -423,7 +423,7 @@
 				50FCF7942EBCFD5700B2C472 /* XCRemoteSwiftPackageReference "OpenAI" */,
 				50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 				50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */,
-				50F069492EC8EEFA00C27E07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 502CE8DD2EA1F638007F38E3 /* Products */;
@@ -920,7 +920,6 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -956,7 +955,6 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1031,7 +1029,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		50F069492EC8EEFA00C27E07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
@@ -1066,19 +1064,19 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		50F0694A2EC8EEFA00C27E07 /* FirebaseAnalytics */ = {
+		50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 50F069492EC8EEFA00C27E07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalytics;
 		};
-		50F0694C2EC8EEFA00C27E07 /* FirebaseAnalyticsCore */ = {
+		50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 50F069492EC8EEFA00C27E07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalyticsCore;
 		};
-		50F0694E2EC8EEFA00C27E07 /* FirebaseAnalyticsIdentitySupport */ = {
+		50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 50F069492EC8EEFA00C27E07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalyticsIdentitySupport;
 		};
 		50FCF7952EBCFD5700B2C472 /* OpenAI */ = {
