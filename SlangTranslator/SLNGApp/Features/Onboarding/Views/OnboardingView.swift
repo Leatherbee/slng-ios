@@ -244,7 +244,6 @@ struct OnBoardingPage<Content: View>: View {
                         .foregroundColor(AppColor.Text.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Button {
                     if pageNumber < 6 {
@@ -252,9 +251,6 @@ struct OnBoardingPage<Content: View>: View {
                     }
                     else{
                         hasOnboarded = true
-                        Analytics.logEvent("tutorial_complete", parameters: [
-                            "source": "onboarding"
-                        ])
                     }
                 } label: {
                     HStack {
@@ -271,11 +267,9 @@ struct OnBoardingPage<Content: View>: View {
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
             }
-            .frame(maxWidth: .infinity)
+            .padding()
+            .padding(.bottom, 33)
         }
-        .padding()
-        .padding(.bottom, 33)
-        .frame(maxWidth: .infinity)
     }
 }
 
