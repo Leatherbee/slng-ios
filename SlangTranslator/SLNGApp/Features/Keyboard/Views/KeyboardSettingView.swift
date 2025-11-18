@@ -2,7 +2,7 @@
 //  KeyboardSettingView.swift
 //  SlangTranslator
 //
-//  Test searchable di Keyboard tab
+//  Test searchable di Keyboard tab dengan ScrollView
 //
 
 import SwiftUI
@@ -13,7 +13,7 @@ struct KeyboardSettingView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @State private var showShareSheetPreview: Bool = false
-    @State private var searchText = "" // ADDED FOR TEST
+    @State private var searchText = ""
     
     @AppStorage("settings.autoCorrect", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
     private var autoCorrect: Bool = true
@@ -29,7 +29,7 @@ struct KeyboardSettingView: View {
     }
     
     var body: some View {
-        ZStack {
+        ScrollView {
             VStack {
                 VStack(alignment: .leading, spacing: 8){
                     HStack {
@@ -152,15 +152,15 @@ struct KeyboardSettingView: View {
                     .background(Color(.systemGray6))
                     .cornerRadius(16)
                     .frame(maxWidth: .infinity)
-                    Spacer()
                 }
                 .padding(.horizontal, 10)
+                .padding(.bottom, 20) // Extra padding di bawah untuk spacing
             }
             .padding()
         }
-        .navigationTitle("Keyboard Settings") // ADDED
-        .navigationBarTitleDisplayMode(.large) // ADDED
-        .searchable(text: $searchText, prompt: "Test search...") // ADDED
+        .navigationTitle("Keyboard Settings")
+        .navigationBarTitleDisplayMode(.large)
+        .searchable(text: $searchText, prompt: "Test search...")
         .sheet(isPresented: $showShareSheetPreview) {
             ShareSheetPreviewSheet()
                 .presentationDetents([.large])

@@ -9,7 +9,8 @@ import SwiftUI
 import Lottie
 
 struct SetupKeyboardView: View {
-    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
+    @ObservedObject var viewModel: KeyboardStatusViewModel
+    @AppStorage("hasOpenKeyboardSetting", store: UserDefaults.shared) private var hasOpenKeyboardSetting = false
     var onReturnFromSettings: () -> Void
     @Environment(\.colorScheme) var colorScheme
 
@@ -44,7 +45,6 @@ struct SetupKeyboardView: View {
                 Spacer()
                 VStack(spacing: 10){
                     Button{
-                        print("Added to Keyboard")
                         openKeyboardSettings()
                     } label: {
                         Text("Add Keyboard")
@@ -75,12 +75,16 @@ struct SetupKeyboardView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             checkKeyboardStatus()
         }
+        .onAppear(){
+            viewModel.updateKeyboardStatus()
+        }
     }
     
     private func checkKeyboardStatus() {
         if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") {
-            hasSetupKeyboard = true
+            hasOpenKeyboardSetting = true
             onReturnFromSettings()
+            viewModel.updateKeyboardStatus()
         }
     }
     

@@ -8,21 +8,27 @@
 import SwiftUI
 
 struct KeyboardView: View {
+    @StateObject private var viewModel = KeyboardStatusViewModel()
+    
     var onReturnFromSettings: () -> Void
-    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
     var body: some View {
-        if hasSetupKeyboard {
-            KeyboardSettingView()
-                .accessibilityLabel("Keyboard settings")
-                .accessibilityHint("Manage keyboard translator preferences and options")
-                .accessibilityIdentifier("KeyboardView.Settings")
-        } else {
-            SetupKeyboardView {
-                onReturnFromSettings()
+        Group{
+            if viewModel.isFullAccessEnabled {
+                KeyboardSettingView()
+                    .accessibilityLabel("Keyboard settings")
+                    .accessibilityHint("Manage keyboard translator preferences and options")
+                    .accessibilityIdentifier("KeyboardView.Settings")
+            } else {
+                SetupKeyboardView(viewModel: viewModel) {
+                    onReturnFromSettings()
+                }
+                .accessibilityLabel("Keyboard setup")
+                .accessibilityHint("Follow instructions to enable the slang translator keyboard")
+                .accessibilityIdentifier("KeyboardView.Setup")
             }
-            .accessibilityLabel("Keyboard setup")
-            .accessibilityHint("Follow instructions to enable the slang translator keyboard")
-            .accessibilityIdentifier("KeyboardView.Setup")
         }
-    }    
+        .onAppear {
+            viewModel.updateKeyboardStatus()
+        }
+    }
 }

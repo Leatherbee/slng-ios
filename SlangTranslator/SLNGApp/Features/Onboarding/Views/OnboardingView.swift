@@ -14,7 +14,7 @@ struct OnboardingView: View {
     @State var isSecondPage: Bool = true
     @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 1
     @State var trialKeyboardText: String = ""
-    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
+    @AppStorage("hasOpenKeyboardSetting", store: UserDefaults.shared) private var hasOpenKeyboardSetting = false
     
 
     @FocusState private var focusedField: Bool
@@ -35,7 +35,7 @@ struct OnboardingView: View {
             }
             else if pageNumber==5{
                 KeyboardView {
-                    if hasSetupKeyboard {
+                    if hasOpenKeyboardSetting {
                         withAnimation {
                             pageNumber = 6
                         }
@@ -46,22 +46,6 @@ struct OnboardingView: View {
             }
             else if pageNumber==6{
                 sixthPage
-            }
-        }
-        .onAppear {
-            // If the keyboard has already been set up, fast-forward to the test page.
-            if hasSetupKeyboard && pageNumber < 6 {
-                pageNumber = 6
-            } else if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") && pageNumber < 6 {
-                // Fallback: if we returned from Settings and the view was recreated,
-                // mark setup as done and jump to test page.
-                hasSetupKeyboard = true
-                pageNumber = 6
-            }
-        }
-        .onChange(of: hasSetupKeyboard) { oldValue, newValue in
-            if newValue && pageNumber < 6 {
-                pageNumber = 6
             }
         }
     }
@@ -246,7 +230,6 @@ struct OnBoardingPage<Content: View>: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .minimumScaleFactor(0.5)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Button {
                     if pageNumber < 6 {
@@ -254,9 +237,6 @@ struct OnBoardingPage<Content: View>: View {
                     }
                     else{
                         hasOnboarded = true
-                        Analytics.logEvent("tutorial_complete", parameters: [
-                            "source": "onboarding"
-                        ])
                     }
                 } label: {
                     HStack {
@@ -273,11 +253,9 @@ struct OnBoardingPage<Content: View>: View {
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
             }
-            .frame(maxWidth: .infinity)
+            .padding()
+            .padding(.bottom, 33)
         }
-        .padding()
-        .padding(.bottom, 33)
-        .frame(maxWidth: .infinity)
     }
 }
 
