@@ -14,7 +14,7 @@ struct OnboardingView: View {
     @State var isSecondPage: Bool = true
     @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 1
     @State var trialKeyboardText: String = ""
-    @AppStorage("hasOpenKeyboardSetting", store: UserDefaults.shared) private var hasOpenKeyboardSetting = false
+    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
     
 
     @FocusState private var focusedField: Bool
@@ -35,7 +35,7 @@ struct OnboardingView: View {
             }
             else if pageNumber==5{
                 KeyboardView {
-                    if hasOpenKeyboardSetting {
+                    if hasSetupKeyboard {
                         withAnimation {
                             pageNumber = 6
                         }
@@ -46,6 +46,22 @@ struct OnboardingView: View {
             }
             else if pageNumber==6{
                 sixthPage
+            }
+        }
+        .onAppear {
+            // If the keyboard has already been set up, fast-forward to the test page.
+            if hasSetupKeyboard && pageNumber < 6 {
+                pageNumber = 6
+            } else if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") && pageNumber < 6 {
+                // Fallback: if we returned from Settings and the view was recreated,
+                // mark setup as done and jump to test page.
+                hasSetupKeyboard = true
+                pageNumber = 6
+            }
+        }
+        .onChange(of: hasSetupKeyboard) { oldValue, newValue in
+            if newValue && pageNumber < 6 {
+                pageNumber = 6
             }
         }
     }
@@ -67,21 +83,22 @@ struct OnboardingView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack(spacing: 16){
-                Button {
-                    Analytics.logEvent("tutorial_begin", parameters: [
-                        "source": "onboarding"
-                    ])
-                    pageNumber+=1
-                } label: {
+                PrimaryButton(
+                    buttonColor: AppColor.Button.primary,
+                    textColor: AppColor.Button.Text.primary,
+                    accessibilityLabel: "Get Started",
+                    accessibilityHint: "Goes to the next onboarding page",
+                    action: {
+                        Analytics.logEvent("tutorial_begin", parameters: [
+                            "source": "onboarding"
+                        ])
+                        pageNumber += 1
+                    }
+                ) {
                     Text("Get Started")
                         .padding(.vertical, 18)
-                        .font(Font.body.bold())
+                        .font(.body.bold())
                         .frame(maxWidth: .infinity, minHeight: 60)
-                        .foregroundColor(.onboardingTextPrimary)
-                        .background(
-                            AppColor.Button.primary
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
                 
                 Text("By starting, you accept our [Terms of Use](https://slng.space/terms/) and [Privacy Policy](https://slng.space/privacy/).")
@@ -230,15 +247,24 @@ struct OnBoardingPage<Content: View>: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .minimumScaleFactor(0.5)
                 }
-                
-                Button {
-                    if pageNumber < 6 {
-                        pageNumber+=1
+                .frame(maxWidth: .infinity, alignment: .leading)
+                PrimaryButton(
+                    buttonColor: AppColor.Button.primary,
+                    textColor: AppColor.Button.Text.primary,
+                    accessibilityLabel: "Continue",
+                    accessibilityHint: "Goes to the next onboarding page",
+                    action: {
+                        if pageNumber < 6 {
+                            pageNumber+=1
+                        }
+                        else{
+                            hasOnboarded = true
+                            Analytics.logEvent("tutorial_complete", parameters: [
+                                "source": "onboarding"
+                            ])
+                        }
                     }
-                    else{
-                        hasOnboarded = true
-                    }
-                } label: {
+                ) {
                     HStack {
                         Text("Continue")
                         Image(systemName: "arrow.right")
@@ -252,10 +278,13 @@ struct OnBoardingPage<Content: View>: View {
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
+ 
             }
-            .padding()
-            .padding(.bottom, 33)
+            .frame(maxWidth: .infinity)
         }
+        .padding()
+        .padding(.bottom, 33)
+        .frame(maxWidth: .infinity)
     }
 }
 

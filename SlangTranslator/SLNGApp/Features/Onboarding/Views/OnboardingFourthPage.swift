@@ -76,20 +76,27 @@ struct OnboardingFourthPage: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 10)
-                
-                Button {
-                    pageNumber += 1
-                } label: {
+                PrimaryButton(
+                    buttonColor: AppColor.Button.primary,
+                    textColor: AppColor.Button.Text.primary,
+                    accessibilityLabel: "Continue",
+                    accessibilityHint: "Goes to the next onboarding page",
+                    action: {
+                        pageNumber += 1
+                    }
+                ) {
                     HStack {
                         Text("Continue")
                         Image(systemName: "arrow.right")
                     }
-                    .padding(.vertical, 18)
-                    .font(Font.body.bold())
-                    .frame(maxWidth: .infinity, minHeight: 60)
-                    .foregroundColor(.onboardingTextPrimary)
-                    .background(AppColor.Button.primary)
-                    .clipShape(RoundedRectangle(cornerRadius: 30))
+                        .padding(.vertical, 18)
+                        .font(Font.body.bold())
+                        .frame(maxWidth: .infinity, minHeight: 60)
+                        .foregroundColor(.onboardingTextPrimary)
+                        .background(
+                            AppColor.Button.primary
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 30))
                 }
             }
             .padding()

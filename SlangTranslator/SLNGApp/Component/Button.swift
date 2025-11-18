@@ -40,12 +40,10 @@ struct PrimaryButton<Label: View>: View {
             action()
         } label: {
             label()
-                .foregroundColor(textColor)
-                .padding()
-                .frame(maxWidth: .infinity)
+                .foregroundColor(textColor) 
                 .background(buttonColor)
                 .clipShape(Capsule())
-                .scaleEffect(isPressed ? 0.94 : 1.0)
+                .scaleEffect(isPressed ? 1.05 : 1.0)
                 .contentShape(Capsule())
         }
         .accessibilityElement(children: .combine)
@@ -90,7 +88,7 @@ struct PrimaryButton<Label: View>: View {
             Text("Button Primary")
         }
     }
-    .padding()
+    .padding(.horizontal, 80)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(AppColor.Background.primary)
   

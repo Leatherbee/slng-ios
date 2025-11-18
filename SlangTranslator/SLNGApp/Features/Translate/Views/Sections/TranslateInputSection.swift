@@ -69,33 +69,28 @@ struct TranslateInputSection: View {
             
             Spacer()
             
-            Button {
+            PrimaryButton(buttonColor: (
+                viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                ? AppColor.Button.secondary
+                : AppColor.Button.primary
+            ), textColor: (
+                (colorScheme == .dark && !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                ? AppColor.Button.Text.primary : .white
+            ), accessibilityLabel: "Translate button"){
                 UIApplication.shared.dismissKeyboard()
                 shouldPlaySequentialAnimation = true
                 viewModel.translate(text: viewModel.inputText)
-            } label: {
+            } label : {
                 HStack {
                     Text("Translate")
                     Image(systemName: "arrow.right")
                 }
                 .padding(.vertical, 18)
                 .font(Font.body.bold())
-                .frame(maxWidth: 314, minHeight: 60)
-                .foregroundColor(
-                    (colorScheme == .dark && !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                    ? AppColor.Button.Text.primary : .white
-                )
-                .background(
-                    viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    ? AppColor.Button.secondary
-                    : AppColor.Button.primary
-                )
-                .clipShape(RoundedRectangle(cornerRadius: 30))
+                .frame(maxWidth: 314, minHeight: 60) 
             }
             .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isRecording || viewModel.isLoading)
-            .accessibilityLabel("Translate button")
             .accessibilityInputLabels(["Translate button"])
-            .accessibilityHidden(false)
             .zIndex(10)
         }
         .overlay(alignment: .bottom) {
