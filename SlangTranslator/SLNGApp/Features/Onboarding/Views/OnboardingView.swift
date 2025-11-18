@@ -14,7 +14,7 @@ struct OnboardingView: View {
     @State var isSecondPage: Bool = true
     @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 1
     @State var trialKeyboardText: String = ""
-    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
+    @AppStorage("hasOpenKeyboardSetting", store: UserDefaults.shared) private var hasOpenKeyboardSetting = false
     
 
     @FocusState private var focusedField: Bool
@@ -34,13 +34,29 @@ struct OnboardingView: View {
                 OnboardingFourthPage(pageNumber: $pageNumber)
             }
             else if pageNumber==5{
-                KeyboardView {
-                    if hasSetupKeyboard {
-                        withAnimation {
-                            pageNumber = 6
+                NavigationStack{
+                    KeyboardView {
+                        if hasOpenKeyboardSetting {
+                            withAnimation {
+                                pageNumber = 6
+                            }
+                        } else {
+                            print("Keyboard belum diaktifkan di Settings.")
                         }
-                    } else {
-                        print("Keyboard belum diaktifkan di Settings.")
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button{
+                                pageNumber = 6
+                            }
+                            label: {
+                                HStack {
+                                    Text("Skip")
+                                    Image(systemName: "arrow.right")
+                                }
+                                .foregroundColor(.secondary)
+                            }
+                        }
                     }
                 }
             }
@@ -50,16 +66,16 @@ struct OnboardingView: View {
         }
         .onAppear {
             // If the keyboard has already been set up, fast-forward to the test page.
-            if hasSetupKeyboard && pageNumber < 6 {
+            if hasOpenKeyboardSetting && pageNumber < 6 {
                 pageNumber = 6
             } else if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") && pageNumber < 6 {
                 // Fallback: if we returned from Settings and the view was recreated,
                 // mark setup as done and jump to test page.
-                hasSetupKeyboard = true
+                hasOpenKeyboardSetting = true
                 pageNumber = 6
             }
         }
-        .onChange(of: hasSetupKeyboard) { oldValue, newValue in
+        .onChange(of: hasOpenKeyboardSetting) { oldValue, newValue in
             if newValue && pageNumber < 6 {
                 pageNumber = 6
             }
