@@ -239,10 +239,12 @@ struct OnBoardingPage<Content: View>: View {
                         .font(.system(.largeTitle, design: .serif, weight: .bold))
                         .foregroundColor(AppColor.Text.primary)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .minimumScaleFactor(0.5)
                     Text(onBoardingContent)
                         .font(.subheadline)
                         .foregroundColor(AppColor.Text.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .minimumScaleFactor(0.5)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 

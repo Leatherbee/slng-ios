@@ -65,12 +65,14 @@ struct OnboardingFourthPage: View {
                         .foregroundColor(AppColor.Text.primary)
                         .multilineTextAlignment(.leading)
                         .lineLimit(nil)
+                        .minimumScaleFactor(0.5)
                     
                     Text("Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk.")
                         .font(.subheadline)
                         .foregroundColor(AppColor.Text.secondary)
                         .multilineTextAlignment(.leading)
                         .lineLimit(nil)
+                        .minimumScaleFactor(0.5)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 10)
