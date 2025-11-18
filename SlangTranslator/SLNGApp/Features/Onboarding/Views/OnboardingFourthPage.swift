@@ -53,7 +53,7 @@ struct OnboardingFourthPage: View {
                     }
                 }
             }
-            .frame(height: 320) // biar tinggi area SpriteView konsisten
+            .frame(height: 320) 
             .padding(.horizontal, 16)
             
             Spacer()
@@ -63,11 +63,16 @@ struct OnboardingFourthPage: View {
                     Text("Stay fluent in the ever-changing slang world")
                         .font(.system(.largeTitle, design: .serif, weight: .bold))
                         .foregroundColor(AppColor.Text.primary)
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(nil)
                     
                     Text("Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk.")
                         .font(.subheadline)
                         .foregroundColor(AppColor.Text.secondary)
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(nil)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 10)
                 
                 Button {
@@ -93,6 +98,6 @@ struct OnboardingFourthPage: View {
 }
 
 
-//#Preview {
-//    OnboardingFourthPage()
-//}
+#Preview {
+    OnboardingFourthPage(pageNumber: .constant(3))
+}
