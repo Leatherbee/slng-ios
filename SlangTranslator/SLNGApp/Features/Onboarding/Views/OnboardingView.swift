@@ -48,22 +48,6 @@ struct OnboardingView: View {
                 sixthPage
             }
         }
-//        .onAppear {
-//            // If the keyboard has already been set up, fast-forward to the test page.
-//            if hasOpenKeyboardSetting && pageNumber < 6 {
-//                pageNumber = 6
-//            } else if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") && pageNumber < 6 {
-//                // Fallback: if we returned from Settings and the view was recreated,
-//                // mark setup as done and jump to test page.
-//                hasOpenKeyboardSetting = true
-//                pageNumber = 6
-//            }
-//        }
-//        .onChange(of: hasOpenKeyboardSetting) { oldValue, newValue in
-//            if newValue && pageNumber < 6 {
-//                pageNumber = 6
-//            }
-//        }
     }
     
     private var firstPage: some View {
