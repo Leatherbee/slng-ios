@@ -20,7 +20,7 @@ final class SharedModelContainer {
             SlangModel.self
         ])
         
-        let appGroupID = "group.prammmoe.SLNG"
+        let appGroupID = "group.canquinee.SLNG"
         
         guard let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) else {
             fatalError("Cannot find AppGroup")
