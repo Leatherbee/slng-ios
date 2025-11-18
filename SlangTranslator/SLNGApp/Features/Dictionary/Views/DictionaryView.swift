@@ -3,7 +3,6 @@
 //  SlangTranslator
 //
 //  Created by Filza Rizki Ramadhan on 07/11/25.
-//  Optimized for large data sets and alphabet jumping.
 //
 
 import SwiftUI

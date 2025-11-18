@@ -16,7 +16,7 @@ class KeyboardStatusViewModel: ObservableObject {
     }
     
     func updateKeyboardStatus() {
-        let defaults = UserDefaults(suiteName: "group.canquinee.SLNG")!
+        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
         self.isFullAccessEnabled = defaults.bool(forKey: "keyboardFullAccess")
     }
 }
