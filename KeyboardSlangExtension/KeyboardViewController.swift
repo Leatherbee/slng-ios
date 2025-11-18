@@ -15,7 +15,9 @@ class KeyboardViewController: UIInputViewController {
     private var viewModelRef: SlangKeyboardViewModel?
     private let textChecker = UITextChecker()
     private func recordExtEvent(_ name: String, params: [String: String]? = nil) {
-        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+        let defaults = UserDefaults(suiteName: "group.canquinee.SLNG")!
+        defaults.set(self.hasFullAccess, forKey: "keyboardFullAccess")
+        defaults.synchronize()
         let countKey = "analytics/.\(name)/.count"
         defaults.set(defaults.integer(forKey: countKey) + 1, forKey: countKey)
         if let params {
