@@ -25,11 +25,11 @@ struct SlangTranslatorApp: App {
     
     var body: some Scene {
         WindowGroup {
-                if hasOnboarded{
-                    MainTabbedView()
-                } else{
-                    OnboardingView()
-                }
+            if hasOnboarded{
+                MainTabbedView()
+            } else{
+                OnboardingView()
+            }
         }
         .modelContainer(container)
     }

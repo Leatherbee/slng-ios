@@ -4,20 +4,21 @@
 //
 //  Created by Filza Rizki Ramadhan on 18/11/25.
 //
+
 import SwiftUI
- 
+
 struct PrimaryButton<Label: View>: View {
     let buttonColor: Color
     let textColor: Color
     let action: () -> Void
     @ViewBuilder let label: () -> Label
- 
+    
     var accessibilityLabelOverride: String?
     var accessibilityHintOverride: String?
-
+    
     @State private var isPressed: Bool = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
+    
     init(
         buttonColor: Color,
         textColor: Color,
@@ -33,14 +34,14 @@ struct PrimaryButton<Label: View>: View {
         self.accessibilityLabelOverride = accessibilityLabel
         self.accessibilityHintOverride = accessibilityHint
     }
-
+    
     var body: some View {
         Button {
             Haptics.primaryButtonTap()
             action()
         } label: {
             label()
-                .foregroundColor(textColor) 
+                .foregroundColor(textColor)
                 .background(buttonColor)
                 .clipShape(Capsule())
                 .scaleEffect(isPressed ? 1.05 : 1.0)
@@ -48,7 +49,7 @@ struct PrimaryButton<Label: View>: View {
         }
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(accessibilityLabelOverride ?? "")  
+        .accessibilityLabel(accessibilityLabelOverride ?? "")
         .accessibilityHint(accessibilityHintOverride ?? "Activates primary action")
         .accessibilityRepresentation {
             if let custom = accessibilityLabelOverride {
@@ -62,17 +63,17 @@ struct PrimaryButton<Label: View>: View {
                 .onChanged { _ in
                     guard !isPressed else { return }
                     withAnimation(reduceMotion ?
-                                  .default :
-                                  .spring(response: 0.2, dampingFraction: 0.5)) {
-                        isPressed = true
-                    }
+                        .default :
+                            .spring(response: 0.2, dampingFraction: 0.5)) {
+                                isPressed = true
+                            }
                 }
                 .onEnded { _ in
                     withAnimation(reduceMotion ?
-                                  .default :
-                                  .spring(response: 0.3, dampingFraction: 0.6)) {
-                        isPressed = false
-                    }
+                        .default :
+                            .spring(response: 0.3, dampingFraction: 0.6)) {
+                                isPressed = false
+                            }
                 }
         )
     }
@@ -91,6 +92,6 @@ struct PrimaryButton<Label: View>: View {
     .padding(.horizontal, 80)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(AppColor.Background.primary)
-  
-
+    
+    
 }

@@ -154,13 +154,12 @@ struct KeyboardSettingView: View {
                     .frame(maxWidth: .infinity)
                 }
                 .padding(.horizontal, 10)
-                .padding(.bottom, 20) // Extra padding di bawah untuk spacing
+                .padding(.bottom, 20)
             }
             .padding()
         }
         .navigationTitle("Keyboard Settings")
         .navigationBarTitleDisplayMode(.large)
-        .searchable(text: $searchText, prompt: "Test search...")
         .sheet(isPresented: $showShareSheetPreview) {
             ShareSheetPreviewSheet()
                 .presentationDetents([.large])

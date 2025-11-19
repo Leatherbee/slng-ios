@@ -35,7 +35,7 @@ struct TranslateResultSection: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-                Color.backgroundSecondary.ignoresSafeArea()
+//                Color.backgroundSecondary.ignoresSafeArea()
                 
                 GeometryReader { screenGeo in
                     SunburstView(trigger: $showBurst)
@@ -52,7 +52,6 @@ struct TranslateResultSection: View {
                         
                         ZStack(alignment: .topLeading) {
                             VStack(alignment: .leading, spacing: 8) {
-                                
                                 // Original text (pulse only)
                                 Text(viewModel.inputText)
                                     .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
@@ -268,7 +267,6 @@ struct TranslateResultSection: View {
             .toolbar(showBottomUI ? .visible : .hidden, for: .tabBar)
     }
     
-    // MARK: Animation Logic
     private func resetAnimation() {
         stage = 0
         showBurst = false

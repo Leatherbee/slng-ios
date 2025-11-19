@@ -17,45 +17,61 @@ struct TranslateView: View {
     @State private var fontSizeWorkItem: DispatchWorkItem?
     @AppStorage("hasRequestedSpeechMic", store: UserDefaults.shared) private var hasRequestedSpeechMic = false
     
+    @State var shouldDisplaySecondaryColor: Bool = false
+    
+    @State private var showSettings: Bool = false
+    @State private var dragOffset: CGFloat = 0
+        
     var body: some View {
         ZStack {
-            if viewModel.isInitializing {
-                VStack(spacing: 12) {
-                    ProgressView("Preparing translator...")
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .font(.headline)
-                    Text("Warming up dictionary & translation engine…")
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
+            VStack(spacing: 0) {
+                VStack(spacing: 8) {
+                    RoundedRectangle(cornerRadius: 20)
+                        .frame(width: 40, height: 4)
+                        .foregroundStyle(AppColor.Button.primary)
+                    
+                    Text("Settings")
+                        .font(.system(.footnote, design: .default, weight: .bold))
+                        .foregroundStyle(.secondary)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.black.opacity(0.1))
-                .ignoresSafeArea()
-            } else if viewModel.isLoading && !viewModel.isTranscribing {
-                TranslateLoadingSection(
-                    viewModel: viewModel,
-                    textNamespace: textNamespace,
-                    dynamicTextStyle: dynamicTextStyle
-                )
-            } else if !viewModel.isTranslated {
-                TranslateInputSection(
-                    viewModel: viewModel,
-                    textNamespace: textNamespace,
-                    adjustFontSizeDebounced: adjustFontSizeDebounced,
-                    shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
-                    dynamicTextStyle: $dynamicTextStyle
-                )
-            } else {
-                TranslateResultSection(
-                    viewModel: viewModel,
-                    textNamespace: textNamespace,
-                    adjustFontSizeDebounced: adjustFontSizeDebounced,
-                    shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
-                    dynamicTextStyle: $dynamicTextStyle
-                )
+                .padding(.top, 12)
+                .padding(.bottom, 8)
+                
+                contentSection
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .offset(y: dragOffset)
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        let translation = value.translation.height
+                        if translation > 0 {
+                            dragOffset = translation
+                        }
+                    }
+                    .onEnded { value in
+                        if value.translation.height > 120 {
+                            withAnimation(.easeOut(duration: 0.3)) {
+                                showSettings = true
+                            }
+                        }
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            dragOffset = 0
+                        }
+                    }
+            )
+            
+            if showSettings || dragOffset > 0 {
+                NavigationStack {
+                    SettingsView(showSettings: $showSettings)
+                }
+                .transition(.move(edge: .bottom))
+                .offset(y: showSettings ? 0 : max(0, CGFloat(300) - dragOffset))
+                .opacity(showSettings ? 1 : min(1.0, Double(dragOffset) / 60.0))
+                .zIndex(1)
             }
         }
-        .background(Color.backgroundPrimary)
+
         .animation(.easeInOut(duration: 0.25), value: viewModel.isTranslated)
         .onAppear {
             if !hasRequestedSpeechMic {
@@ -63,11 +79,45 @@ struct TranslateView: View {
                 hasRequestedSpeechMic = true
             }
         }
-        .onAppear {
-            if !hasRequestedSpeechMic {
-                viewModel.prewarmPermissions()
-                hasRequestedSpeechMic = true
+    }
+    
+    @ViewBuilder
+    var contentSection: some View {
+        if viewModel.isInitializing {
+            VStack(spacing: 12) {
+                ProgressView("Preparing translator...")
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .font(.headline)
+                Text("Warming up dictionary & translation engine…")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.black.opacity(0.1))
+        } else if viewModel.isLoading && !viewModel.isTranscribing {
+            TranslateLoadingSection(
+                viewModel: viewModel,
+                textNamespace: textNamespace,
+                dynamicTextStyle: dynamicTextStyle
+            )
+        } else if !viewModel.isTranslated {
+            TranslateInputSection(
+                viewModel: viewModel,
+                textNamespace: textNamespace,
+                adjustFontSizeDebounced: adjustFontSizeDebounced,
+                shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
+                dynamicTextStyle: $dynamicTextStyle
+            )
+            .background(Color.backgroundPrimary)
+        } else {
+            TranslateResultSection(
+                viewModel: viewModel,
+                textNamespace: textNamespace,
+                adjustFontSizeDebounced: adjustFontSizeDebounced,
+                shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
+                dynamicTextStyle: $dynamicTextStyle
+            )
+            .background(Color.backgroundSecondary)
         }
     }
         
@@ -101,11 +151,11 @@ struct BlinkingCursor: View {
     var body: some View {
         Text("|")
             .font(.system(size: 46, weight: .regular, design: .serif))
-        .opacity(isVisible ? 1 : 0)
-        .animation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true), value: isVisible)
-        .onAppear {
-            isVisible.toggle()
-        }
+            .opacity(isVisible ? 1 : 0)
+            .animation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true), value: isVisible)
+            .onAppear {
+                isVisible.toggle()
+            }
     }
 }
 
