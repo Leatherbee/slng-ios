@@ -6,6 +6,7 @@
 import SwiftUI
 import SwiftData
 import AVFoundation
+import UIKit
 
 struct TranslateView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -25,44 +26,49 @@ struct TranslateView: View {
     private let settingsContentRevealThreshold: CGFloat = 120
     private let settingsOverlayYOffset: CGFloat = -60
     
-    // MARK: - Magic sauce: Apple-style easing
     private var curtainEase: Animation {
         .timingCurve(0.22, 0.61, 0.36, 1.0, duration: 0.32)
     }
     
     var body: some View {
         ZStack {
-            contentSection
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .offset(y: showSettings ? 55.0 : dragOffset * 0.12)
-                .opacity(showSettings ? 0 : (1 - min(1.0, dragOffset / 220.0)))
-                .animation(curtainEase, value: showSettings)
-
-            VStack(spacing: 8) {
-                RoundedRectangle(cornerRadius: 20)
-                    .frame(width: 40, height: 4)
-                    .foregroundStyle(AppColor.Button.primary)
-                
-                Text("Settings")
-                    .font(.system(.footnote, design: .default, weight: .bold))
-                    .foregroundStyle(.secondary)
-                    .opacity((showSettings || dragOffset > 0) ? 0 : 1)
+            VStack(spacing: 0) {
+                contentSection
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .padding(.top, 12)
-            .padding(.bottom, 8)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .allowsHitTesting(false)
+            .offset(y: showSettings ? 55.0 : 0)
+            .opacity(showSettings ? 0 : (1 - min(1.0, dragOffset / 220.0)))
+            .animation(curtainEase, value: showSettings)
+            .background(hasShownTranslateResult ? AppColor.Background.secondary : AppColor.Background.primary)
+            .overlay(alignment: .top) {
+                VStack(spacing: 8) {
+                    RoundedRectangle(cornerRadius: 20)
+                        .frame(width: 40, height: 4)
+                        .foregroundStyle(AppColor.Button.primary)
+                    
+                    Text("Settings")
+                        .font(.system(.footnote, design: .default, weight: .bold))
+                        .foregroundStyle(.secondary)
+                        .opacity(1)
+                }
+                .allowsHitTesting(false)
+                .offset(
+                    y: showSettings
+                        ? UIScreen.main.bounds.height - 60
+                        : dragOffset * 1.05   
+                )
+                .animation(.interactiveSpring(response: 0.28, dampingFraction: 0.85), value: dragOffset)
+            }
                         
             if (showSettings || dragOffset > 0) && !(viewModel.isRecording || viewModel.isTranscribing) {
                 ZStack {
                     GeometryReader { geo in
                         VStack(spacing: 0) {
-                            // Dynamic curtain height
                             Color.backgroundSecondary
                                 .frame(
                                     height: showSettings
                                     ? geo.size.height
-                                    : dragOffset * 1.05 + 80
+                                    : dragOffset * 1.05 + safeTop - 16
                                 )
                             
                             Spacer()
@@ -202,13 +208,17 @@ struct TranslateView: View {
         }
     }
     
-    // MARK: - Drag Smoothing
+    var safeTop: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+            .first?.safeAreaInsets.top ?? 60
+    }
+    
     private func softened(_ t: CGFloat) -> CGFloat {
         let v = max(0, t)
         return pow(v, 0.82)   // smoothest curve
     }
     
-    // MARK: - Debounced Font
     private func adjustFontSizeDebounced() {
         fontSizeWorkItem?.cancel()
         let workItem = DispatchWorkItem {
