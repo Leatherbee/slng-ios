@@ -97,8 +97,7 @@ struct DictionaryView: View {
                 }
             }
             .padding()
-            
-            // Letter overlay - MUST be separate to avoid blocking search
+             
             VStack {
                 let displayLetter: String = {
                     if let l = viewModel.activeLetter, !l.isEmpty { return l }
@@ -107,12 +106,12 @@ struct DictionaryView: View {
                 Text(displayLetter.uppercased())
                     .font(.system(size: 64, design: .serif))
                     .foregroundColor(AppColor.Text.secondary)
-                    .allowsHitTesting(false) // PENTING: jangan block interaction
+                    .allowsHitTesting(false)
             }
             .frame(width: 128, height: 128)
             .background(.clear)
             .clipShape(.circle)
-            .allowsHitTesting(false) // PENTING: jangan block interaction
+            .allowsHitTesting(false)
         }
         .task {
             viewModel.setContext(context: modelContext)
@@ -384,7 +383,7 @@ class SoundManager {
         AudioServicesPlaySystemSound(1104)
         
         // Ultra smooth haptic dengan proper intensity
-        let generator = UIImpactFeedbackGenerator(style: .light)
+        let generator = UIImpactFeedbackGenerator(style: .heavy)
         generator.prepare()
         generator.impactOccurred(intensity: intensity)
     }
@@ -411,7 +410,7 @@ public struct SwiftUIWheelPicker<Item>: View {
     @State private var centers: [Int: CGFloat] = [:]
     @State private var scrollProxy: ScrollViewProxy? = nil
     @State private var dragging = false
-    @State private var engine = UIImpactFeedbackGenerator(style: .light)
+    @State private var engine = UIImpactFeedbackGenerator(style: .heavy)
     
     @State private var visibleRange: Range<Int> = 0..<10
     @State private var containerCenterY: CGFloat = 0
@@ -506,6 +505,8 @@ public struct SwiftUIWheelPicker<Item>: View {
                                        
                                        // Smooth velocity reset dengan decay
                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                           engine.impactOccurred(intensity: 0.4)
+
                                            isQuickScrolling = false
                                            soundManager.resetVelocity()
                                            lastSelectionTime = 0
@@ -606,6 +607,7 @@ public struct SwiftUIWheelPicker<Item>: View {
 
     private func updateSelection(to newIndex: Int, animated: Bool) {
         guard newIndex >= 0 && newIndex < items.count else { return }
+        
         selection = newIndex
         updateVisibleRange(around: newIndex)
         guard let proxy = scrollProxy else { return }
@@ -619,7 +621,7 @@ public struct SwiftUIWheelPicker<Item>: View {
         }
         
         // Gentle haptic
-        engine.impactOccurred(intensity: 0.6)
+        engine.impactOccurred(intensity: 1)
     }
 
     public func scrollToIndex(_ index: Int, animated: Bool = true) {

@@ -33,7 +33,8 @@ struct PlainKeyButton: View {
                     if let label = label {
                         Text(label)
                             .font(.system(size: fontSize))
-                    } else if let systemName = systemName {
+                    }
+                    if let systemName = systemName {
                         Image(systemName: systemName)
                             .font(.system(size: 18, weight: .medium))
                     }

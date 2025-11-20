@@ -37,10 +37,10 @@ struct KeyCapView: View {
     private var keyPopupBubble: some View {
         VStack(spacing: 0) {
             ZStack {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                RoundedRectangle(cornerRadius: 9, style: .continuous)
                     .fill(style.popupFill)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: 9)
                             .stroke(style.popupStroke, lineWidth: 0.6)
                     )
                     .shadow(color: Color.black.opacity(0.18), radius: 2.5, y: 2.5)
@@ -57,10 +57,10 @@ struct KeyCapView: View {
     }
     
     private var keyButton: some View {
-        RoundedRectangle(cornerRadius: 6)
+        RoundedRectangle(cornerRadius: 9)
             .fill(style.keyFill)
             .overlay(
-                RoundedRectangle(cornerRadius: 6)
+                RoundedRectangle(cornerRadius: 9 )
                     .stroke(style.keyStroke, lineWidth: 0.4)
             )
             .shadow(color: style.keyShadow, radius: 0.4, y: 0.5)

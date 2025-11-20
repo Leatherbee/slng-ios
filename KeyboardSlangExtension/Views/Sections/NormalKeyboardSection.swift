@@ -25,7 +25,7 @@ struct NormalKeyboardSection: View {
             keyRows
             bottomRow
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 2)
         .background(style.keyboardBackground)
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         .overlay(VStack(spacing: 0) { Divider().opacity(0.6) }, alignment: .top)
@@ -54,7 +54,7 @@ struct NormalKeyboardSection: View {
         .background(style.keyboardBackground)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .onTapGesture {
-            let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+            let defaults = UserDefaults(suiteName: "group.Slang")!
             let countKey = "analytics.feature_used.explain_mode.count"
             defaults.set(defaults.integer(forKey: countKey) + 1, forKey: countKey)
             handlePasteAction()
@@ -74,7 +74,7 @@ struct NormalKeyboardSection: View {
     }
     
     private var bottomRow: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 7) {
             if needsInputModeSwitchKey, let nextKeyboardAction {
                 NextKeyboardButtonOverlay(action: nextKeyboardAction)
                     .frame(width: 40, height: 44)
@@ -105,14 +105,14 @@ struct NormalKeyboardSection: View {
             
             PlainKeyButton(label: nil, systemName: "face.smiling", width: 48, height: 44, fontSize: 18) {
                 vm.changeDisplayMode(.emoji)
-                let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+                let defaults = UserDefaults(suiteName: "group.Slang")!
                 let countKey = "analytics.feature_used.emoji_mode.count"
                 defaults.set(defaults.integer(forKey: countKey) + 1, forKey: countKey)
             }
-            PlainKeyButton(label: "space", systemName: nil, width: 150, height: 44, fontSize: 17) { insertText(" ") }
+            PlainKeyButton(label: "space", systemName: nil, width: 191, height: 44, fontSize: 17) { insertText(" ") }
             PlainKeyButton(label: "return", systemName: nil, width: 76, height: 44, fontSize: 17) { insertText("\n") }
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 0)
     }
     
     private func handlePasteAction() {
@@ -140,25 +140,36 @@ struct KeyRowView: View {
     let deleteText: () -> Void
     
     var body: some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 0) {
             if rowIndex == 2 {
                 leftModifierKey
+                Spacer()
             }
             
-            ForEach(vm.getRows()[rowIndex], id: \.self) { key in
-                let label = displayLabel(for: key)
-                KeyCapView(
-                    label: label,
-                    width: keyWidth(for: rowIndex),
-                    height: 44,
-                    fontSize: 22
-                ) {
-                    insertText(label)
-                    if vm.isShifted && !vm.showNumber && !vm.isCapsLockOn { vm.isShifted = false }
+            HStack(spacing: 6) {
+                ForEach(vm.getRows()[rowIndex], id: \.self) { key in
+                    let label = displayLabel(for: key)
+ 
+                    let specialChars: Set<String> = [".", ",", "?", "!", "'"]
+                    let keyWidth: CGFloat = specialChars.contains(label) ? 50 : 33.05
+
+                    KeyCapView(
+                        label: label,
+                        width: keyWidth,
+                        height: 42,
+                        fontSize: 22
+                    ) {
+                        insertText(label)
+                        if vm.isShifted && !vm.showNumber && !vm.isCapsLockOn {
+                            vm.isShifted = false
+                        }
+                    }
                 }
+
             }
-            
+
             if rowIndex == 2 {
+                Spacer()
                 PlainKeyButton(
                     label: nil,
                     systemName: "delete.left",
@@ -170,20 +181,35 @@ struct KeyRowView: View {
                 }
             }
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 6)
+        .frame(maxWidth: .infinity)
     }
     
     private var leftModifierKey: some View {
-        let label = vm.showNumbersShifted ? "123" : vm.showNumber ? "#+=" : (vm.isCapsLockOn ? "⇪" : "⇧")
+        let label: String?
+        let systemName: String?
+
+        if vm.showNumbersShifted {
+            label = "123"
+            systemName = nil
+        } else if vm.showNumber {
+            label = "#+="
+            systemName = nil
+        } else if vm.isCapsLockOn {
+            label = nil
+            systemName = "shift.fill"
+        } else {
+            label = nil
+            systemName = "shift"
+        }
 
         return PlainKeyButton(
             label: label,
-            systemName: nil,
+            systemName: systemName,
             width: 44,
             height: 44,
             fontSize: vm.showNumber ? 14 : 22
         ) {
-            // Disable animations when toggling symbol/shift state
             withTransaction(Transaction(animation: nil)) {
                 if vm.showNumbersShifted || vm.showNumber {
                     vm.showNumbersShifted.toggle()
@@ -230,3 +256,20 @@ struct NextKeyboardButtonOverlay: UIViewRepresentable {
     
     func updateUIView(_ uiView: UIButton, context: Context) {}
 }
+
+struct MockTranslateSentenceUseCase: TranslateSentenceUseCase {
+    func execute(_ text: String) async throws -> TranslationResult {
+        let response = TranslationResponse(
+            id: UUID(),
+            originalText: text,
+            englishTranslation: "Preview Translation",
+            sentiment: .neutral,
+            source: nil
+        )
+        return TranslationResult(translation: response, detectedSlangs: [])
+    }
+    func peekCache(_ text: String) -> TranslationResponse? { nil }
+}
+ 
+
+

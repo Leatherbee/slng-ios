@@ -37,6 +37,7 @@ struct PrimaryButton<Label: View>: View {
     var body: some View {
         Button {
             Haptics.primaryButtonTap()
+            SoundPlayer.play("button-2.wav")
             action()
         } label: {
             label()
