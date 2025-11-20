@@ -40,55 +40,91 @@ struct SettingsView: View {
             
             List {
                 Section {
-                    HStack {
-                        Image(systemName: "speaker.wave.2")
-                        Text("Sound Effect")
-                        Spacer()
-                        Toggle("", isOn: .constant(true))
+                    Button {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "speaker.wave.2")
+                            Text("Sound Effect")
+                            Spacer()
+                            Toggle("", isOn: .constant(true))
+                        }
                     }
+                    .buttonStyle(.plain)
                     
-                    HStack {
-                        Image(systemName: "circle.dotted.and.circle")
-                        Text("Motion")
-                        Spacer()
-                        Toggle("", isOn: .constant(true))
+                    Button {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "circle.dotted.and.circle")
+                            Text("Motion")
+                            Spacer()
+                            Toggle("", isOn: .constant(true))
+                        }
                     }
+                    .buttonStyle(.plain)
                     
-                    HStack {
-                        Image(systemName: "globe")
-                        Text("Language")
+                    Button {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "globe")
+                            Text("Language")
+                        }
                     }
-                    
-                    HStack {
-                        Image(systemName: "swirl.circle.righthalf.filled")
-                        Text("Theme")
+                    .buttonStyle(.plain)
+                   
+                    Button {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "swirl.circle.righthalf.filled")
+                            Text("Theme")
+                        }
                     }
+                    .buttonStyle(.plain)
                 }
                 .listRowBackground(Color.listRowPrimary)
                 
                 Section {
-                    HStack {
-                        Image(systemName: "water.waves")
-                        Text("Haptic")
-                        Spacer()
-                        Toggle("", isOn: .constant(true))
+                    Button {
+                        print("tappeed")
+                    } label: {
+                        HStack {
+                            Image(systemName: "water.waves")
+                            Text("Haptic")
+                            Spacer()
+                            Toggle("", isOn: .constant(true))
+                        }
                     }
+                    .buttonStyle(.plain)
                 }
                 .listRowBackground(Color.listRowPrimary)
                 
                 Section {
-                    HStack {
-                        Image(systemName: "person")
-                        Text("About")
-                        Spacer()
-                        Image(systemName: "chevron.right")
+                    Button {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "person")
+                            Text("About")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                        }
                     }
-                    HStack {
-                        Image(systemName: "star")
-                        Text("Rate the App")
-                        Spacer()
-                        Image(systemName: "chevron.right")
+                    .buttonStyle(.plain)
+                    
+                    Button {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "star")
+                            Text("Rate the App")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                        }
                     }
+                    .buttonStyle(.plain)
                 }
                 .listRowBackground(Color.listRowPrimary)
             }
