@@ -35,7 +35,7 @@ struct TranslateResultSection: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-//                Color.backgroundSecondary.ignoresSafeArea()
+                Color.backgroundSecondary.ignoresSafeArea()
                 
                 GeometryReader { screenGeo in
                     SunburstView(trigger: $showBurst)
