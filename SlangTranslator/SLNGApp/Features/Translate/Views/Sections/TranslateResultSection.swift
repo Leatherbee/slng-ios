@@ -33,6 +33,8 @@ struct TranslateResultSection: View {
     @State private var moveUp: Bool = false
     @State private var audioPlayer: AVAudioPlayer?
     
+    var dragOffset: CGFloat
+    
     var body: some View {
         ZStack(alignment: .bottom) {
                 Color.backgroundSecondary.ignoresSafeArea()
@@ -221,6 +223,10 @@ struct TranslateResultSection: View {
                             .toolbar(.hidden, for: .tabBar)
                     }
                     .padding(.top, 1)
+                    .offset(y: dragOffset * 0.65)
+                    .opacity(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 260.0))))
+                    .scaleEffect(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 900.0))), anchor: .top)
+                    .animation(.interactiveSpring(response: 0.25, dampingFraction: 0.82), value: dragOffset)
                 }
                 .safeAreaPadding(.top)
                 .scrollIndicators(.hidden)
@@ -356,3 +362,4 @@ struct TranslateResultSection: View {
         HapticManager.shared.playExplosionHaptic()
     }
 }
+

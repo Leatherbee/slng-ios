@@ -14,10 +14,11 @@ struct TranslateInputSection: View {
     var textNamespace: Namespace.ID
     var adjustFontSizeDebounced: () -> Void
     
-    @FocusState private var isKeyboardActive: Bool
+    @FocusState.Binding var isKeyboardActive: Bool
     @Binding var shouldPlaySequentialAnimation: Bool
     @Binding var dynamicTextStyle: Font.TextStyle
-    
+    var dragOffset: CGFloat
+        
     var body: some View {
         VStack {
             Spacer()
@@ -93,21 +94,39 @@ struct TranslateInputSection: View {
             }
         }
         .overlay(alignment: .bottom) {
-            RecordButton(
-                isRecording: $viewModel.isRecording,
-                onStart: { viewModel.startRecording() },
-                onStopAndTranscribe: { viewModel.stopRecordingAndTranscribe() },
-                audioLevel: viewModel.audioLevel
-            )
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(.bottom, 40)
-            .zIndex(1)
-            .accessibilityLabel("Hold to speak")
+            if !isKeyboardActive {
+                RecordButton(
+                    isRecording: $viewModel.isRecording,
+                    onStart: { viewModel.startRecording() },
+                    onStopAndTranscribe: { viewModel.stopRecordingAndTranscribe() },
+                    audioLevel: viewModel.audioLevel
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.bottom, 40)
+                .zIndex(1)
+                .accessibilityLabel("Hold to speak")
+            }
         }
         .padding()
         .contentShape(Rectangle())
         .onTapGesture { UIApplication.shared.dismissKeyboard() }
-        .background(Color.backgroundPrimary.ignoresSafeArea())
+        .background(
+            Color.backgroundPrimary
+                .ignoresSafeArea()
+                .onTapGesture {
+                    UIApplication.shared.dismissKeyboard()
+                }
+        )
+        .offset(y: dragOffset * 0.65)
+        .opacity(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 260.0))))
+        .scaleEffect(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 900.0))), anchor: .top)
+        .animation(.interactiveSpring(response: 0.25, dampingFraction: 0.82), value: dragOffset)
+    }
+}
+
+extension View {
+    func endEditing() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

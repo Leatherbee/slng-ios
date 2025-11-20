@@ -11,11 +11,9 @@ struct SettingsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            
-            // MARK: - Custom Header (Large Title + X Button)
             HStack(alignment: .center) {
                 Text("Settings")
-                    .font(.system(size: 34, weight: .bold, design: .serif)) // Large title
+                    .font(.system(size: 34, weight: .bold, design: .serif))
                     .foregroundStyle(.primary)
                 
                 Spacer()
@@ -40,17 +38,19 @@ struct SettingsView: View {
             .padding(.bottom, 8)
             .background(Color(AppColor.Background.secondary))
             
-            
-            // MARK: - Actual Settings List
             List {
                 Section {
                     HStack {
+                        Image(systemName: "speaker.wave.2")
                         Text("Sound Effect")
+                        Spacer()
                         Toggle("", isOn: .constant(true))
                     }
                     
                     HStack {
+                        Image(systemName: "circle.dotted.and.circle")
                         Text("Motion")
+                        Spacer()
                         Toggle("", isOn: .constant(true))
                     }
                     
@@ -80,6 +80,14 @@ struct SettingsView: View {
                     HStack {
                         Image(systemName: "person")
                         Text("About")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                    }
+                    HStack {
+                        Image(systemName: "star")
+                        Text("Rate the App")
+                        Spacer()
+                        Image(systemName: "chevron.right")
                     }
                 }
                 .listRowBackground(Color.listRowPrimary)

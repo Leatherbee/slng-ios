@@ -19,6 +19,8 @@ struct TranslateView: View {
     @State private var fontSizeWorkItem: DispatchWorkItem?
     @AppStorage("hasRequestedSpeechMic", store: UserDefaults.shared) private var hasRequestedSpeechMic = false
     
+    @FocusState private var isKeyboardActive: Bool
+    
     @State private var showSettings: Bool = false
     @State private var dragOffset: CGFloat = 0
     
@@ -36,8 +38,9 @@ struct TranslateView: View {
                 contentSection
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .offset(y: showSettings ? 55.0 : 0)
-            .opacity(showSettings ? 0 : (1 - min(1.0, dragOffset / 220.0)))
+//            .offset(y: showSettings ? 55.0 : 0)
+            .offset(y: showSettings ? UIScreen.main.bounds.height * 0.9 : dragOffset * 0.45)
+            .opacity(showSettings ? 0 : (1 - min(1.0, dragOffset / 420.0)))
             .animation(curtainEase, value: showSettings)
             .background(hasShownTranslateResult ? AppColor.Background.secondary : AppColor.Background.primary)
             .overlay(alignment: .top) {
@@ -55,7 +58,7 @@ struct TranslateView: View {
                 .offset(
                     y: showSettings
                         ? UIScreen.main.bounds.height - 60
-                        : dragOffset * 1.05   
+                        : dragOffset * 1.05
                 )
                 .animation(.interactiveSpring(response: 0.28, dampingFraction: 0.85), value: dragOffset)
             }
@@ -85,7 +88,7 @@ struct TranslateView: View {
                     .offset(
                         y: showSettings
                         ? 0
-                        : max(-settingsOverlayStart + dragOffset * 0.85,
+                        : max(-settingsOverlayStart + dragOffset * 1.1,
                               -settingsOverlayStart)
                     )
                     .opacity(
@@ -104,8 +107,9 @@ struct TranslateView: View {
             }
         }
         .simultaneousGesture(
-            DragGesture(minimumDistance: 0)
+            DragGesture(minimumDistance: 8)
                 .onChanged { value in
+                    guard !isKeyboardActive else { return }
                     guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
                     let raw = value.translation.height
                     if raw > 0 {
@@ -113,14 +117,18 @@ struct TranslateView: View {
                     }
                 }
                 .onEnded { value in
+                    guard !isKeyboardActive else {
+                        UIApplication.shared.dismissKeyboard()
+                        return
+                    }
                     guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
                     let passed = value.translation.height > 120.0
                     
                     if passed {
-                        withAnimation(.interactiveSpring(response: 0.26, dampingFraction: 0.88)) {
-                            dragOffset = 140
+                        withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.78)) {
+                            dragOffset = 240
                         }
-                        withAnimation(curtainEase.delay(0.02)) {
+                        withAnimation(curtainEase.delay(0.05)) {
                             showSettings = true
                         }
                     } else {
@@ -185,8 +193,10 @@ struct TranslateView: View {
                 viewModel: viewModel,
                 textNamespace: textNamespace,
                 adjustFontSizeDebounced: adjustFontSizeDebounced,
+                isKeyboardActive: $isKeyboardActive,
                 shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
-                dynamicTextStyle: $dynamicTextStyle
+                dynamicTextStyle: $dynamicTextStyle,
+                dragOffset: dragOffset
             )
             .background(Color.backgroundPrimary)
             .onAppear {
@@ -199,7 +209,8 @@ struct TranslateView: View {
                 textNamespace: textNamespace,
                 adjustFontSizeDebounced: adjustFontSizeDebounced,
                 shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
-                dynamicTextStyle: $dynamicTextStyle
+                dynamicTextStyle: $dynamicTextStyle,
+                dragOffset: dragOffset
             )
             .background(Color.backgroundSecondary)
             .onAppear {
@@ -216,7 +227,7 @@ struct TranslateView: View {
     
     private func softened(_ t: CGFloat) -> CGFloat {
         let v = max(0, t)
-        return pow(v, 0.82)   // smoothest curve
+        return pow(v, 0.82)
     }
     
     private func adjustFontSizeDebounced() {
@@ -260,10 +271,14 @@ struct BlinkingCursor: View {
 
 extension UIApplication {
     func dismissKeyboard() {
-        sendAction(#selector(UIResponder.resignFirstResponder),
-                   to: nil,
-                   from: nil,
-                   for: nil)
+        sendAction(
+            #selector(
+                UIResponder.resignFirstResponder
+            ),
+            to: nil,
+            from: nil,
+            for: nil
+        )
     }
 }
 

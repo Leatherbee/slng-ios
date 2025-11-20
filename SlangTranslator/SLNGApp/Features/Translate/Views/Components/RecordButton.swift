@@ -42,7 +42,7 @@ struct RecordButton: View {
                 if !isRecording {
                     Circle()
                         .fill(Color.gray.opacity(0.0001))
-                        .frame(width: 300, height: 300)
+                        .frame(width: 200, height: 200)
                         .overlay(
                             Circle().stroke(Color.gray.opacity(0.01), lineWidth: 1)
                         )
