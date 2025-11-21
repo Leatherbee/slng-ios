@@ -11,6 +11,7 @@ struct TranslateInputSection: View {
     @ObservedObject var viewModel: TranslateViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.accessibilityReduceMotion) var reduceMotion
+    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
     var textNamespace: Namespace.ID
     var adjustFontSizeDebounced: () -> Void
     
@@ -57,7 +58,7 @@ struct TranslateInputSection: View {
                         .accessibilityHint("Type a slang word you want to translate")
                         .accessibilityHidden(false)
                     
-                    if !isKeyboardActive && !reduceMotion && !viewModel.isRecording && !viewModel.isTranscribing {
+                    if !isKeyboardActive && !(reduceMotion || reduceMotionEnabled) && !viewModel.isRecording && !viewModel.isTranscribing {
                         BlinkingCursor()
                             .padding(.horizontal, -3)
                     }

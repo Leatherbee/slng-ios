@@ -18,6 +18,7 @@ struct PrimaryButton<Label: View>: View {
     
     @State private var isPressed: Bool = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
     
     init(
         buttonColor: Color,
@@ -41,12 +42,20 @@ struct PrimaryButton<Label: View>: View {
             SoundPlayer.play("button-2.wav")
             action()
         } label: {
-            label()
-                .foregroundColor(textColor)
-                .background(buttonColor)
-                .clipShape(Capsule())
-                .scaleEffect(isPressed ? 1.05 : 1.0)
-                .contentShape(Capsule())
+            Group {
+                if #available(iOS 26, *) {
+                    label()
+                        .foregroundColor(textColor)
+                        .glassEffect(.regular.tint(buttonColor).interactive())
+                } else {
+                    label()
+                        .foregroundColor(textColor)
+                        .background(buttonColor)
+                }
+            }
+            .clipShape(Capsule())
+            .scaleEffect(isPressed ? 1.05 : 1.0)
+            .contentShape(Capsule())
         }
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
@@ -63,14 +72,14 @@ struct PrimaryButton<Label: View>: View {
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in
                     guard !isPressed else { return }
-                    withAnimation(reduceMotion ?
+                    withAnimation((reduceMotion || reduceMotionEnabled) ?
                         .default :
                             .spring(response: 0.2, dampingFraction: 0.5)) {
                                 isPressed = true
                             }
                 }
                 .onEnded { _ in
-                    withAnimation(reduceMotion ?
+                    withAnimation((reduceMotion || reduceMotionEnabled) ?
                         .default :
                             .spring(response: 0.3, dampingFraction: 0.6)) {
                                 isPressed = false
@@ -79,6 +88,8 @@ struct PrimaryButton<Label: View>: View {
         )
     }
 }
+
+ 
 
 
 

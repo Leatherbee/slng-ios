@@ -7,7 +7,6 @@
 import SwiftUI
 import Observation
 
-@MainActor
 @Observable
 final class Router {
     // MARK: Navigation state
@@ -30,6 +29,20 @@ final class Router {
         path.append(route)
     }
 
+    func go(_ name: String) {
+        let key = name.lowercased()
+        switch key {
+        case "languagesettingview", "language":
+            path.append(.settingsLanguage)
+        case "themesettingview", "theme":
+            path.append(.settingsTheme)
+        case "aboutview", "about":
+            path.append(.settingsAbout)
+        default:
+            break
+        }
+    }
+
     func goBack() {
         _ = path.popLast()
     }
@@ -42,6 +55,26 @@ final class Router {
     func goToMainTab() { reset(to: .mainTab) }
 }
 
+struct RouterStack<Content: View>: View {
+    @State private var router: Router
+    private let content: () -> Content
+
+    init(router: Router = Router(), @ViewBuilder content: @escaping () -> Content) {
+        _router = State(initialValue: router)
+        self.content = content
+    }
+
+    var body: some View {
+        NavigationStack(path: $router.path) {
+            content()
+                .environment(router)
+        }
+        .navigationDestination(for: Route.self) { route in
+            router.destination(for: route)
+        }
+    }
+}
+
 // MARK: - Destination builder
 extension Router {
     @ViewBuilder
@@ -51,6 +84,12 @@ extension Router {
             MainTabbedView()
         case .onboarding:
             OnboardingView()
+        case .settingsLanguage:
+            LanguageSettingView()
+        case .settingsTheme:
+            ThemeSettingView()
+        case .settingsAbout:
+            AboutView()
         }
     }
 }
@@ -66,4 +105,7 @@ extension Router: NavigationRouting {}
 public enum Route: Hashable {
     case onboarding
     case mainTab
+    case settingsLanguage
+    case settingsTheme
+    case settingsAbout
 }

@@ -7,7 +7,12 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(Router.self) private var route
     @Binding var showSettings: Bool
+    @AppStorage("selectedTheme", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var selectedThemeRaw: String = ThemeOption.light.rawValue
+    @AppStorage("hapticEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var hapticEnabled: Bool = true
+    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
+    enum ThemeOption: String { case dark, light }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -48,62 +53,64 @@ struct SettingsView: View {
                             Text("Sound Effect")
                             Spacer()
                             Toggle("", isOn: .constant(true))
+                                .tint(.green)
                         }
+                        .contentShape(.rect)
                     }
-                    .buttonStyle(.plain)
+                    
+                    HStack {
+                        Image(systemName: "circle.dotted.and.circle")
+                        Text("Reduce Motion")
+                        Spacer()
+                        Toggle("", isOn: $reduceMotionEnabled)
+                            .tint(.green)
+                    }
+                    .contentShape(.rect)
+                    
                     
                     Button {
-                        
-                    } label: {
-                        HStack {
-                            Image(systemName: "circle.dotted.and.circle")
-                            Text("Motion")
-                            Spacer()
-                            Toggle("", isOn: .constant(true))
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    
-                    Button {
-                        
+                        route.go(to: .settingsLanguage)
                     } label: {
                         HStack {
                             Image(systemName: "globe")
                             Text("Language")
                         }
+                        .contentShape(.rect)
                     }
-                    .buttonStyle(.plain)
+                    
                    
-                    Button {
-                        
-                    } label: {
-                        HStack {
-                            Image(systemName: "swirl.circle.righthalf.filled")
-                            Text("Theme")
+                    HStack {
+                        Image(systemName: "swirl.circle.righthalf.filled")
+                        Text("Theme")
+                        Spacer()
+                        Picker("", selection: $selectedThemeRaw) {
+                            Text("Light").tag(ThemeOption.light.rawValue)
+                            Text("Dark").tag(ThemeOption.dark.rawValue)
                         }
+                        .pickerStyle(.segmented)
+                        .frame(maxWidth: 180)
                     }
-                    .buttonStyle(.plain)
+                    .contentShape(.rect)
+                    
+                }
+                .listRowBackground(Color.listRowPrimary)
+                
+                Section {
+                    HStack {
+                        Image(systemName: "water.waves")
+                        Text("Haptic")
+                        Spacer()
+                        Toggle("", isOn: $hapticEnabled)
+                            .tint(.green)
+                    }
+                    .contentShape(.rect)
+                    
                 }
                 .listRowBackground(Color.listRowPrimary)
                 
                 Section {
                     Button {
-                        print("tappeed")
-                    } label: {
-                        HStack {
-                            Image(systemName: "water.waves")
-                            Text("Haptic")
-                            Spacer()
-                            Toggle("", isOn: .constant(true))
-                        }
-                    }
-                    .buttonStyle(.plain)
-                }
-                .listRowBackground(Color.listRowPrimary)
-                
-                Section {
-                    Button {
-                        
+                        route.go(to: .settingsAbout)
                     } label: {
                         HStack {
                             Image(systemName: "person")
@@ -111,11 +118,12 @@ struct SettingsView: View {
                             Spacer()
                             Image(systemName: "chevron.right")
                         }
+                        .contentShape(.rect)
                     }
-                    .buttonStyle(.plain)
                     
                     Button {
-                        
+                        guard let url = URL(string: "https://apps.apple.com/id/app/slng/id6754663192?action=write-review") else { return }
+                        UIApplication.shared.open(url)
                     } label: {
                         HStack {
                             Image(systemName: "star")
@@ -123,8 +131,9 @@ struct SettingsView: View {
                             Spacer()
                             Image(systemName: "chevron.right")
                         }
+                        .contentShape(.rect)
                     }
-                    .buttonStyle(.plain)
+                    
                 }
                 .listRowBackground(Color.listRowPrimary)
             }
@@ -138,4 +147,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView(showSettings: .constant(true))
+        .environment(Router())
 }

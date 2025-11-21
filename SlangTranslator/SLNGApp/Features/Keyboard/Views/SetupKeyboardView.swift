@@ -10,7 +10,7 @@ import Lottie
 
 struct SetupKeyboardView: View {
     @ObservedObject var viewModel: KeyboardStatusViewModel
-    @AppStorage("hasOpenKeyboardSetting", store: UserDefaults.shared) private var hasOpenKeyboardSetting = false
+    @AppStorage("hasOpenKeyboardSetting", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var hasOpenKeyboardSetting = false
     var onReturnFromSettings: () -> Void
     @Environment(\.colorScheme) var colorScheme
 
@@ -27,11 +27,9 @@ struct SetupKeyboardView: View {
                     .font(.footnote)
                     .foregroundStyle(AppColor.Text.secondary)
                 
-//                LottieAnimationUIView(animationName: "keyboard-setup", width: 242, height: 526)
                 LottieView(animation: .named(colorScheme == .light ? "keyboard-setup-light" : "keyboard-setup-dark"))
                     .looping()
                     .accessibilityHidden(true)
-//                    .frame(width: 242, height: 526)
                 
                 Spacer()
                 
@@ -40,8 +38,7 @@ struct SetupKeyboardView: View {
             .padding(.horizontal,20)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            //action sheet
-            VStack(){
+            VStack {
                 Spacer()
                 VStack(spacing: 10){
                     Button{
@@ -81,10 +78,11 @@ struct SetupKeyboardView: View {
     }
     
     private func checkKeyboardStatus() {
-        if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") {
+        viewModel.updateKeyboardStatus()
+        
+        if viewModel.isFullAccessEnabled {
             hasOpenKeyboardSetting = true
             onReturnFromSettings()
-            viewModel.updateKeyboardStatus()
         }
     }
     

@@ -100,6 +100,7 @@
 				Shared/Domain/Repositories/TranslationRepository.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
+				SLNGApp/Component/Haptic.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
 			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
@@ -120,6 +121,7 @@
 				Shared/Domain/Repositories/TranslationRepository.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
+				SLNGApp/Component/Haptic.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
 			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
