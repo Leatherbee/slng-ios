@@ -8,6 +8,11 @@
 import UIKit
 
 public enum Haptics {
+    public static var isEnabled: Bool {
+        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+        if defaults.object(forKey: "hapticEnabled") == nil { return true }
+        return defaults.bool(forKey: "hapticEnabled")
+    }
     // MARK: - Private Properties
     private static var lastFiredAt: [String: TimeInterval] = [:]
     private static let throttleInterval: TimeInterval = 0.3 // 300ms
@@ -86,6 +91,7 @@ public enum Haptics {
     
     // MARK: - Private Methods
     private static func fireThrottled(_ key: String, action: @escaping () -> Void) {
+        guard isEnabled else { return }
         DispatchQueue.main.async {
             let now = Date().timeIntervalSince1970
             let lastFired = lastFiredAt[key] ?? 0

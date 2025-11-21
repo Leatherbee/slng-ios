@@ -27,6 +27,7 @@ struct LanguageSettingView: View {
                     .buttonStyle(.plain)
                 }
             }
+            .background(Color(AppColor.Background.secondary))
         }
     }
 }

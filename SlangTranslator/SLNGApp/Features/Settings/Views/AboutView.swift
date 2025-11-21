@@ -10,6 +10,8 @@ import SwiftUI
 struct AboutView: View {
     var body: some View {
         Text("This is the about page")
+            .background(Color(AppColor.Background.secondary))
+
     }
 }
 

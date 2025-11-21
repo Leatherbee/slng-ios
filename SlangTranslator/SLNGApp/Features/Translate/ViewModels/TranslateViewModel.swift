@@ -80,7 +80,7 @@ final class TranslateViewModel: ObservableObject {
             self.isInitializing = false
         }
 
-        let baseURLString = "https://slng-backend.vercel.app"
+        let baseURLString = "https://api.slng.space"
         if let url = URL(string: baseURLString) {
             let sttRepo = SpeechToTextRepositoryImpl(baseURL: url)
             let sttUseCase = TranscribeSpeechUseCaseImpl(repository: sttRepo)

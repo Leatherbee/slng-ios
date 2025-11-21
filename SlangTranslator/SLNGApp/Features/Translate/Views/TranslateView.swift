@@ -10,6 +10,7 @@ import UIKit
 
 struct TranslateView: View {
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
     @StateObject private var viewModel = TranslateViewModel()
     @Namespace private var textNamespace
     
@@ -17,12 +18,16 @@ struct TranslateView: View {
     @State private var shouldPlaySequentialAnimation = false
     @State private var hasShownTranslateResult: Bool = false
     @State private var fontSizeWorkItem: DispatchWorkItem?
-    @AppStorage("hasRequestedSpeechMic", store: UserDefaults.shared) private var hasRequestedSpeechMic = false
+    @AppStorage("hasRequestedSpeechMic", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var hasRequestedSpeechMic = false
+    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
     
     @FocusState private var isKeyboardActive: Bool
     
     @State private var showSettings: Bool = false
     @State private var dragOffset: CGFloat = 0
+    @State private var settingsRouter = Router()
+    @State private var showDragHint: Bool = false
+    @State private var dragHintTimer: Timer?
     
     private let settingsOverlayStart: CGFloat = 800
     private let settingsContentRevealThreshold: CGFloat = 120
@@ -47,11 +52,17 @@ struct TranslateView: View {
                     RoundedRectangle(cornerRadius: 20)
                         .frame(width: 40, height: 4)
                         .foregroundStyle(AppColor.Button.primary)
+                        .offset(y: showDragHint ? 6 : 0)
+                        .scaleEffect(showDragHint ? 1.1 : 1.0)
+                        .animation((reduceMotion || reduceMotionEnabled) ? nil : .spring(response: 0.55, dampingFraction: 0.7), value: showDragHint)
                     
                     Text("Settings")
                         .font(.system(.footnote, design: .default, weight: .bold))
                         .foregroundStyle(.secondary)
-                        .opacity(1)
+                        .opacity(showDragHint ? 0.9 : 1)
+                        .offset(y: showDragHint ? 6 : 0)
+                        .scaleEffect(showDragHint ? 0.9 : 1.0)
+                        .animation((reduceMotion || reduceMotionEnabled) ? nil : .spring(response: 0.5, dampingFraction: 0.8), value: showDragHint)
                 }
                 .allowsHitTesting(false)
                 .offset(
@@ -80,7 +91,7 @@ struct TranslateView: View {
                                    value: dragOffset)
                     }
                     
-                    NavigationStack {
+                    RouterStack(router: settingsRouter) {
                         SettingsView(showSettings: $showSettings)
                     }
                     .transition(.move(edge: .top))
@@ -144,6 +155,15 @@ struct TranslateView: View {
                 viewModel.prewarmPermissions()
                 hasRequestedSpeechMic = true
             }
+            if dragHintTimer == nil {
+                dragHintTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+                    triggerDragHint()
+                }
+            }
+        }
+        .onDisappear {
+            dragHintTimer?.invalidate()
+            dragHintTimer = nil
         }
         .onChange(of: showSettings) { _, isShowing in
             if !isShowing {
@@ -252,6 +272,20 @@ struct TranslateView: View {
         
         fontSizeWorkItem = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: workItem)
+    }
+
+    private func triggerDragHint() {
+        guard !showSettings else { return }
+        guard !(viewModel.isRecording || viewModel.isTranscribing) else { return }
+        guard !(reduceMotion || reduceMotionEnabled) else { return }
+        withAnimation(.interactiveSpring(response: 0.6, dampingFraction: 0.7)) {
+            showDragHint = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+            withAnimation(.interactiveSpring(response: 0.6, dampingFraction: 0.7)) {
+                showDragHint = false
+            }
+        }
     }
 }
 

@@ -14,6 +14,7 @@ import FirebaseAnalytics
 struct SlangTranslatorApp: App {
     @State private var router = Router()
     @AppStorage("hasOnboarded") private var hasOnboarded = false
+    @AppStorage("selectedTheme", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var selectedThemeRaw: String = "light"
     let container = SharedModelContainer.shared.container
     
     
@@ -25,11 +26,14 @@ struct SlangTranslatorApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if hasOnboarded{
-                MainTabbedView()
-            } else{
-                OnboardingView()
+            Group {
+                if hasOnboarded{
+                    MainTabbedView()
+                } else{
+                    OnboardingView()
+                }
             }
+            .preferredColorScheme(selectedThemeRaw == "dark" ? .dark : .light)
         }
         .modelContainer(container)
     }

@@ -10,10 +10,11 @@ import SwiftUI
 struct KeyboardView: View {
     @StateObject private var viewModel = KeyboardStatusViewModel()
     
+    var isOnboarding: Bool = false
     var onReturnFromSettings: () -> Void
     var body: some View {
         Group{
-            if viewModel.isFullAccessEnabled {
+            if viewModel.isKeyboardEnabled && !isOnboarding {
                 KeyboardSettingView()
                     .accessibilityLabel("Keyboard settings")
                     .accessibilityHint("Manage keyboard translator preferences and options")

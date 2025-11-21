@@ -5,6 +5,6 @@
 	<key>APIKey</key>
 	<string>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</string>
 	<key>BackendBaseURL</key>
-	<string>https://slng-backend.vercel.app</string>
+	<string>https://api.slng.space</string>
 </dict>
 </plist>
