@@ -67,7 +67,6 @@ final class TranslateViewModel: ObservableObject {
     
     private func initializeDependencies() async {
         let context = SharedModelContainer.shared.container.mainContext
-        let apiKey = Bundle.main.infoDictionary?[("APIKey")] as? String ?? ""
         let baseURLString = Bundle.main.infoDictionary?["BackendBaseURL"] as? String ?? "https://api.slng.space"
         guard let url = URL(string: baseURLString) else {
             await MainActor.run { self.errorMessage = "Backend base URL invalid." }
