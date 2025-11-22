@@ -22,7 +22,7 @@ struct RecordButton: View {
     @State private var dripPlayer: AVAudioPlayer?
     @State private var releasePlayer: AVAudioPlayer?
     @State private var pressStartAt: Date?
-    private let minHoldDuration: TimeInterval = 2.0
+    private let minHoldDuration: TimeInterval = 1.4
     
     var body: some View {
         GeometryReader { geometry in
