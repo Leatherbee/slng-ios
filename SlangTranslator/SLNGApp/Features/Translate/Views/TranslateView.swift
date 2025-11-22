@@ -45,7 +45,7 @@ struct TranslateView: View {
             }
             .offset(y: showSettings ? UIScreen.main.bounds.height * 0.9 : dragOffset * 0.45)
             .opacity(showSettings ? 0 : (1 - min(1.0, dragOffset / 420.0)))
-            .animation(curtainEase, value: showSettings)
+//            .animation(curtainEase, value: showSettings)
             .background(viewModel.isTranslated ? AppColor.Background.secondary : AppColor.Background.primary)
             .overlay(alignment: .top) {
                 VStack(spacing: 8) {
@@ -75,10 +75,10 @@ struct TranslateView: View {
                 .allowsHitTesting(false)
                 .offset(
                     y: showSettings
-                        ? UIScreen.main.bounds.height - 60
-                        : dragOffset * 1.05
+                        ? UIScreen.main.bounds.height
+                        : dragOffset
                 )
-                .animation(.interactiveSpring(response: 0.28, dampingFraction: 0.85), value: dragOffset)
+//                .animation(.interactiveSpring(response: 0.28, dampingFraction: 0.85), value: dragOffset)
             }
                         
             if (showSettings || dragOffset > 0) && !(viewModel.isRecording || viewModel.isTranscribing) {
@@ -89,13 +89,13 @@ struct TranslateView: View {
                                 .frame(
                                     height: showSettings
                                     ? geo.size.height
-                                    : dragOffset * 1.05 + safeTop - 16
+                                    : dragOffset
                                 )
                             
                             Spacer()
                         }
                         .ignoresSafeArea()
-                        .animation(.interactiveSpring(response: 0.28, dampingFraction: 0.85),
+                        .animation(.interactiveSpring(response: 0.50, dampingFraction: 0.85),
                                    value: dragOffset)
                     }
                     
@@ -106,7 +106,7 @@ struct TranslateView: View {
                     .offset(
                         y: showSettings
                         ? 0
-                        : max(-settingsOverlayStart + dragOffset * 1.1,
+                        : max(-settingsOverlayStart + dragOffset,
                               -settingsOverlayStart)
                     )
                     .opacity(
@@ -115,7 +115,7 @@ struct TranslateView: View {
                         : (
                             dragOffset > settingsContentRevealThreshold
                             ? min(1.0,
-                                  (dragOffset - settingsContentRevealThreshold) / 90.0)
+                                  (dragOffset - settingsContentRevealThreshold) / 600)
                             : 0
                         )
                     )
@@ -129,10 +129,7 @@ struct TranslateView: View {
                 .onChanged { value in
                     guard !isKeyboardActive else { return }
                     guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
-                    let raw = value.translation.height
-                    if raw > 0 {
-                        dragOffset = softened(raw)
-                    }
+                    dragOffset = softened(value.translation.height)
                 }
                 .onEnded { value in
                     guard !isKeyboardActive else {
@@ -140,21 +137,19 @@ struct TranslateView: View {
                         return
                     }
                     guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
-                    let passed = value.translation.height > 120.0
-                    
-                    if passed {
-                        withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.78)) {
-                            dragOffset = 240
-                        }
-                        withAnimation(curtainEase.delay(0.05)) {
+                    let shouldOpen = value.translation.height > 120
+                    if shouldOpen {
+                        withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.85)) {
                             showSettings = true
+                            dragOffset = 10
                         }
                     } else {
-                        withAnimation(.interactiveSpring(response: 0.32, dampingFraction: 0.82)) {
+                        withAnimation(.interactiveSpring(response: 0.3, dampingFraction: 0.85)) {
                             dragOffset = 0
                         }
                     }
                 }
+            
         )
         
         .animation(.easeInOut(duration: 0.25), value: viewModel.isTranslated)
