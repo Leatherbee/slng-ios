@@ -18,9 +18,12 @@ class KeyboardStatusViewModel: ObservableObject {
     
     func updateKeyboardStatus() {
         let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
-        self.isFullAccessEnabled = defaults.bool(forKey: "keyboardFullAccess")
+        let fullAccess = defaults.bool(forKey: "keyboardFullAccess")
         let hasSetup = defaults.bool(forKey: "hasSetupKeyboard")
         let hasOpened = defaults.integer(forKey: "analytics/.keyboard_open/.count") > 0
-        self.isKeyboardEnabled = hasSetup || hasOpened
+        DispatchQueue.main.async {
+            self.isFullAccessEnabled = fullAccess
+            self.isKeyboardEnabled = hasSetup || hasOpened
+        }
     }
 }

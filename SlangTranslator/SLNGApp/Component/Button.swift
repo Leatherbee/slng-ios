@@ -53,9 +53,9 @@ struct PrimaryButton<Label: View>: View {
                         .background(buttonColor)
                 }
             }
-            .clipShape(Capsule())
+            .clipShape(.capsule)
             .scaleEffect(isPressed ? 1.05 : 1.0)
-            .contentShape(Capsule())
+            .contentShape(.capsule)
         }
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)

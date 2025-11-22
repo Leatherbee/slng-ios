@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import FirebaseAnalytics
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
@@ -12,6 +13,7 @@ struct SettingsView: View {
     @AppStorage("selectedTheme", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var selectedThemeRaw: String = ThemeOption.light.rawValue
     @AppStorage("hapticEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var hapticEnabled: Bool = true
     @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
+    @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
     enum ThemeOption: String { case dark, light }
     
     var body: some View {
@@ -45,18 +47,14 @@ struct SettingsView: View {
             
             List {
                 Section {
-                    Button {
-                        
-                    } label: {
-                        HStack {
-                            Image(systemName: "speaker.wave.2")
-                            Text("Sound Effect")
-                            Spacer()
-                            Toggle("", isOn: .constant(true))
-                                .tint(.green)
-                        }
-                        .contentShape(.rect)
+                    HStack {
+                        Image(systemName: "speaker.wave.2")
+                        Text("Sound Effect")
+                        Spacer()
+                        Toggle("", isOn: $soundEffectEnabled)
+                            .tint(.green)
                     }
+                    .contentShape(.rect)
                     
                     HStack {
                         Image(systemName: "circle.dotted.and.circle")
@@ -98,7 +96,8 @@ struct SettingsView: View {
                 
                 Section {
                     Button {
-                        route.go(to: .settingsAbout)
+                        guard let url = URL(string: "https://slng.space/") else { return }
+                        UIApplication.shared.open(url)
                     } label: {
                         HStack {
                             Image(systemName: "person")
@@ -128,6 +127,12 @@ struct SettingsView: View {
             .scrollIndicators(.hidden)
             .scrollContentBackground(.hidden)
             .background(Color(AppColor.Background.secondary))
+            .onChange(of: soundEffectEnabled) { oldValue, newValue in
+                Analytics.logEvent("settings_changed", parameters: [
+                    "setting_name": "sound_effect",
+                    "state": newValue ? "enabled" : "disabled"
+                ])
+            }
         }
         .background(Color(AppColor.Background.secondary))
     }

@@ -33,6 +33,7 @@ struct TranslateResultSection: View {
     @State private var showBottomUI = false
     @State private var moveUp: Bool = false
     @State private var audioPlayer: AVAudioPlayer?
+    @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
     
     var dragOffset: CGFloat
     
@@ -186,7 +187,7 @@ struct TranslateResultSection: View {
                                                 .background(AppColor.Button.primary)
                                             }
                                         }
-                                        .clipShape(Capsule())
+                                        .clipShape(.capsule)
                                     }
                                     .accessibilityLabel(viewModel.isDetectedSlangShown ? "Close detected slang" : "Show detected slang")
                                     .accessibilityHint("Toggle the detected slang list")
@@ -366,6 +367,7 @@ struct TranslateResultSection: View {
     }
     
     private func playBurstSound() {
+        guard soundEffectEnabled else { return }
         guard let url = Bundle.main.url(forResource: "whoosh", withExtension: "mp3") else { return }
         
         do {

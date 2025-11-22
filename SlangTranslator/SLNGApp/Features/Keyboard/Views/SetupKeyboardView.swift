@@ -79,10 +79,11 @@ struct SetupKeyboardView: View {
     
     private func checkKeyboardStatus() {
         viewModel.updateKeyboardStatus()
-        
-        if viewModel.isFullAccessEnabled {
-            hasOpenKeyboardSetting = true
-            onReturnFromSettings()
+        DispatchQueue.main.async {
+            if viewModel.isFullAccessEnabled {
+                hasOpenKeyboardSetting = true
+                onReturnFromSettings()
+            }
         }
     }
     
