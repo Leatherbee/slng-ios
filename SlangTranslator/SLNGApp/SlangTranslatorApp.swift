@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import SwiftData
 import Firebase
 import FirebaseAnalytics
@@ -22,6 +23,11 @@ struct SlangTranslatorApp: App {
         let container = SharedModelContainer.shared.container
         let repo = SlangRepositoryImpl(container: container)
         _ = repo.loadAll()
+        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+        if defaults.object(forKey: "selectedTheme") == nil {
+            let style = UIScreen.main.traitCollection.userInterfaceStyle
+            defaults.set(style == .dark ? "dark" : "light", forKey: "selectedTheme")
+        }
     }
     
     var body: some Scene {

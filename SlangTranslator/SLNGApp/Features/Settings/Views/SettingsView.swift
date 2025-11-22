@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UIKit
 import FirebaseAnalytics
 
 struct SettingsView: View {
@@ -135,6 +136,13 @@ struct SettingsView: View {
             }
         }
         .background(Color(AppColor.Background.secondary))
+        .onAppear {
+            let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+            if defaults.object(forKey: "selectedTheme") == nil {
+                let style = UIScreen.main.traitCollection.userInterfaceStyle
+                selectedThemeRaw = style == .dark ? ThemeOption.dark.rawValue : ThemeOption.light.rawValue
+            }
+        }
     }
 }
 
