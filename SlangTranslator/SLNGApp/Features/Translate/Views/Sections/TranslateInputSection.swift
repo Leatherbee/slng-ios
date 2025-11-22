@@ -11,16 +11,15 @@ struct TranslateInputSection: View {
     @ObservedObject var viewModel: TranslateViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.accessibilityReduceMotion) var reduceMotion
+    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
     var textNamespace: Namespace.ID
     var adjustFontSizeDebounced: () -> Void
     
-    @FocusState private var isKeyboardActive: Bool
+    @FocusState.Binding var isKeyboardActive: Bool
     @Binding var shouldPlaySequentialAnimation: Bool
     @Binding var dynamicTextStyle: Font.TextStyle
-    @State private var pulse = false
-    @State private var dragTranslation: CGSize = .zero
-    @State private var isCancelling: Bool = false
-    
+    var dragOffset: CGFloat
+        
     var body: some View {
         VStack {
             Spacer()
@@ -59,7 +58,7 @@ struct TranslateInputSection: View {
                         .accessibilityHint("Type a slang word you want to translate")
                         .accessibilityHidden(false)
                     
-                    if !isKeyboardActive && !reduceMotion && !viewModel.isRecording && !viewModel.isTranscribing {
+                    if !isKeyboardActive && !(reduceMotion || reduceMotionEnabled) && !viewModel.isRecording && !viewModel.isTranscribing {
                         BlinkingCursor()
                             .padding(.horizontal, -3)
                     }
@@ -69,104 +68,67 @@ struct TranslateInputSection: View {
             
             Spacer()
             
-            PrimaryButton(buttonColor: (
-                viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                ? AppColor.Button.secondary
-                : AppColor.Button.primary
-            ), textColor: (
-                (colorScheme == .dark && !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                ? AppColor.Button.Text.primary : .white
-            ), accessibilityLabel: "Translate button"){
-                UIApplication.shared.dismissKeyboard()
-                shouldPlaySequentialAnimation = true
-                viewModel.translate(text: viewModel.inputText)
-            } label : {
-                HStack {
-                    Text("Translate")
-                    Image(systemName: "arrow.right")
+            if !viewModel.isRecording {
+                PrimaryButton(buttonColor: (
+                    viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    ? AppColor.Button.secondary
+                    : AppColor.Button.primary
+                ), textColor: (
+                    (colorScheme == .dark && !viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    ? AppColor.Button.Text.primary : .white
+                ), accessibilityLabel: "Translate button"){
+                    UIApplication.shared.dismissKeyboard()
+                    shouldPlaySequentialAnimation = true
+                    viewModel.translate(text: viewModel.inputText)
+                } label : {
+                    HStack {
+                        Text("Translate")
+                        Image(systemName: "arrow.right")
+                    }
+                    .padding(.vertical, 18)
+                    .font(Font.body.bold())
+                    .frame(maxWidth: 314, minHeight: 60)
                 }
-                .padding(.vertical, 18)
-                .font(Font.body.bold())
-                .frame(maxWidth: 314, minHeight: 60) 
+                .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
+                .accessibilityInputLabels(["Translate button"])
+                .zIndex(10)
             }
-            .disabled(viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isRecording || viewModel.isLoading)
-            .accessibilityInputLabels(["Translate button"])
-            .zIndex(10)
         }
         .overlay(alignment: .bottom) {
-            ZStack {
-                if viewModel.isRecording {
-                    Circle()
-                        .stroke(AppColor.Button.primary.opacity(0.7), lineWidth: 3)
-                        .frame(width: 160, height: 160)
-                        .scaleEffect(pulse ? 1.4 : 1.0)
-                        .opacity(pulse ? 0 : 1)
-                        .animation(.easeOut(duration: 1).repeatForever(autoreverses: false), value: pulse)
-                        .onAppear { pulse = true }
-                        .onDisappear { pulse = false }
-                }
-
-                Circle()
-                    .fill(Color.clear)
-                    .frame(width: 280, height: 280)
-                    .contentShape(.circle)
-                    .opacity(0.001)
-                    .onLongPressGesture(minimumDuration: 0.6, maximumDistance: 50, pressing: { _ in }, perform: {
-                        if !viewModel.isRecording {
-                            viewModel.startRecording()
-                        }
-                    })
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                dragTranslation = value.translation
-                                if viewModel.isRecording {
-                                    isCancelling = dragTranslation.width > 80
-                                }
-                            }
-                            .onEnded { _ in
-                                if viewModel.isRecording {
-                                    if isCancelling {
-                                        viewModel.stopRecording()
-                                    } else {
-                                        viewModel.stopRecordingAndTranscribe()
-                                    }
-                                }
-                                dragTranslation = .zero
-                                isCancelling = false
-                            }
-                    )
-
-                if viewModel.isRecording {
-                    VStack(spacing: 6) {
-                        Circle()
-                            .fill(AppColor.Button.primary)
-                            .frame(width: 14, height: 14)
-                            .shadow(color: AppColor.Button.primary.opacity(0.3), radius: 6)
-                        Text("Recording")
-                            .font(.caption)
-                            .foregroundColor(Color.textDisable)
-                    }
-                }
-
-                if viewModel.isRecording {
-                    HStack {
-                        Spacer()
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(isCancelling ? .red : Color.textDisable)
-                            .font(.title3)
-                            .scaleEffect(isCancelling ? 1.1 : 1.0)
-                            .padding(.trailing, 24)
-                            .opacity(1)
-                    }
-                }
+            if !isKeyboardActive {
+                RecordButton(
+                    isRecording: $viewModel.isRecording,
+                    onStart: { viewModel.startRecording() },
+                    onStopAndTranscribe: { viewModel.stopRecordingAndTranscribe() },
+                    onCancel: { viewModel.stopRecording() },
+                    audioLevel: viewModel.audioLevel
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.bottom, 40)
+                .zIndex(1)
+                .accessibilityLabel("Hold to speak")
             }
-            .accessibilityLabel("Hold to speak")
-            .padding(.bottom, 40)
-            .zIndex(1)
         }
         .padding()
         .contentShape(Rectangle())
         .onTapGesture { UIApplication.shared.dismissKeyboard() }
+        .background(
+            Color.backgroundPrimary
+                .ignoresSafeArea()
+                .onTapGesture {
+                    UIApplication.shared.dismissKeyboard()
+                }
+        )
+        .offset(y: dragOffset * 0.65)
+        .opacity(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 260.0))))
+        .scaleEffect(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 900.0))), anchor: .top)
+        .animation(.interactiveSpring(response: 0.25, dampingFraction: 0.82), value: dragOffset)
     }
 }
+
+extension View {
+    func endEditing() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+

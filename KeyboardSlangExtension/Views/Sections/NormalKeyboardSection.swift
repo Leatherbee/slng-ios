@@ -119,13 +119,9 @@ struct NormalKeyboardSection: View {
         Task {
             withAnimation(.easeInOut(duration: 0.3)) {
                 vm.changeDisplayMode(.explain)
-                vm.isTranslating = true
             }
             try? await Task.sleep(nanoseconds: 150_000_000)
             await vm.translateFromClipboard()
-            withAnimation(.easeInOut(duration: 0.25)) {
-                vm.isTranslating = false
-            }
         }
     }
 }

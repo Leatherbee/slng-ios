@@ -26,7 +26,8 @@ final class ShareTranslateViewModel: ObservableObject {
 
     func translate() async {
         guard !inputText.isEmpty else { return }
-        isLoading = true
+        let hasCache = useCase.peekCache(inputText) != nil
+        isLoading = !hasCache
         errorMessage = nil
 
         do {

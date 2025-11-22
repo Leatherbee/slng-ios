@@ -29,6 +29,8 @@ final class TranslateViewModel: ObservableObject {
     @Published var result: TranslationResult? = nil
     @Published var isRecording: Bool = false
     @Published var isTranscribing: Bool = false
+    @Published var audioLevel: Float = -160
+    @Published var isRecorderUIVisible: Bool = false
     
     private let audioRecorder = AudioRecorderManager()
     private let speechStreamingManager = SpeechStreamingManager()
@@ -65,31 +67,27 @@ final class TranslateViewModel: ObservableObject {
     
     private func initializeDependencies() async {
         let context = SharedModelContainer.shared.container.mainContext
-        let apiKey = Bundle.main.infoDictionary?[("APIKey")] as? String ?? ""
-        let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+        let baseURLString = Bundle.main.infoDictionary?["BackendBaseURL"] as? String ?? "https://api.slng.space"
+        guard let url = URL(string: baseURLString) else {
+            await MainActor.run { self.errorMessage = "Backend base URL invalid." }
+            return
+        }
+        let client = BackendClient(baseURL: url)
+
+        let translationRepository = TranslationRepositoryImpl(client: client, context: context)
         let slangRepository = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
         let translateSentenceUseCase = TranslateSentenceUseCaseImpl(
             translationRepository: translationRepository,
             slangRepository: slangRepository
         )
 
+        let sttRepo = SpeechToTextRepositoryImpl(client: client)
+        let sttUseCase = TranscribeSpeechUseCaseImpl(repository: sttRepo)
+
         await MainActor.run {
             self.translateSentenceUseCase = translateSentenceUseCase
+            self.speechUseCase = sttUseCase
             self.isInitializing = false
-        }
-
-        let baseURLString = "https://slng-backend.vercel.app"
-        if let url = URL(string: baseURLString) {
-            let sttRepo = SpeechToTextRepositoryImpl(baseURL: url)
-            let sttUseCase = TranscribeSpeechUseCaseImpl(repository: sttRepo)
-            await MainActor.run {
-                self.speechUseCase = sttUseCase
-                print("Speech use case initialized with \(url)")
-            }
-        } else {
-            await MainActor.run {
-                self.errorMessage = "STT base URL invalid."
-            }
         }
     }
     
@@ -104,6 +102,11 @@ final class TranslateViewModel: ObservableObject {
                 return
             }
             do {
+                self.audioRecorder.setLevelUpdateHandler { level in
+                    Task { @MainActor in
+                        self.audioLevel = level
+                    }
+                }
                 try self.audioRecorder.start()
                 Task { @MainActor in self.isRecording = true }
                 Analytics.logEvent("permissions_response", parameters: [
@@ -121,6 +124,7 @@ final class TranslateViewModel: ObservableObject {
         do {
             let result = try audioRecorder.stopAndFetchData()
             isRecording = false
+            audioLevel = -160
             guard let speechUseCase else { return }
             isTranscribing = true
             Task {
@@ -146,6 +150,7 @@ final class TranslateViewModel: ObservableObject {
         speechStreamingManager.stop()
         audioRecorder.stop()
         isRecording = false
+        audioLevel = -160
     }
     
     func translate(text: String) {

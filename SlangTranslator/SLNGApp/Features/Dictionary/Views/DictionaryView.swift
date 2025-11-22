@@ -585,7 +585,7 @@ public struct SwiftUIWheelPicker<Item>: View {
             }
             
             // Smooth haptic dengan velocity-based intensity
-            if shouldFeedback {
+            if shouldFeedback && Haptics.isEnabled {
                 let normalizedVelocity = min(selectionVelocity / 15.0, 1.0)
                 let intensity = max(0.2, 1.0 - CGFloat(normalizedVelocity * 0.7))
                 
@@ -620,8 +620,9 @@ public struct SwiftUIWheelPicker<Item>: View {
             proxy.scrollTo(newIndex, anchor: .center)
         }
         
-        // Gentle haptic
-        engine.impactOccurred(intensity: 1)
+            if Haptics.isEnabled {
+                engine.impactOccurred(intensity: 0.6)
+            }
     }
 
     public func scrollToIndex(_ index: Int, animated: Bool = true) {
@@ -644,7 +645,9 @@ public struct SwiftUIWheelPicker<Item>: View {
             }
         }
         
-        engine.impactOccurred(intensity: 0.5)
+        if Haptics.isEnabled {
+            engine.impactOccurred(intensity: 0.5)
+        }
 
         DispatchQueue.main.async {
             snapToNearest(containerCenterY: containerCenterY > 0 ? containerCenterY : 0)

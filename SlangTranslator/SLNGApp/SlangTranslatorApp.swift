@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import SwiftData
 import Firebase
 import FirebaseAnalytics
@@ -14,6 +15,7 @@ import FirebaseAnalytics
 struct SlangTranslatorApp: App {
     @State private var router = Router()
     @AppStorage("hasOnboarded") private var hasOnboarded = false
+    @AppStorage("selectedTheme", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var selectedThemeRaw: String = "light"
     let container = SharedModelContainer.shared.container
     
     
@@ -21,15 +23,23 @@ struct SlangTranslatorApp: App {
         let container = SharedModelContainer.shared.container
         let repo = SlangRepositoryImpl(container: container)
         _ = repo.loadAll()
+        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+        if defaults.object(forKey: "selectedTheme") == nil {
+            let style = UIScreen.main.traitCollection.userInterfaceStyle
+            defaults.set(style == .dark ? "dark" : "light", forKey: "selectedTheme")
+        }
     }
     
     var body: some Scene {
         WindowGroup {
+            Group {
                 if hasOnboarded{
                     MainTabbedView()
                 } else{
                     OnboardingView()
                 }
+            }
+            .preferredColorScheme(selectedThemeRaw == "dark" ? .dark : .light)
         }
         .modelContainer(container)
     }

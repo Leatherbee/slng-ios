@@ -14,7 +14,7 @@ struct OnboardingView: View {
     @State var isSecondPage: Bool = true
     @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 1
     @State var trialKeyboardText: String = ""
-    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
+    @AppStorage("hasSetupKeyboard", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var hasSetupKeyboard = false
     
 
     @FocusState private var focusedField: Bool
@@ -34,13 +34,11 @@ struct OnboardingView: View {
                 OnboardingFourthPage(pageNumber: $pageNumber)
             }
             else if pageNumber==5{
-                KeyboardView {
-                    if hasSetupKeyboard {
-                        withAnimation {
-                            pageNumber = 6
-                        }
-                    } else {
-                        print("Keyboard belum diaktifkan di Settings.")
+                KeyboardView(isOnboarding: true) {
+                    hasSetupKeyboard = true
+                    
+                    withAnimation {
+                        pageNumber = 6
                     }
                 }
             }
@@ -119,7 +117,7 @@ struct OnboardingView: View {
     private var secondPage: some View {
         OnBoardingPage(
             content: {
-                Image(colorScheme == .light ?"SecondOnboardingIllustration" : "SecondOnboardingIllustrationDark")
+                Image(colorScheme == .light ? "SecondOnboardingIllustration" : "SecondOnboardingIllustrationDark")
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: 182, maxHeight: 288)
@@ -195,13 +193,19 @@ struct OnboardingView: View {
                 Spacer()
             }
             
-            Button {
-                @AppStorage("hasOnboarded") var hasOnboarded = false
-                hasOnboarded = true
-                Analytics.logEvent("tutorial_complete", parameters: [
-                    "source": "onboarding"
-                ])
-            } label: {
+            PrimaryButton(
+                buttonColor: AppColor.Button.primary,
+                textColor: AppColor.Button.Text.primary,
+                accessibilityLabel: "Continue",
+                accessibilityHint: "Completes onboarding",
+                action: {
+                    @AppStorage("hasOnboarded") var hasOnboarded = false
+                    hasOnboarded = true
+                    Analytics.logEvent("tutorial_complete", parameters: [
+                        "source": "onboarding"
+                    ])
+                }
+            ) {
                 HStack {
                     Text("Continue")
                     Image(systemName: "arrow.right")
@@ -209,9 +213,6 @@ struct OnboardingView: View {
                 .padding(.vertical, 18)
                 .font(Font.body.bold())
                 .frame(maxWidth: .infinity, minHeight: 60)
-                .foregroundColor(.onboardingTextPrimary)
-                .background(AppColor.Button.primary)
-                .clipShape(RoundedRectangle(cornerRadius: 30))
             }
             .padding(.horizontal, 33)
             .padding(.bottom, 33)
@@ -256,8 +257,7 @@ struct OnBoardingPage<Content: View>: View {
                     action: {
                         if pageNumber < 6 {
                             pageNumber+=1
-                        }
-                        else{
+                        } else {
                             hasOnboarded = true
                             Analytics.logEvent("tutorial_complete", parameters: [
                                 "source": "onboarding"
@@ -269,14 +269,9 @@ struct OnBoardingPage<Content: View>: View {
                         Text("Continue")
                         Image(systemName: "arrow.right")
                     }
-                        .padding(.vertical, 18)
-                        .font(Font.body.bold())
-                        .frame(maxWidth: .infinity, minHeight: 60)
-                        .foregroundColor(.onboardingTextPrimary)
-                        .background(
-                            AppColor.Button.primary
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 30))
+                    .padding(.vertical, 18)
+                    .font(Font.body.bold())
+                    .frame(maxWidth: .infinity, minHeight: 60)
                 }
  
             }

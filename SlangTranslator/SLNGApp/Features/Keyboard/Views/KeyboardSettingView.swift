@@ -83,89 +83,165 @@ struct KeyboardSettingView: View {
                 }
 
                 VStack(spacing: 24) {
-                    VStack(spacing: 4) {
-                        Toggle("Auto Capslock", isOn: $autoCapslock)
-                            .padding(.vertical, 2)
-                            .tint(.green)
-                            .accessibilityIdentifier("KeyboardSettingView.AutoCapslockToggle")
-                            .accessibilityInputLabels(["Auto Caps", "Auto Capitalization"])
-                            .onChange(of: autoCapslock) { _, newValue in
-                                Analytics.logEvent("settings_changed", parameters: [
-                                    "setting_name": "auto_capslock",
-                                    "state": newValue ? "enabled" : "disabled"
-                                ])
+                    Group {
+                        if #available(iOS 26, *) {
+                            VStack(spacing: 4) {
+                                Toggle("Auto Capslock", isOn: $autoCapslock)
+                                    .padding(.vertical, 2)
+                                    .tint(.green)
+                                    .accessibilityIdentifier("KeyboardSettingView.AutoCapslockToggle")
+                                    .accessibilityInputLabels(["Auto Caps", "Auto Capitalization"])
+                                    .onChange(of: autoCapslock) { _, newValue in
+                                        Analytics.logEvent("settings_changed", parameters: [
+                                            "setting_name": "auto_capslock",
+                                            "state": newValue ? "enabled" : "disabled"
+                                        ])
+                                    }
                             }
+                            .padding()
+                            .glassEffect(.regular.tint(Color(.systemGray6)).interactive(), in: .rect(cornerRadius: 16))
+                            .frame(maxWidth: .infinity)
+                        } else {
+                            VStack(spacing: 4) {
+                                Toggle("Auto Capslock", isOn: $autoCapslock)
+                                    .padding(.vertical, 2)
+                                    .tint(.green)
+                                    .accessibilityIdentifier("KeyboardSettingView.AutoCapslockToggle")
+                                    .accessibilityInputLabels(["Auto Caps", "Auto Capitalization"])
+                                    .onChange(of: autoCapslock) { _, newValue in
+                                        Analytics.logEvent("settings_changed", parameters: [
+                                            "setting_name": "auto_capslock",
+                                            "state": newValue ? "enabled" : "disabled"
+                                        ])
+                                    }
+                            }
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(16)
+                            .frame(maxWidth: .infinity)
+                        }
                     }
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(16)
-                    .frame(maxWidth: .infinity)
                     
-                    VStack(alignment: .leading, spacing: 24) {
-                        Text("Keyboard Layout")
-                            .font(.system(.headline, design: .default, weight: .regular))
-                        
-                        HStack(spacing: 40) {
-                            ForEach(LayoutType.allCases, id: \.self) { layout in
-                                VStack(spacing: 4) {
-                                    Circle()
-                                        .fill(selectedLayout == layout ? AppColor.Text.primary : Color(.systemGray4))
-                                        .frame(width: 24, height: 24)
-                                        .overlay(
-                                            Image(systemName: "checkmark")
-                                                .resizable()
-                                                .frame(width: 10, height: 10)
-                                                .foregroundColor(AppColor.Background.primary)
-                                                .opacity(selectedLayout == layout ? 1 : 0)
-                                        )
-                                        .onTapGesture {
-                                            withAnimation(.easeInOut) {
-                                                keyboardLayoutRaw = layout.rawValue
+                    Group {
+                        if #available(iOS 26, *) {
+                            VStack(alignment: .leading, spacing: 24) {
+                            Text("Keyboard Layout")
+                                .font(.system(.headline, design: .default, weight: .regular))
+                            
+                            HStack(spacing: 40) {
+                                ForEach(LayoutType.allCases, id: \.self) { layout in
+                                    VStack(spacing: 4) {
+                                        Circle()
+                                            .frame(width: 24, height: 24)
+                                            .glassEffect(.regular.tint(selectedLayout == layout ? AppColor.Text.primary : Color(.systemGray6)).interactive())
+                                            .overlay(
+                                                Image(systemName: "checkmark")
+                                                    .resizable()
+                                                    .frame(width: 10, height: 10)
+                                                    .foregroundColor(AppColor.Background.primary)
+                                                    .opacity(selectedLayout == layout ? 1 : 0)
+                                            )
+                                            .onTapGesture {
+                                                withAnimation(.easeInOut) {
+                                                    keyboardLayoutRaw = layout.rawValue
+                                                }
+                                                Analytics.logEvent("settings_changed", parameters: [
+                                                    "setting_name": "keyboard_layout",
+                                                    "state": layout.rawValue
+                                                ])
                                             }
-                                            Analytics.logEvent("settings_changed", parameters: [
-                                                "setting_name": "keyboard_layout",
-                                                "state": layout.rawValue
-                                            ])
+                                        Text(layout.rawValue)
+                                            .font(.footnote)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    .contentShape(.rect)
+                                    .accessibilityElement(children: .combine)
+                                    .accessibilityAddTraits(.isButton)
+                                    .accessibilityLabel(layout.rawValue)
+                                    .accessibilityValue(selectedLayout == layout ? "Selected" : "Not selected")
+                                    .accessibilityHint("Applies keyboard layout")
+                                    .accessibilityInputLabels([layout.rawValue, "\(layout.rawValue) layout", "Select \(layout.rawValue)"])
+                                    .accessibilityIdentifier("KeyboardSettingView.Layout.\(layout.rawValue)")
+                                    .accessibilityAction {
+                                        withAnimation(.easeInOut) {
+                                            keyboardLayoutRaw = layout.rawValue
                                         }
-                                    Text(layout.rawValue)
-                                        .font(.footnote)
-                                        .foregroundColor(.secondary)
-                                }
-                                .contentShape(.rect)
-                                .accessibilityElement(children: .combine)
-                                .accessibilityAddTraits(.isButton)
-                                .accessibilityLabel(layout.rawValue)
-                                .accessibilityValue(selectedLayout == layout ? "Selected" : "Not selected")
-                                .accessibilityHint("Applies keyboard layout")
-                                .accessibilityInputLabels([layout.rawValue, "\(layout.rawValue) layout", "Select \(layout.rawValue)"])
-                                .accessibilityIdentifier("KeyboardSettingView.Layout.\(layout.rawValue)")
-                                .accessibilityAction {
-                                    withAnimation(.easeInOut) {
-                                        keyboardLayoutRaw = layout.rawValue
                                     }
                                 }
                             }
+                            .frame(maxWidth: .infinity)
+                            }
+                            .padding()
+                            .glassEffect(.regular.tint(Color(.systemGray6)).interactive(), in: .rect(cornerRadius: 16))
+                            .frame(maxWidth: .infinity)
+                        } else {
+                            VStack(alignment: .leading, spacing: 24) {
+                                Text("Keyboard Layout")
+                                    .font(.system(.headline, design: .default, weight: .regular))
+                                
+                                HStack(spacing: 40) {
+                                    ForEach(LayoutType.allCases, id: \.self) { layout in
+                                        VStack(spacing: 4) {
+                                            Circle()
+                                                .fill(selectedLayout == layout ? AppColor.Text.primary : Color(.systemGray4))
+                                                .frame(width: 24, height: 24)
+                                                .overlay(
+                                                    Image(systemName: "checkmark")
+                                                        .resizable()
+                                                        .frame(width: 10, height: 10)
+                                                        .foregroundColor(AppColor.Background.primary)
+                                                        .opacity(selectedLayout == layout ? 1 : 0)
+                                                )
+                                                .onTapGesture {
+                                                    withAnimation(.easeInOut) {
+                                                        keyboardLayoutRaw = layout.rawValue
+                                                    }
+                                                    Analytics.logEvent("settings_changed", parameters: [
+                                                        "setting_name": "keyboard_layout",
+                                                        "state": layout.rawValue
+                                                    ])
+                                                }
+                                            Text(layout.rawValue)
+                                                .font(.footnote)
+                                                .foregroundColor(.secondary)
+                                        }
+                                        .contentShape(.rect)
+                                        .accessibilityElement(children: .combine)
+                                        .accessibilityAddTraits(.isButton)
+                                        .accessibilityLabel(layout.rawValue)
+                                        .accessibilityValue(selectedLayout == layout ? "Selected" : "Not selected")
+                                        .accessibilityHint("Applies keyboard layout")
+                                        .accessibilityInputLabels([layout.rawValue, "\(layout.rawValue) layout", "Select \(layout.rawValue)"])
+                                        .accessibilityIdentifier("KeyboardSettingView.Layout.\(layout.rawValue)")
+                                        .accessibilityAction {
+                                            withAnimation(.easeInOut) {
+                                                keyboardLayoutRaw = layout.rawValue
+                                            }
+                                        }
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(16)
+                            .frame(maxWidth: .infinity)
                         }
-                        .frame(maxWidth: .infinity)
                     }
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(16)
-                    .frame(maxWidth: .infinity)
                 }
                 .padding(.horizontal, 10)
-                .padding(.bottom, 20) // Extra padding di bawah untuk spacing
+                .padding(.bottom, 20)
             }
             .padding()
         }
         .navigationTitle("Keyboard Settings")
         .navigationBarTitleDisplayMode(.large)
-        .searchable(text: $searchText, prompt: "Test search...")
         .sheet(isPresented: $showShareSheetPreview) {
             ShareSheetPreviewSheet()
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
         }
+        .scrollIndicators(.hidden)
     }
 }
 

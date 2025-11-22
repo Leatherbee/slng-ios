@@ -6,42 +6,32 @@
 //
 
 import Foundation
-import OpenAI
 import SwiftData
 
 final class TranslationRepositoryImpl: TranslationRepository {
-    private let client: OpenAIProtocol
+    private let client: BackendClient
     private let context: ModelContext
-    
-    init(apiKey: String, context: ModelContext) {
-        self.client = OpenAI(apiToken: apiKey)
+
+    init(client: BackendClient, context: ModelContext) {
+        self.client = client
         self.context = context
     }
-    
+
     func translateSentence(_ text: String) async throws -> TranslationResponse {
         let lowercasedText = text.lowercased()
-        
-        // First, fetch cached translate result locally
         if let cached = fetchCachedTranslation(for: lowercasedText) {
             return cached
         }
-        
-        // Request to GPT if there is no cached translation
-        let gptResponse = try await translateSentenceWithGPT(for: lowercasedText)
-        
-        // Save response to SwiftData for caching
+        let gptResponse = try await translateSentenceViaBackend(for: lowercasedText)
         saveTranslationToSwiftData(gptResponse)
-        
         return gptResponse
     }
-    
+
     func fetchCachedTranslation(for text: String) -> TranslationResponse? {
         let fetchDescriptor = FetchDescriptor<TranslationModel>(
             predicate: #Predicate { $0.originalText == text }
         )
-        
         guard let cached = try? context.fetch(fetchDescriptor).first else { return nil }
-        
         return TranslationResponse(
             id: UUID(),
             originalText: cached.originalText,
@@ -50,84 +40,45 @@ final class TranslationRepositoryImpl: TranslationRepository {
             source: .localDB
         )
     }
-    
-    private func translateSentenceWithGPT(for text: String) async throws -> TranslationResponse {
-        let prompt = """
-        You are an expert Indonesian-English translator that understands modern Indonesian slang, abbreviations, and internet language. 
-        Your goal is to translate informal or slang sentences into natural, fluent English that preserves the *meaning and emotional tone*, not word-for-word translation.
 
-        For each input sentence:
-        1. Translate it naturally to English (preserving tone and intention).
-        2. Identify the sentiment as one of: "positive", "neutral", or "negative".
-        3. If the sentence includes slang or figurative expressions, interpret their *contextual meaning*.
+    private func translateSentenceViaBackend(for text: String) async throws -> TranslationResponse {
+        var req = client.makeRequest(path: "api/v1/nlp/translate", method: "POST")
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.setValue("application/json", forHTTPHeaderField: "Accept")
+        let payload = TranslationRequest(text: text, model: nil, temperature: 0.3)
+        req.httpBody = try JSONEncoder().encode(payload)
 
-        Return ONLY valid JSON in this format:
-        {
-          "englishTranslation": "...",
-          "sentiment": "...",
+        let (data, resp) = try await client.session.data(for: req)
+        guard let http = resp as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+            let status = (resp as? HTTPURLResponse)?.statusCode ?? -1
+            let body = String(data: data, encoding: .utf8) ?? ""
+            let info: [String: Any] = [NSLocalizedDescriptionKey: "Backend error", "status": status, "body": body]
+            throw NSError(domain: "HTTPError", code: status, userInfo: info)
         }
-
-        Examples:
-        Input: "anjir, parah banget!"
-        Output: {"englishTranslation": "Damn, that’s crazy!", "sentiment": "negative"}
-
-        Input: "mantul bro!"
-        Output: {"englishTranslation": "That’s awesome, bro!", "sentiment": "positive"}
-
-        Now translate the following:
-        "\(text)"
-        """
-        
-        let query = ChatQuery(
-            messages: [.user(.init(content: .string(prompt)))],
-            model: .gpt4_o_mini,
-            temperature: 0.3
-        )
-        
-        let result = try await client.chats(query: query)
-        
-        guard let content = result.choices.first?.message.content else {
-            throw NSError(domain: "TranslationError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Empty GPT response"])
-        }
-        
-        let clean = content
-            .replacingOccurrences(of: "```json", with: "")
-            .replacingOccurrences(of: "```", with: "")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        guard let data = clean.data(using: .utf8) else {
-            throw NSError(domain: "JSONError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid string encoding"])
-        }
-        
-        let decoded = try JSONDecoder().decode(GPTTranslationResult.self, from: data)
-        let sentiment = SentimentType(rawValue: decoded.sentiment.lowercased()) ?? .neutral
-        
-        let response = TranslationResponse(
+        let decoded = try JSONDecoder().decode(BackendTranslationDTO.self, from: data)
+        let sentiment = SentimentType(rawValue: decoded.sentiment ?? "") ?? .neutral
+        return TranslationResponse(
             id: UUID(),
-            originalText: text,
+            originalText: decoded.originalText,
             englishTranslation: decoded.englishTranslation,
             sentiment: sentiment,
             source: .openAI
         )
-        
-        return response
     }
-    
+
     private func saveTranslationToSwiftData(_ response: TranslationResponse) {
         let cache = TranslationModel(
             originalText: response.originalText.lowercased(),
             englishTranslation: response.englishTranslation,
             sentiment: response.sentiment ?? .neutral
         )
-        
         context.insert(cache)
         try? context.save()
-        print("Successfully saved slang into database")
     }
 }
 
-// Helper entity for decoding JSON data
-private struct GPTTranslationResult: Codable {
+private struct BackendTranslationDTO: Decodable {
     let englishTranslation: String
-    let sentiment: String
+    let originalText: String
+    let sentiment: String?
 }

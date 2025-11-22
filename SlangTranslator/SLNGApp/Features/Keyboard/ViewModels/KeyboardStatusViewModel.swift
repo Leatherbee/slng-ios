@@ -10,6 +10,7 @@ internal import Combine
 
 class KeyboardStatusViewModel: ObservableObject {
     @Published var isFullAccessEnabled: Bool = false
+    @Published var isKeyboardEnabled: Bool = false
     
     init() {
         updateKeyboardStatus()
@@ -17,6 +18,12 @@ class KeyboardStatusViewModel: ObservableObject {
     
     func updateKeyboardStatus() {
         let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
-        self.isFullAccessEnabled = defaults.bool(forKey: "keyboardFullAccess")
+        let fullAccess = defaults.bool(forKey: "keyboardFullAccess")
+        let hasSetup = defaults.bool(forKey: "hasSetupKeyboard")
+        let hasOpened = defaults.integer(forKey: "analytics/.keyboard_open/.count") > 0
+        DispatchQueue.main.async {
+            self.isFullAccessEnabled = fullAccess
+            self.isKeyboardEnabled = hasSetup || hasOpened
+        }
     }
 }

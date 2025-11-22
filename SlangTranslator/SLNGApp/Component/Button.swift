@@ -4,20 +4,22 @@
 //
 //  Created by Filza Rizki Ramadhan on 18/11/25.
 //
+
 import SwiftUI
- 
+
 struct PrimaryButton<Label: View>: View {
     let buttonColor: Color
     let textColor: Color
     let action: () -> Void
     @ViewBuilder let label: () -> Label
- 
+    
     var accessibilityLabelOverride: String?
     var accessibilityHintOverride: String?
-
+    
     @State private var isPressed: Bool = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
+    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
+    
     init(
         buttonColor: Color,
         textColor: Color,
@@ -33,23 +35,31 @@ struct PrimaryButton<Label: View>: View {
         self.accessibilityLabelOverride = accessibilityLabel
         self.accessibilityHintOverride = accessibilityHint
     }
-
+    
     var body: some View {
         Button {
             Haptics.primaryButtonTap()
             SoundPlayer.play("button-2.wav")
             action()
         } label: {
-            label()
-                .foregroundColor(textColor) 
-                .background(buttonColor)
-                .clipShape(Capsule())
-                .scaleEffect(isPressed ? 1.05 : 1.0)
-                .contentShape(Capsule())
+            Group {
+                if #available(iOS 26, *) {
+                    label()
+                        .foregroundColor(textColor)
+                        .glassEffect(.regular.tint(buttonColor).interactive())
+                } else {
+                    label()
+                        .foregroundColor(textColor)
+                        .background(buttonColor)
+                }
+            }
+            .clipShape(.capsule)
+            .scaleEffect(isPressed ? 1.05 : 1.0)
+            .contentShape(.capsule)
         }
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(accessibilityLabelOverride ?? "")  
+        .accessibilityLabel(accessibilityLabelOverride ?? "")
         .accessibilityHint(accessibilityHintOverride ?? "Activates primary action")
         .accessibilityRepresentation {
             if let custom = accessibilityLabelOverride {
@@ -62,22 +72,24 @@ struct PrimaryButton<Label: View>: View {
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in
                     guard !isPressed else { return }
-                    withAnimation(reduceMotion ?
-                                  .default :
-                                  .spring(response: 0.2, dampingFraction: 0.5)) {
-                        isPressed = true
-                    }
+                    withAnimation((reduceMotion || reduceMotionEnabled) ?
+                        .default :
+                            .spring(response: 0.2, dampingFraction: 0.5)) {
+                                isPressed = true
+                            }
                 }
                 .onEnded { _ in
-                    withAnimation(reduceMotion ?
-                                  .default :
-                                  .spring(response: 0.3, dampingFraction: 0.6)) {
-                        isPressed = false
-                    }
+                    withAnimation((reduceMotion || reduceMotionEnabled) ?
+                        .default :
+                            .spring(response: 0.3, dampingFraction: 0.6)) {
+                                isPressed = false
+                            }
                 }
         )
     }
 }
+
+ 
 
 
 
@@ -92,6 +104,6 @@ struct PrimaryButton<Label: View>: View {
     .padding(.horizontal, 80)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(AppColor.Background.primary)
-  
-
+    
+    
 }

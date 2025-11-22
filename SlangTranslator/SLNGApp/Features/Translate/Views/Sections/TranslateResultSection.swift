@@ -12,6 +12,7 @@ struct TranslateResultSection: View {
     @ObservedObject var viewModel: TranslateViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.accessibilityReduceMotion) var reduceMotion
+    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
     
     var textNamespace: Namespace.ID
     var adjustFontSizeDebounced: () -> Void
@@ -32,6 +33,9 @@ struct TranslateResultSection: View {
     @State private var showBottomUI = false
     @State private var moveUp: Bool = false
     @State private var audioPlayer: AVAudioPlayer?
+    @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
+    
+    var dragOffset: CGFloat
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -52,7 +56,6 @@ struct TranslateResultSection: View {
                         
                         ZStack(alignment: .topLeading) {
                             VStack(alignment: .leading, spacing: 8) {
-                                
                                 // Original text (pulse only)
                                 Text(viewModel.inputText)
                                     .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
@@ -66,8 +69,8 @@ struct TranslateResultSection: View {
                                     )
                                     .scaleEffect(showPulse ? 0.80 : 1.0)
                                     .offset(y: moveUp ? -textHeight * 0.2 : 0)
-                                    .animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: showPulse)
-                                    .animation(reduceMotion ? nil : .easeInOut(duration: 0.5), value: moveUp)
+                                    .animation((reduceMotion || reduceMotionEnabled) ? nil : .easeInOut(duration: 0.25), value: showPulse)
+                                    .animation((reduceMotion || reduceMotionEnabled) ? nil : .easeInOut(duration: 0.5), value: moveUp)
                                     .textSelection(.enabled)
                                     .onTapGesture {
                                         viewModel.editText(text: viewModel.inputText)
@@ -81,7 +84,7 @@ struct TranslateResultSection: View {
                                         .fill(Color.stroke)
                                         .frame(width: geo.size.width * dividerProgress, height: 0.8)
                                         .position(x: geo.size.width / 2, y: geo.size.height / 2)
-                                        .animation(reduceMotion ? nil : .easeOut(duration: 0.6), value: dividerProgress)
+                                        .animation((reduceMotion || reduceMotionEnabled) ? nil : .easeOut(duration: 0.6), value: dividerProgress)
                                 }
                                 .frame(height: 1)
                                 
@@ -99,9 +102,9 @@ struct TranslateResultSection: View {
                                         .mask(
                                             Rectangle()
                                                 .frame(height: showTranslated ? 2000 : 0)
-                                                .animation(reduceMotion ? nil : .easeOut(duration: 0.5), value: showTranslated)
+                                                .animation((reduceMotion || reduceMotionEnabled) ? nil : .easeOut(duration: 0.5), value: showTranslated)
                                         )
-                                        .animation(reduceMotion ? nil : .spring(response: 0.55, dampingFraction: 0.8), value: showTranslated)
+                                        .animation((reduceMotion || reduceMotionEnabled) ? nil : .spring(response: 0.55, dampingFraction: 0.8), value: showTranslated)
                                 }
                             }
                         }
@@ -115,13 +118,11 @@ struct TranslateResultSection: View {
                                         viewModel.expandedView()
                                         showExpanded = true
                                     } label: {
-                                        Image(systemName: "arrow.up.left.and.arrow.down.right")
                                     }
                                     .accessibilityLabel("Expand translation")
                                     .accessibilityHint("Open fullscreen translation view")
                                     
                                     Button { viewModel.copyToClipboard() } label: {
-                                        Image(systemName: "doc.on.doc")
                                     }
                                     .accessibilityLabel("Copy translation")
                                     .accessibilityHint("Copy translated text to clipboard")
@@ -142,7 +143,7 @@ struct TranslateResultSection: View {
                                         .frame(maxWidth: .infinity)
                                         .padding(.bottom, 120)
                                         .transition(.opacity.combined(with: .move(edge: .bottom)))
-                                        .animation(reduceMotion ? nil : .easeInOut(duration: 0.4), value: viewModel.slangDetected)
+                                        .animation((reduceMotion || reduceMotionEnabled) ? nil : .easeInOut(duration: 0.4), value: viewModel.slangDetected)
                                 }
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                             } else {
@@ -167,14 +168,26 @@ struct TranslateResultSection: View {
                                     Button {
                                         viewModel.showDetectedSlang()
                                     } label: {
-                                        Text(viewModel.isDetectedSlangShown
-                                             ? "Close Detected Slang (\(viewModel.slangDetected.count))"
-                                             : "Show Detected Slang (\(viewModel.slangDetected.count))")
-                                        .padding(.vertical, 16)
-                                        .padding(.horizontal, 16)
-                                        .foregroundColor(colorScheme == .dark ? .black : .white)
-                                        .background(AppColor.Button.primary)
-                                        .clipShape(Capsule())
+                                        Group {
+                                            if #available(iOS 26, *) {
+                                                Text(viewModel.isDetectedSlangShown
+                                                     ? "Close Detected Slang (\(viewModel.slangDetected.count))"
+                                                     : "Show Detected Slang (\(viewModel.slangDetected.count))")
+                                                .padding(.vertical, 16)
+                                                .padding(.horizontal, 16)
+                                                .foregroundColor(colorScheme == .dark ? .black : .white)
+                                                .glassEffect(.regular.tint(AppColor.Button.primary).interactive())
+                                            } else {
+                                                Text(viewModel.isDetectedSlangShown
+                                                     ? "Close Detected Slang (\(viewModel.slangDetected.count))"
+                                                     : "Show Detected Slang (\(viewModel.slangDetected.count))")
+                                                .padding(.vertical, 16)
+                                                .padding(.horizontal, 16)
+                                                .foregroundColor(colorScheme == .dark ? .black : .white)
+                                                .background(AppColor.Button.primary)
+                                            }
+                                        }
+                                        .clipShape(.capsule)
                                     }
                                     .accessibilityLabel(viewModel.isDetectedSlangShown ? "Close detected slang" : "Show detected slang")
                                     .accessibilityHint("Toggle the detected slang list")
@@ -222,6 +235,10 @@ struct TranslateResultSection: View {
                             .toolbar(.hidden, for: .tabBar)
                     }
                     .padding(.top, 1)
+                    .offset(y: dragOffset * 0.65)
+                    .opacity(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 260.0))))
+                    .scaleEffect(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 900.0))), anchor: .top)
+                    .animation(.interactiveSpring(response: 0.25, dampingFraction: 0.82), value: dragOffset)
                 }
                 .safeAreaPadding(.top)
                 .scrollIndicators(.hidden)
@@ -230,15 +247,26 @@ struct TranslateResultSection: View {
                     viewModel.reset()
                     resetAnimation()
                 } label: {
-                    Label("Try Another", systemImage: "arrow.left")
-                        .padding(.vertical, 18)
-                        .font(Font.body.bold())
-                        .frame(maxWidth: 314, minHeight: 60)
-                        .foregroundColor(colorScheme == .dark ? .black : .white)
-                        .background(
-                            AppColor.Button.primary
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 30))
+                    Group {
+                        if #available(iOS 26, *) {
+                            Label("Try Another", systemImage: "arrow.left")
+                                .padding(.vertical, 18)
+                                .font(Font.body.bold())
+                                .frame(maxWidth: 314, minHeight: 60)
+                                .foregroundColor(colorScheme == .dark ? .black : .white)
+                                .glassEffect(.regular.tint(AppColor.Button.primary).interactive(), in: .rect(cornerRadius: 30))
+                        } else {
+                            Label("Try Another", systemImage: "arrow.left")
+                                .padding(.vertical, 18)
+                                .font(Font.body.bold())
+                                .frame(maxWidth: 314, minHeight: 60)
+                                .foregroundColor(colorScheme == .dark ? .black : .white)
+                                .background(
+                                    AppColor.Button.primary
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 30))
+                        }
+                    }
                 }
                 .accessibilityLabel("Try another translation")
                 .accessibilityHint("Go back to input to translate another text")
@@ -268,7 +296,6 @@ struct TranslateResultSection: View {
             .toolbar(showBottomUI ? .visible : .hidden, for: .tabBar)
     }
     
-    // MARK: Animation Logic
     private func resetAnimation() {
         stage = 0
         showBurst = false
@@ -340,6 +367,7 @@ struct TranslateResultSection: View {
     }
     
     private func playBurstSound() {
+        guard soundEffectEnabled else { return }
         guard let url = Bundle.main.url(forResource: "whoosh", withExtension: "mp3") else { return }
         
         do {
@@ -358,3 +386,4 @@ struct TranslateResultSection: View {
         HapticManager.shared.playExplosionHaptic()
     }
 }
+

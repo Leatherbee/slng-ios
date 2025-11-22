@@ -3,6 +3,7 @@ internal import Combine
 
 struct TranslateLoadingSection: View {
     @Environment(\.accessibilityReduceMotion) var reduceMotion
+    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
     @ObservedObject var viewModel: TranslateViewModel
     var textNamespace: Namespace.ID
     var dynamicTextStyle: Font.TextStyle
@@ -105,7 +106,7 @@ struct TranslateLoadingSection: View {
         
         var tickCounter = 0
         
-        if !reduceMotion {
+        if !(reduceMotion || reduceMotionEnabled) {
             timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
                 withAnimation(.interpolatingSpring(stiffness: 150, damping: 14)) {
                     dotCount = (dotCount + 1) % 4

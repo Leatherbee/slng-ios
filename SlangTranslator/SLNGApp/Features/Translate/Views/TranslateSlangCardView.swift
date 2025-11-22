@@ -113,10 +113,12 @@ struct TranslateSlangCardView: View {
             isExpanded.toggle()
         }
         
-        if isExpanded {
-            generator.impactOccurred(intensity: 0.7)
-        } else {
-            generator.impactOccurred(intensity: 0.4)
+        if Haptics.isEnabled {
+            if isExpanded {
+                generator.impactOccurred(intensity: 0.7)
+            } else {
+                generator.impactOccurred(intensity: 0.4)
+            }
         }
     }
 }

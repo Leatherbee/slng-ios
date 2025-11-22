@@ -89,14 +89,9 @@ struct OnboardingFourthPage: View {
                         Text("Continue")
                         Image(systemName: "arrow.right")
                     }
-                        .padding(.vertical, 18)
-                        .font(Font.body.bold())
-                        .frame(maxWidth: .infinity, minHeight: 60)
-                        .foregroundColor(.onboardingTextPrimary)
-                        .background(
-                            AppColor.Button.primary
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 30))
+                    .padding(.vertical, 18)
+                    .font(Font.body.bold())
+                    .frame(maxWidth: .infinity, minHeight: 60)
                 }
             }
             .padding()

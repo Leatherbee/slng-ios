@@ -7,6 +7,12 @@
 
 import Foundation
 
+struct TranslationRequest: Encodable {
+    let text: String
+    let model: String?
+    let temperature: Double?
+}
+
 struct TranslationResponse: Decodable, Identifiable {
     let id: UUID
     let originalText: String
