@@ -137,9 +137,6 @@ struct DictionaryDetail: View {
                 }
             }
         }
-<<<<<<< HEAD
-        
-=======
         .sheet(isPresented: $showInfoSheet) {
             NavigationView {
                 VStack(alignment: .leading, spacing: 24) {
@@ -187,7 +184,6 @@ struct DictionaryDetail: View {
                             .foregroundColor(AppColor.Text.primary.opacity(0.6))
                             .clipShape(.circle)
                         } else {
-                            // Fallback on earlier versions
                             Button {
                                 showInfoSheet.toggle()
                             } label: {
@@ -205,7 +201,6 @@ struct DictionaryDetail: View {
             .presentationDetents([.fraction(0.4)])
             .presentationDragIndicator(.visible)
         }
->>>>>>> 84afd05 (feat: add glass effect to the xmark)
     }
     
     private struct similiarButton:  View {

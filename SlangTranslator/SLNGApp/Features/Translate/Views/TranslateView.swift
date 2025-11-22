@@ -46,6 +46,7 @@ struct TranslateView: View {
             .offset(y: showSettings ? UIScreen.main.bounds.height * 0.9 : dragOffset * 0.45)
             .opacity(showSettings ? 0 : (1 - min(1.0, dragOffset / 420.0)))
             .animation(curtainEase, value: showSettings)
+            // MARK: Bug
             .background(hasShownTranslateResult ? AppColor.Background.secondary : AppColor.Background.primary)
             .overlay(alignment: .top) {
                 VStack(spacing: 8) {
