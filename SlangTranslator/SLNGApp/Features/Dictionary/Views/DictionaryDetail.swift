@@ -37,8 +37,18 @@ struct DictionaryDetail: View {
                                 .foregroundColor(AppColor.Button.Text.primary)
                         }
                         .frame(width: 43, height: 43)
-                        .background(AppColor.Button.primary)
-                        .cornerRadius(9999)
+                        .background(
+                            Group {
+                                if #available(iOS 26, *) {
+                                    Circle()
+                                        .glassEffect(.regular.tint(AppColor.Button.primary).interactive())
+                                } else {
+                                    Circle()
+                                        .fill(AppColor.Button.primary)
+                                }
+                            }
+                        )
+                        .clipShape(.circle)
                         .transition(.opacity)
                     }
                     .frame(maxWidth: .infinity)
@@ -177,17 +187,29 @@ struct DictionaryDetail: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            showInfoSheet.toggle()
-                        } label: {
-                            Image(systemName: "xmark")
-                                .font(.system(size: 17))
-                             
-                            
+                        if #available(iOS 26.0, *) {
+                            Button {
+                                showInfoSheet.toggle()
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 17))
+                            }
+                            .glassEffect(.regular.tint(AppColor.Text.primary).interactive())
+                            .frame(width: 44, height: 44)
+                            .foregroundColor(AppColor.Text.primary.opacity(0.6))
+                            .clipShape(.circle)
+                        } else {
+                            // Fallback on earlier versions
+                            Button {
+                                showInfoSheet.toggle()
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 17))
+                            }
+                            .frame(width: 44, height: 44)
+                            .foregroundColor(AppColor.Text.primary.opacity(0.6))
+                            .clipShape(.circle)
                         }
-                        .frame(width: 44, height: 44)
-                        .foregroundColor(AppColor.Text.primary.opacity(0.6))
-                        .clipShape(.circle)
                       
                     }
                 }

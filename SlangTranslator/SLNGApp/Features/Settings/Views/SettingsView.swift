@@ -34,8 +34,17 @@ struct SettingsView: View {
                         .foregroundStyle(AppColor.Background.primary)
                         .padding(10)
                         .background(
-                            Circle()
-                                .fill(AppColor.Text.primary)
+                            Group {
+                                if #available(iOS 26, *) {
+                                    Circle()
+                                        .glassEffect(.regular.tint(AppColor.Text.primary).interactive())
+                                        .frame(width: 44, height: 44)
+                                } else {
+                                    Circle()
+                                        .fill(AppColor.Text.primary)
+                                        .frame(width: 44, height: 44)
+                                }
+                            }
                         )
                 }
                 .accessibilityLabel("Close")
