@@ -46,8 +46,7 @@ struct TranslateView: View {
             .offset(y: showSettings ? UIScreen.main.bounds.height * 0.9 : dragOffset * 0.45)
             .opacity(showSettings ? 0 : (1 - min(1.0, dragOffset / 420.0)))
             .animation(curtainEase, value: showSettings)
-            // MARK: Bug
-            .background(hasShownTranslateResult ? AppColor.Background.secondary : AppColor.Background.primary)
+            .background(viewModel.isTranslated ? AppColor.Background.secondary : AppColor.Background.primary)
             .overlay(alignment: .top) {
                 VStack(spacing: 8) {
                     RoundedRectangle(cornerRadius: 20)
@@ -64,7 +63,7 @@ struct TranslateView: View {
                     Text("Settings")
                         .font(.system(.footnote, design: .default, weight: .bold))
                         .foregroundStyle(.secondary)
-                        .opacity(showDragHint ? 0.9 : 1) 
+                        .opacity(showDragHint ? 0.9 : 1)
                         .offset(y: showDragHint ? 6 : 0)
                         .scaleEffect(showDragHint ? 0.9 : 1.0)
                         .animation(
@@ -86,7 +85,7 @@ struct TranslateView: View {
                 ZStack {
                     GeometryReader { geo in
                         VStack(spacing: 0) {
-                            Color.backgroundSecondary
+                            (viewModel.isTranslated ? AppColor.Background.secondary : AppColor.Background.primary)
                                 .frame(
                                     height: showSettings
                                     ? geo.size.height
@@ -226,10 +225,8 @@ struct TranslateView: View {
                 dynamicTextStyle: $dynamicTextStyle,
                 dragOffset: dragOffset
             )
-            .background(Color.backgroundPrimary)
-            .onAppear {
-                hasShownTranslateResult = false
-            }
+            .background(AppColor.Background.primary)
+            
             
         } else {
             TranslateResultSection(
@@ -240,10 +237,8 @@ struct TranslateView: View {
                 dynamicTextStyle: $dynamicTextStyle,
                 dragOffset: dragOffset
             )
-            .background(Color.backgroundSecondary)
-            .onAppear {
-                hasShownTranslateResult = true
-            }
+            .background(AppColor.Background.secondary)
+            
         }
     }
     
@@ -323,4 +318,3 @@ extension UIApplication {
         )
     }
 }
-

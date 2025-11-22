@@ -113,7 +113,7 @@ struct TranslateInputSection: View {
         .contentShape(Rectangle())
         .onTapGesture { UIApplication.shared.dismissKeyboard() }
         .background(
-            Color.backgroundPrimary
+            AppColor.Background.primary
                 .ignoresSafeArea()
                 .onTapGesture {
                     UIApplication.shared.dismissKeyboard()
