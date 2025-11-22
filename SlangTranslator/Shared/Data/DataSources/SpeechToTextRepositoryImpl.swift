@@ -8,18 +8,15 @@
 import Foundation
 
 final class SpeechToTextRepositoryImpl: SpeechToTextRepository {
-    private let baseURL: URL
-    private let session: URLSession
+    private let client: BackendClient
     
-    init(baseURL: URL, session: URLSession = .shared) {
-        self.baseURL = baseURL
-        self.session = session
+    init(client: BackendClient) {
+        self.client = client
     }
     
     func transcribeAudio(data: Data, fileName: String, mimeType: String) async throws -> TranscriptionResponse {
         let boundary = "Boundary-\(UUID().uuidString)"
-        var request = URLRequest(url: baseURL.appendingPathComponent("api/v1/stt/transcribe"))
-        request.httpMethod = "POST"
+        var request = client.makeRequest(path: "api/v1/stt/transcribe", method: "POST")
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
 
         let body = MultipartFormData.build(
@@ -32,9 +29,12 @@ final class SpeechToTextRepositoryImpl: SpeechToTextRepository {
 
         request.httpBody = body
 
-        let (respData, resp) = try await session.data(for: request)
+        let (respData, resp) = try await client.session.data(for: request)
         guard let http = resp as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
-            throw NSError(domain: "STTError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Transcription failed"])
+            let status = (resp as? HTTPURLResponse)?.statusCode ?? -1
+            let body = String(data: respData, encoding: .utf8) ?? ""
+            let info: [String: Any] = [NSLocalizedDescriptionKey: "Transcription failed", "status": status, "body": body]
+            throw NSError(domain: "STTError", code: status, userInfo: info)
         }
 
         let dto = try JSONDecoder().decode(TranscriptionDTO.self, from: respData)

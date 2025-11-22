@@ -100,6 +100,7 @@ struct TranslateInputSection: View {
                     isRecording: $viewModel.isRecording,
                     onStart: { viewModel.startRecording() },
                     onStopAndTranscribe: { viewModel.stopRecordingAndTranscribe() },
+                    onCancel: { viewModel.stopRecording() },
                     audioLevel: viewModel.audioLevel
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -68,30 +68,27 @@ final class TranslateViewModel: ObservableObject {
     private func initializeDependencies() async {
         let context = SharedModelContainer.shared.container.mainContext
         let apiKey = Bundle.main.infoDictionary?[("APIKey")] as? String ?? ""
-        let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+        let baseURLString = Bundle.main.infoDictionary?["BackendBaseURL"] as? String ?? "https://api.slng.space"
+        guard let url = URL(string: baseURLString) else {
+            await MainActor.run { self.errorMessage = "Backend base URL invalid." }
+            return
+        }
+        let client = BackendClient(baseURL: url)
+
+        let translationRepository = TranslationRepositoryImpl(client: client, context: context)
         let slangRepository = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
         let translateSentenceUseCase = TranslateSentenceUseCaseImpl(
             translationRepository: translationRepository,
             slangRepository: slangRepository
         )
 
+        let sttRepo = SpeechToTextRepositoryImpl(client: client)
+        let sttUseCase = TranscribeSpeechUseCaseImpl(repository: sttRepo)
+
         await MainActor.run {
             self.translateSentenceUseCase = translateSentenceUseCase
+            self.speechUseCase = sttUseCase
             self.isInitializing = false
-        }
-
-        let baseURLString = "https://api.slng.space"
-        if let url = URL(string: baseURLString) {
-            let sttRepo = SpeechToTextRepositoryImpl(baseURL: url)
-            let sttUseCase = TranscribeSpeechUseCaseImpl(repository: sttRepo)
-            await MainActor.run {
-                self.speechUseCase = sttUseCase
-                print("Speech use case initialized with \(url)")
-            }
-        } else {
-            await MainActor.run {
-                self.errorMessage = "STT base URL invalid."
-            }
         }
     }
     

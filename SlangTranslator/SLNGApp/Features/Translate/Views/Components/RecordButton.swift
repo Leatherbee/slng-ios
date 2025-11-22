@@ -6,17 +6,23 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct RecordButton: View {
     @Binding var isRecording: Bool
     var onStart: () -> Void = {}
     var onStopAndTranscribe: () -> Void = {}
+    var onCancel: () -> Void = {}
     var audioLevel: Float = -160
     
     @State private var timer: Timer?
     @State private var pulseScale: CGFloat = 1.0
     @State private var position: CGPoint = .zero
     @State private var dragOffset: CGSize = .zero
+    @State private var dripPlayer: AVAudioPlayer?
+    @State private var releasePlayer: AVAudioPlayer?
+    @State private var pressStartAt: Date?
+    private let minHoldDuration: TimeInterval = 2.0
     
     var body: some View {
         GeometryReader { geometry in
@@ -76,10 +82,19 @@ struct RecordButton: View {
                     if pressing && !isRecording {
                         isRecording = true
                         onStart()
+                        playDripSound()
+                        pressStartAt = Date()
                         startSonar()
                     } else if !pressing && isRecording {
                         isRecording = false
-                        onStopAndTranscribe()
+                        playReleaseSound()
+                        let duration = Date().timeIntervalSince(pressStartAt ?? Date())
+                        if duration >= minHoldDuration {
+                            onStopAndTranscribe()
+                        } else {
+                            onCancel()
+                        }
+                        pressStartAt = nil
                         stopSonar()
                     }
                 },
@@ -96,6 +111,28 @@ struct RecordButton: View {
         }
     }
     
+    private func playDripSound() {
+        guard let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") else { return }
+        do {
+            dripPlayer = try AVAudioPlayer(contentsOf: url)
+            dripPlayer?.volume = 0.85
+            dripPlayer?.prepareToPlay()
+            dripPlayer?.play()
+        } catch {
+        }
+    }
+
+    private func playReleaseSound() {
+        guard let url = Bundle.main.url(forResource: "water-release", withExtension: "mp3") else { return }
+        do {
+            releasePlayer = try AVAudioPlayer(contentsOf: url)
+            releasePlayer?.volume = 0.9
+            releasePlayer?.prepareToPlay()
+            releasePlayer?.play()
+        } catch {
+        }
+    }
+
     private func startSonar() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.8, repeats: true) { t in
