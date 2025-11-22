@@ -66,19 +66,7 @@ struct SettingsView: View {
                             .tint(.green)
                     }
                     .contentShape(.rect)
-                    
-                    
-                    Button {
-                        route.go(to: .settingsLanguage)
-                    } label: {
-                        HStack {
-                            Image(systemName: "globe")
-                            Text("Language")
-                        }
-                        .contentShape(.rect)
-                    }
-                    
-                   
+
                     HStack {
                         Image(systemName: "swirl.circle.righthalf.filled")
                         Text("Theme")

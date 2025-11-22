@@ -19,8 +19,10 @@ struct ExplainSlangIntent: AppIntent {
 
         let (useCase, _): (TranslateSentenceUseCaseImpl, String) = await MainActor.run {
             let context = SharedModelContainer.shared.context
-            let apiKey = Bundle.main.infoDictionary?["APIKey"] as? String ?? ""
-            let translationRepository = TranslationRepositoryImpl(apiKey: apiKey, context: context)
+            let baseURLString = Bundle.main.infoDictionary?["BackendBaseURL"] as? String ?? "https://api.slng.space"
+            let baseURL = URL(string: baseURLString)!
+            let client = BackendClient(baseURL: baseURL)
+            let translationRepository = TranslationRepositoryImpl(client: client, context: context)
             let slangRepository = SlangRepositoryImpl(container: SharedModelContainer.shared.container)
             let useCase = TranslateSentenceUseCaseImpl(translationRepository: translationRepository, slangRepository: slangRepository)
             return (useCase, "")

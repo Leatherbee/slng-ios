@@ -100,6 +100,7 @@
 				Shared/Domain/Repositories/TranslationRepository.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
+				Shared/Utils/BackendClient.swift,
 				SLNGApp/Component/Haptic.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
@@ -121,6 +122,7 @@
 				Shared/Domain/Repositories/TranslationRepository.swift,
 				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
 				"Shared/Extensions/String+SlangNormalization.swift",
+				Shared/Utils/BackendClient.swift,
 				SLNGApp/Component/Haptic.swift,
 				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
 			);
