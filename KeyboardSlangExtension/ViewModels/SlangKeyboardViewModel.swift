@@ -155,6 +155,8 @@ final class SlangKeyboardViewModel: ObservableObject {
         self.translationError = nil
         self.translatedText = ""
         self.detectedSlangs.removeAll()
+        let hasCache = useCase.peekCache(clipboardText) != nil
+        self.isTranslating = !hasCache
         
         do {
             let start = Date()
@@ -165,6 +167,7 @@ final class SlangKeyboardViewModel: ObservableObject {
             self.result = result
             self.translatedText = result.translation.englishTranslation
             self.detectedSlangs = result.detectedSlangs
+            self.isTranslating = false
             
             if result.detectedSlangs.isEmpty {
                 self.translationError = "No slang detected."
@@ -178,6 +181,7 @@ final class SlangKeyboardViewModel: ObservableObject {
             defaults.set(defaults.integer(forKey: netKey) + 1, forKey: netKey)
         } catch {
             self.translationError = error.localizedDescription
+            self.isTranslating = false
             let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
             let errKey = "analytics.extension_error.translation_error.count"
             defaults.set(defaults.integer(forKey: errKey) + 1, forKey: errKey)

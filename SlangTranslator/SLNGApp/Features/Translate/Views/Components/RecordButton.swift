@@ -23,6 +23,7 @@ struct RecordButton: View {
     @State private var releasePlayer: AVAudioPlayer?
     @State private var pressStartAt: Date?
     private let minHoldDuration: TimeInterval = 1.4
+    @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
     
     var body: some View {
         GeometryReader { geometry in
@@ -112,6 +113,7 @@ struct RecordButton: View {
     }
     
     private func playDripSound() {
+        guard soundEffectEnabled else { return }
         guard let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") else { return }
         do {
             dripPlayer = try AVAudioPlayer(contentsOf: url)
@@ -123,6 +125,7 @@ struct RecordButton: View {
     }
 
     private func playReleaseSound() {
+        guard soundEffectEnabled else { return }
         guard let url = Bundle.main.url(forResource: "water-release", withExtension: "mp3") else { return }
         do {
             releasePlayer = try AVAudioPlayer(contentsOf: url)

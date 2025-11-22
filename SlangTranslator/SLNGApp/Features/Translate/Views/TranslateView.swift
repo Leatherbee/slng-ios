@@ -54,15 +54,23 @@ struct TranslateView: View {
                         .foregroundStyle(AppColor.Button.primary)
                         .offset(y: showDragHint ? 6 : 0)
                         .scaleEffect(showDragHint ? 1.1 : 1.0)
-                        .animation((reduceMotion || reduceMotionEnabled) ? nil : .spring(response: 0.55, dampingFraction: 0.7), value: showDragHint)
+                        .animation(
+                            (reduceMotion || reduceMotionEnabled) ? nil :
+                            .interpolatingSpring(stiffness: 130, damping: 10),
+                            value: showDragHint
+                        )
                     
                     Text("Settings")
                         .font(.system(.footnote, design: .default, weight: .bold))
                         .foregroundStyle(.secondary)
-                        .opacity(showDragHint ? 0.9 : 1)
+                        .opacity(showDragHint ? 0.9 : 1) 
                         .offset(y: showDragHint ? 6 : 0)
                         .scaleEffect(showDragHint ? 0.9 : 1.0)
-                        .animation((reduceMotion || reduceMotionEnabled) ? nil : .spring(response: 0.5, dampingFraction: 0.8), value: showDragHint)
+                        .animation(
+                            (reduceMotion || reduceMotionEnabled) ? nil :
+                            .interpolatingSpring(stiffness: 120, damping: 6),
+                            value: showDragHint
+                        )
                 }
                 .allowsHitTesting(false)
                 .offset(
