@@ -271,7 +271,10 @@ struct TranslateResultSection: View {
                 .accessibilityLabel("Try another translation")
                 .accessibilityHint("Go back to input to translate another text")
                 .padding(.bottom, 16)
-                .opacity(showBottomUI ? 1 : 0)
+                .opacity(showBottomUI ? CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 360.0))) : 0)
+                .offset(y: dragOffset * 0.65)
+                .scaleEffect(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 900.0))), anchor: .top)
+                .animation(.interactiveSpring(response: 0.50, dampingFraction: 0.82), value: dragOffset)
                 .animation(reduceMotion ? nil : .easeIn(duration: 0.5), value: showBottomUI)
             }
             .onAppear {
