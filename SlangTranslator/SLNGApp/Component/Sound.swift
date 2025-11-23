@@ -9,9 +9,13 @@ import AVFoundation
  
 enum SoundPlayer {
     static var player: AVAudioPlayer?
+    private static var isEnabled: Bool {
+        (UserDefaults(suiteName: "group.prammmoe.SLNG")?.bool(forKey: "soundEffectEnabled")) ?? true
+    }
 
     /// Play sound by filename string (auto detect extension)
     static func play(_ filename: String) {
+        guard isEnabled else { return }
         let components = filename.split(separator: ".")
         guard let name = components.first else {
             print("Invalid sound filename:", filename)

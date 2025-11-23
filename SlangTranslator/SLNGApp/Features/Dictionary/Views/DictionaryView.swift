@@ -319,6 +319,8 @@ class SoundManager {
     
     // Ultra smooth playback dengan advanced features
     func playClick(withVelocity velocity: Double = 0) {
+        let enabled = (UserDefaults(suiteName: "group.prammmoe.SLNG")?.bool(forKey: "soundEffectEnabled")) ?? true
+        guard enabled else { return }
         let currentTime = CACurrentMediaTime()
         
         // Update velocity dengan smoothing

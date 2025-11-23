@@ -9,6 +9,7 @@ import Foundation
 import FirebaseAnalytics
 import AVFoundation
 struct DictionaryDetail: View {
+    @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
     @Environment(PopupManager.self) private var popupManager
     @State private var slangData: SlangModel?
     @State private var variants: [SlangModel] = []
@@ -229,6 +230,7 @@ struct DictionaryDetail: View {
     }
     
     private func playBurstSound() {
+        guard soundEffectEnabled else { return }
         guard let url = Bundle.main.url(forResource: "whoosh", withExtension: "mp3") else { return }
         
         do {
