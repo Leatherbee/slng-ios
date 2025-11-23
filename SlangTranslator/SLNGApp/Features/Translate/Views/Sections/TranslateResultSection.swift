@@ -299,33 +299,21 @@ struct TranslateResultSection: View {
             .coordinateSpace(name: "scroll")
             
             
-            Button {
-                viewModel.reset()
-                resetAnimation()
-            } label: {
-                Group {
-                    if #available(iOS 26, *) {
-                        Label("Try Another", systemImage: "arrow.left")
-                            .padding(.vertical, 18)
-                            .font(Font.body.bold())
-                            .frame(maxWidth: 314, minHeight: 60)
-                            .foregroundColor(colorScheme == .dark ? .black : .white)
-                            .glassEffect(.regular.tint(AppColor.Button.primary).interactive(), in: .rect(cornerRadius: 30))
-                    } else {
-                        Label("Try Another", systemImage: "arrow.left")
-                            .padding(.vertical, 18)
-                            .font(Font.body.bold())
-                            .frame(maxWidth: 314, minHeight: 60)
-                            .foregroundColor(colorScheme == .dark ? .black : .white)
-                            .background(
-                                AppColor.Button.primary
-                            )
-                            .clipShape(RoundedRectangle(cornerRadius: 30))
-                    }
+            PrimaryButton(
+                buttonColor: AppColor.Button.primary,
+                textColor: colorScheme == .dark ? .black : .white,
+                accessibilityLabel: "Try another translation",
+                accessibilityHint: "Go back to input to translate another text",
+                action: {
+                    viewModel.reset()
+                    resetAnimation()
                 }
+            ) {
+                Label("Try Another", systemImage: "arrow.left")
+                    .padding(.vertical, 18)
+                    .font(Font.body.bold())
+                    .frame(maxWidth: 314, minHeight: 60)
             }
-            .accessibilityLabel("Try another translation")
-            .accessibilityHint("Go back to input to translate another text")
             .padding(.bottom, 16)
             .opacity(showBottomUI ? CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 360.0))) : 0)
             .offset(y: dragOffset * 0.65)

@@ -45,21 +45,20 @@ struct SetupKeyboardView: View {
             VStack {
                 Spacer()
                 VStack(spacing: 10){
-                    Button{
-                        openKeyboardSettings()
-                    } label: {
+                    PrimaryButton(
+                        buttonColor: AppColor.Button.primary,
+                        textColor: .onboardingTextPrimary,
+                        accessibilityLabel: "Add SLNG keyboard",
+                        accessibilityHint: "Opens iOS Settings to enable the keyboard",
+                        action: {
+                            openKeyboardSettings()
+                        }
+                    ) {
                         Text("Add Keyboard")
                             .padding(.vertical, 18)
                             .font(Font.body.bold())
                             .frame(maxWidth: .infinity, minHeight: 60)
-                            .foregroundColor(.onboardingTextPrimary)
-                            .background(
-                                AppColor.Button.primary
-                            )
-                            .clipShape(RoundedRectangle(cornerRadius: 30))
                     }
-                    .accessibilityLabel("Add SLNG keyboard")
-                    .accessibilityHint("Opens iOS Settings to enable the keyboard")
                     .accessibilityIdentifier("SetupKeyboardView.AddKeyboard")
                     
                     Text("This will open IOS system settings")
