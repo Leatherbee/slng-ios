@@ -28,13 +28,19 @@ struct TranslateView: View {
     @State private var settingsRouter = Router()
     @State private var showDragHint: Bool = false
     @State private var dragHintTimer: Timer?
+    @State private var resultScrollOffset: CGFloat = 0
+    @State private var isDragPressed: Bool = false
+    @State private var isDragHandleReady: Bool = true
+    @State private var lastScrollOffset: CGFloat = 0
+    @State private var isDragHandleVisible: Bool = true
+    @State private var resultContentTopY: CGFloat = 0
     
     private let settingsOverlayStart: CGFloat = 800
     private let settingsContentRevealThreshold: CGFloat = 120
     private let settingsOverlayYOffset: CGFloat = -60
     
     private var curtainEase: Animation {
-        .timingCurve(0.22, 0.61, 0.36, 1.0, duration: 0.32)
+        .timingCurve(0.22, 0.61, 0.36, 1.0, duration: 0.55)
     }
     
     var body: some View {
@@ -45,40 +51,61 @@ struct TranslateView: View {
             }
             .offset(y: showSettings ? UIScreen.main.bounds.height * 0.9 : dragOffset * 0.45)
             .opacity(showSettings ? 0 : (1 - min(1.0, dragOffset / 420.0)))
-//            .animation(curtainEase, value: showSettings)
+            .animation(curtainEase, value: showSettings)
             .background(viewModel.isTranslated ? AppColor.Background.secondary : AppColor.Background.primary)
             .overlay(alignment: .top) {
-                VStack(spacing: 8) {
-                    RoundedRectangle(cornerRadius: 20)
-                        .frame(width: 40, height: 4)
-                        .foregroundStyle(AppColor.Button.primary)
-                        .offset(y: showDragHint ? 6 : 0)
-                        .scaleEffect(showDragHint ? 1.1 : 1.0)
-                        .animation(
-                            (reduceMotion || reduceMotionEnabled) ? nil :
-                            .interpolatingSpring(stiffness: 130, damping: 10),
-                            value: showDragHint
-                        )
-                    
-                    Text("Settings")
-                        .font(.system(.footnote, design: .default, weight: .bold))
-                        .foregroundStyle(.secondary)
-                        .opacity(showDragHint ? 0.9 : 1)
-                        .offset(y: showDragHint ? 6 : 0)
-                        .scaleEffect(showDragHint ? 0.9 : 1.0)
-                        .animation(
-                            (reduceMotion || reduceMotionEnabled) ? nil :
-                            .interpolatingSpring(stiffness: 120, damping: 6),
-                            value: showDragHint
-                        )
+                if !viewModel.isLoading && isDragHandleReady && isDragHandleVisible {
+                    VStack(spacing: 8) {
+                        RoundedRectangle(cornerRadius: 20)
+                            .frame(width: 40, height: 4)
+                            .foregroundStyle(AppColor.Button.primary)
+                            .offset(y: showDragHint ? 6 : 0)
+                            .scaleEffect(showDragHint ? 1.1 : 1.0)
+                            .scaleEffect(isDragPressed ? 1.08 : 1.0)
+                            .animation(
+                                (reduceMotion || reduceMotionEnabled) ? nil :
+                                .interpolatingSpring(stiffness: 130, damping: 10),
+                                value: showDragHint
+                            )
+                            .animation(
+                                (reduceMotion || reduceMotionEnabled) ? nil :
+                                .interpolatingSpring(stiffness: 180, damping: 14),
+                                value: isDragPressed
+                            )
+
+                        Text("Settings")
+                            .font(.system(.footnote, design: .default, weight: .bold))
+                            .foregroundStyle(.secondary)
+                            .opacity(showDragHint ? 0.9 : 1)
+                            .offset(y: showDragHint ? 6 : 0)
+                            .scaleEffect(showDragHint ? 0.9 : 1.0)
+                            .scaleEffect(isDragPressed ? 0.95 : 1.0)
+                            .animation(
+                                (reduceMotion || reduceMotionEnabled) ? nil :
+                                .interpolatingSpring(stiffness: 120, damping: 6),
+                                value: showDragHint
+                            )
+                            .animation(
+                                (reduceMotion || reduceMotionEnabled) ? nil :
+                                .interpolatingSpring(stiffness: 180, damping: 14),
+                                value: isDragPressed
+                            )
+                    }
+                    .frame(maxWidth: .infinity)
+//                    .frame(height: 96)
+                    .allowsHitTesting(viewModel.isTranslated)
+                    .contentShape(Rectangle())
+                    .gesture(
+                        DragGesture(minimumDistance: 40)
+                            .onChanged(handleResultDragChanged)
+                            .onEnded(handleResultDragEnded)
+                    )
+                    .offset(
+                        y: showSettings
+                            ? UIScreen.main.bounds.height
+                            : dragOffset
+                    )
                 }
-                .allowsHitTesting(false)
-                .offset(
-                    y: showSettings
-                        ? UIScreen.main.bounds.height
-                        : dragOffset
-                )
-//                .animation(.interactiveSpring(response: 0.28, dampingFraction: 0.85), value: dragOffset)
             }
                         
             if (showSettings || dragOffset > 0) && !(viewModel.isRecording || viewModel.isTranscribing) {
@@ -124,33 +151,8 @@ struct TranslateView: View {
                 .zIndex(1)
             }
         }
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 8)
-                .onChanged { value in
-                    guard !isKeyboardActive else { return }
-                    guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
-                    dragOffset = softened(value.translation.height)
-                }
-                .onEnded { value in
-                    guard !isKeyboardActive else {
-                        UIApplication.shared.dismissKeyboard()
-                        return
-                    }
-                    guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
-                    let shouldOpen = value.translation.height > 120
-                    if shouldOpen {
-                        withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.85)) {
-                            showSettings = true
-                            dragOffset = 10
-                        }
-                    } else {
-                        withAnimation(.interactiveSpring(response: 0.3, dampingFraction: 0.85)) {
-                            dragOffset = 0
-                        }
-                    }
-                }
-            
-        )
+        // No global gesture here - each section handles its own
+
         
         .animation(.easeInOut(duration: 0.25), value: viewModel.isTranslated)
         .onAppear {
@@ -168,9 +170,16 @@ struct TranslateView: View {
             dragHintTimer?.invalidate()
             dragHintTimer = nil
         }
+        .onChange(of: viewModel.isTranslated) { _, isRes in
+            if isRes {
+                isDragHandleReady = false
+            } else {
+                isDragHandleReady = true
+            }
+        }
         .onChange(of: showSettings) { _, isShowing in
             if !isShowing {
-                withAnimation(.interactiveSpring(response: 0.32,
+                withAnimation(.interactiveSpring(response: 0.42,
                                                  dampingFraction: 0.82)) {
                     dragOffset = 0
                 }
@@ -184,6 +193,17 @@ struct TranslateView: View {
         .onChange(of: viewModel.isTranscribing) { _, isTr in
             if isTr {
                 dragOffset = 0
+            }
+        }
+        .onPreferenceChange(ScrollOffsetKey.self) { currentOffset in
+            resultScrollOffset = currentOffset
+        }
+        .onChange(of: viewModel.isTranslated) { _, isRes in
+            if isRes {
+                isDragHandleReady = false
+                isDragHandleVisible = true  // ← Reset to visible
+            } else {
+                isDragHandleReady = true
             }
         }
     }
@@ -218,7 +238,9 @@ struct TranslateView: View {
                 isKeyboardActive: $isKeyboardActive,
                 shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
                 dynamicTextStyle: $dynamicTextStyle,
-                dragOffset: dragOffset
+                dragOffset: dragOffset,
+                onDragChanged: handleInputDragChanged,
+                onDragEnded: handleInputDragEnded
             )
             .background(AppColor.Background.primary)
             
@@ -230,7 +252,13 @@ struct TranslateView: View {
                 adjustFontSizeDebounced: adjustFontSizeDebounced,
                 shouldPlaySequentialAnimation: $shouldPlaySequentialAnimation,
                 dynamicTextStyle: $dynamicTextStyle,
-                dragOffset: dragOffset
+                dragOffset: $dragOffset,
+                showSettings: $showSettings,
+                dragHandleReady: $isDragHandleReady,
+                dragHandleVisible: $isDragHandleVisible,
+                resultScrollOffset: $resultScrollOffset,
+                onDragChanged: handleResultDragChanged,
+                onDragEnded: handleResultDragEnded
             )
             .background(AppColor.Background.secondary)
             
@@ -283,6 +311,78 @@ struct TranslateView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
             withAnimation(.interactiveSpring(response: 0.6, dampingFraction: 0.7)) {
                 showDragHint = false
+            }
+        }
+    }
+    
+    // MARK: - Input Section Drag Handlers (Light sensitivity)
+    private func handleInputDragChanged(_ value: DragGesture.Value) {
+        guard !isKeyboardActive else { return }
+        guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
+        guard value.translation.height > 0 else { return }
+        
+        isDragPressed = true
+        dragOffset = softened(value.translation.height)
+    }
+    
+    private func handleInputDragEnded(_ value: DragGesture.Value) {
+        guard !isKeyboardActive else {
+            UIApplication.shared.dismissKeyboard()
+            return
+        }
+        guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
+        guard value.translation.height > 0 else { return }
+        
+        isDragPressed = false
+        
+        // Light threshold for input section (80pt)
+        let shouldOpen = value.translation.height > 20
+        if shouldOpen {
+            withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.85)) {
+                showSettings = true
+                dragOffset = 10
+            }
+        } else {
+            withAnimation(.interactiveSpring(response: 0.3, dampingFraction: 0.85)) {
+                dragOffset = 0
+            }
+        }
+    }
+    
+    // MARK: - Result Section Drag Handlers (Medium sensitivity)
+    private func handleResultDragChanged(_ value: DragGesture.Value) {
+        guard !isKeyboardActive else { return }
+        guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
+        
+        // Prevent drag when scrolled down (conflict with ScrollView)
+        guard resultScrollOffset >= 0 else { return }
+        guard value.translation.height > 0 else { return }
+        
+        isDragPressed = true
+        dragOffset = softened(value.translation.height)
+    }
+    
+    private func handleResultDragEnded(_ value: DragGesture.Value) {
+        guard !isKeyboardActive else {
+            UIApplication.shared.dismissKeyboard()
+            return
+        }
+        guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
+        guard resultScrollOffset >= 0 else { return }
+        guard value.translation.height > 0 else { return }
+        
+        isDragPressed = false
+        
+        // Medium threshold for result section (150pt)
+        let shouldOpen = value.translation.height > 120
+        if shouldOpen {
+            withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.85)) {
+                showSettings = true
+                dragOffset = 10
+            }
+        } else {
+            withAnimation(.interactiveSpring(response: 0.3, dampingFraction: 0.85)) {
+                dragOffset = 0
             }
         }
     }

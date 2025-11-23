@@ -19,6 +19,13 @@ struct ExpandedTranslationView: View {
             Color(AppColor.Background.secondary)
                 .ignoresSafeArea()
             
+            OrientationController(
+                            orientation: .landscape,
+                            fallback: .landscapeRight
+                        )
+                        .allowsHitTesting(false)
+                        .frame(width: 0, height: 0)
+            
             GeometryReader { geo in
                 ScrollView(.vertical, showsIndicators: true){
                     VStack {
@@ -37,18 +44,91 @@ struct ExpandedTranslationView: View {
             }
             
             Button {
-                UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+                OrientationController(
+                                    orientation: .portrait,
+                                    fallback: .portrait
+                                )
+                                .lockImmediately()
                 dismiss()
                 onClose()
             } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.largeTitle)
-                    .foregroundColor(colorScheme == .light ? .black : .white)
-                    .padding()
+                Image(systemName: "xmark")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(AppColor.Background.primary)
+                    .padding(20)
+                    .background(
+                        Group {
+                            if #available(iOS 26, *) {
+                                Circle()
+                                    .glassEffect(.regular.tint(AppColor.Text.primary).interactive())
+                                    .frame(width: 44, height: 44)
+                            } else {
+                                Circle()
+                                    .fill(AppColor.Text.primary)
+                                    .frame(width: 44, height: 44)
+                            }
+                        }
+                    )
             }
+            .accessibilityLabel("Close")
+            .accessibilityIdentifier("ExpandedTranslationView.Close")
         }
         .onAppear {
-            UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
+            setOrientation(.landscape, fallback: .landscapeRight)
         }
     }
 }
+
+struct OrientationController: UIViewControllerRepresentable {
+    let orientation: UIInterfaceOrientationMask
+    let fallback: UIInterfaceOrientation
+
+    func makeUIViewController(context: Context) -> UIViewController {
+        let vc = UIViewController()
+        lock()
+        return vc
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+
+    private func lock() {
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            if #available(iOS 16.0, *) {
+                let prefs = UIWindowScene.GeometryPreferences.iOS(interfaceOrientations: orientation)
+                try? scene.requestGeometryUpdate(prefs)
+            } else {
+                UIDevice.current.setValue(fallback.rawValue, forKey: "orientation")
+            }
+        }
+    }
+}
+
+
+extension ExpandedTranslationView {
+    func setOrientation(_ mask: UIInterfaceOrientationMask, fallback: UIInterfaceOrientation) {
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            if #available(iOS 16.0, *) {
+                let prefs = UIWindowScene.GeometryPreferences.iOS(interfaceOrientations: mask)
+                try? scene.requestGeometryUpdate(prefs)
+            } else {
+                UIDevice.current.setValue(fallback.rawValue, forKey: "orientation")
+            }
+        } else {
+            UIDevice.current.setValue(fallback.rawValue, forKey: "orientation")
+        }
+    }
+}
+
+extension OrientationController {
+    func lockImmediately() {
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            if #available(iOS 16.0, *) {
+                let prefs = UIWindowScene.GeometryPreferences.iOS(interfaceOrientations: orientation)
+                try? scene.requestGeometryUpdate(prefs)
+            } else {
+                UIDevice.current.setValue(fallback.rawValue, forKey: "orientation")
+            }
+        }
+    }
+}
+

@@ -63,14 +63,13 @@ struct RecordButton: View {
             .frame(width: geometry.size.width, height: geometry.size.height)
             .zIndex(999)
             
-            .gesture(
+            .highPriorityGesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in dragOffset = value.translation }
                     .onEnded { value in
                         position.x += value.translation.width
                         position.y += value.translation.height
                         dragOffset = .zero
-                        
                         position.x = min(max(position.x, 40), geometry.size.width - 40)
                         position.y = min(max(position.y, 40), geometry.size.height - 40)
                     }
@@ -108,32 +107,42 @@ struct RecordButton: View {
                         y: geometry.size.height - 120
                     )
                 }
+                if soundEffectEnabled {
+                    if dripPlayer == nil, let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") {
+                        dripPlayer = try? AVAudioPlayer(contentsOf: url)
+                        dripPlayer?.volume = 0.85
+                        dripPlayer?.prepareToPlay()
+                    }
+                    if releasePlayer == nil, let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") {
+                        releasePlayer = try? AVAudioPlayer(contentsOf: url)
+                        releasePlayer?.volume = 0.85
+                        releasePlayer?.prepareToPlay()
+                    }
+                }
             }
         }
     }
     
     private func playDripSound() {
         guard soundEffectEnabled else { return }
-        guard let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") else { return }
-        do {
-            dripPlayer = try AVAudioPlayer(contentsOf: url)
+        if dripPlayer == nil, let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") {
+            dripPlayer = try? AVAudioPlayer(contentsOf: url)
             dripPlayer?.volume = 0.85
             dripPlayer?.prepareToPlay()
-            dripPlayer?.play()
-        } catch {
         }
+        dripPlayer?.currentTime = 0
+        dripPlayer?.play()
     }
 
     private func playReleaseSound() {
         guard soundEffectEnabled else { return }
-        guard let url = Bundle.main.url(forResource: "water-release", withExtension: "mp3") else { return }
-        do {
-            releasePlayer = try AVAudioPlayer(contentsOf: url)
+        if releasePlayer == nil, let url = Bundle.main.url(forResource: "water-release", withExtension: "mp3") {
+            releasePlayer = try? AVAudioPlayer(contentsOf: url)
             releasePlayer?.volume = 0.9
             releasePlayer?.prepareToPlay()
-            releasePlayer?.play()
-        } catch {
         }
+        releasePlayer?.currentTime = 0
+        releasePlayer?.play()
     }
 
     private func startSonar() {

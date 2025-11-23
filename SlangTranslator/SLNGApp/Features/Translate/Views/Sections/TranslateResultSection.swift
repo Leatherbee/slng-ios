@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVFoundation
+import UIKit
 
 struct TranslateResultSection: View {
     @ObservedObject var viewModel: TranslateViewModel
@@ -35,24 +36,39 @@ struct TranslateResultSection: View {
     @State private var audioPlayer: AVAudioPlayer?
     @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
     
-    var dragOffset: CGFloat
+    @Binding var dragOffset: CGFloat
+    @Binding var showSettings: Bool
+    @Binding var dragHandleReady: Bool
+    @Binding var dragHandleVisible: Bool
+    @Binding var resultScrollOffset: CGFloat
+    
+    var onDragChanged: (DragGesture.Value) -> Void
+    var onDragEnded: (DragGesture.Value) -> Void
     
     var body: some View {
         ZStack(alignment: .bottom) {
-                AppColor.Background.secondary.ignoresSafeArea()
-                
-                GeometryReader { screenGeo in
-                    SunburstView(trigger: $showBurst)
-                        .allowsHitTesting(false)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .position(x: screenGeo.size.width / 2,
-                                  y: screenGeo.size.height / 2 - 150)
-                }
-                .zIndex(2)
-                
+            AppColor.Background.secondary.ignoresSafeArea()
+            
+            GeometryReader { screenGeo in
+                SunburstView(trigger: $showBurst)
+                    .allowsHitTesting(false)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .position(x: screenGeo.size.width / 2,
+                              y: screenGeo.size.height / 2 - 150)
+            }
+            .zIndex(2)
+            
+            ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
                         Spacer().frame(height: alignToInputPosition ? 150 : 100)
+                            .id("resultTopAnchor")
+                            .background(
+                                GeometryReader { g in
+                                    Color.clear.preference(key: ResultTopYKey.self,
+                                                           value: g.frame(in: .global).minY)
+                                }
+                            )
                         
                         ZStack(alignment: .topLeading) {
                             VStack(alignment: .leading, spacing: 8) {
@@ -107,6 +123,12 @@ struct TranslateResultSection: View {
                                         .animation((reduceMotion || reduceMotionEnabled) ? nil : .spring(response: 0.55, dampingFraction: 0.8), value: showTranslated)
                                 }
                             }
+                            .background(
+                                GeometryReader { g in
+                                    Color.clear.preference(key: ResultContentTopYKey.self,
+                                                           value: g.frame(in: .global).minY)
+                                }
+                            )
                         }
                         .padding(.horizontal, 32)
                         
@@ -211,7 +233,7 @@ struct TranslateResultSection: View {
                                         .opacity(showDetectedSlang ? 1 : 0)
                                         .animation(
                                             reduceMotion ? nil : .easeInOut(duration: 0.6)
-                                            .delay(Double(viewModel.slangData.firstIndex(where: { $0.slang == slangData.slang }) ?? 0) * 0.05),
+                                                .delay(Double(viewModel.slangData.firstIndex(where: { $0.slang == slangData.slang }) ?? 0) * 0.05),
                                             value: showDetectedSlang
                                         )
                                     }
@@ -240,63 +262,106 @@ struct TranslateResultSection: View {
                     .scaleEffect(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 900.0))), anchor: .top)
                     .animation(.interactiveSpring(response: 0.25, dampingFraction: 0.82), value: dragOffset)
                 }
-                .safeAreaPadding(.top)
-                .scrollIndicators(.hidden)
-                
-                Button {
-                    viewModel.reset()
-                    resetAnimation()
-                } label: {
-                    Group {
-                        if #available(iOS 26, *) {
-                            Label("Try Another", systemImage: "arrow.left")
-                                .padding(.vertical, 18)
-                                .font(Font.body.bold())
-                                .frame(maxWidth: 314, minHeight: 60)
-                                .foregroundColor(colorScheme == .dark ? .black : .white)
-                                .glassEffect(.regular.tint(AppColor.Button.primary).interactive(), in: .rect(cornerRadius: 30))
-                        } else {
-                            Label("Try Another", systemImage: "arrow.left")
-                                .padding(.vertical, 18)
-                                .font(Font.body.bold())
-                                .frame(maxWidth: 314, minHeight: 60)
-                                .foregroundColor(colorScheme == .dark ? .black : .white)
-                                .background(
-                                    AppColor.Button.primary
-                                )
-                                .clipShape(RoundedRectangle(cornerRadius: 30))
+                .onChange(of: showSettings) { _, isShowing in
+                    if !isShowing {
+                        withAnimation(.easeInOut(duration: 1.2)) {
+                            proxy.scrollTo("resultTopAnchor", anchor: .top)
                         }
                     }
                 }
-                .accessibilityLabel("Try another translation")
-                .accessibilityHint("Go back to input to translate another text")
-                .padding(.bottom, 16)
-                .opacity(showBottomUI ? CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 360.0))) : 0)
-                .offset(y: dragOffset * 0.65)
-                .scaleEffect(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 900.0))), anchor: .top)
-                .animation(.interactiveSpring(response: 0.50, dampingFraction: 0.82), value: dragOffset)
-                .animation(reduceMotion ? nil : .easeIn(duration: 0.5), value: showBottomUI)
-            }
-            .onAppear {
-                if shouldPlaySequentialAnimation {
-                    if reduceMotion {
-                        stage = 1
-                        triggerBurstHaptic()
-                        showBurst = true
-                        showPulse = false
-                        dividerProgress = 1.0
-                        showTranslated = true
-                        showDetectedSlangButton = true
-                        showBottomUI = true
-                        alignToInputPosition = false
-                        moveUp = true
-                    } else {
-                        playSequentialAnimation()
+                .onPreferenceChange(ResultTopYKey.self) { topY in
+                    guard showBottomUI else { return }
+                    let hideThreshold = safeTop + 60
+                    let showThreshold = safeTop + 92
+                    if topY < hideThreshold {
+                        dragHandleReady = false
+                    } else if topY > showThreshold {
+                        dragHandleReady = true
                     }
-                    shouldPlaySequentialAnimation = false
+                }
+                .onPreferenceChange(ResultContentTopYKey.self) { contentTopY in
+                    guard showBottomUI else { return }
+                    let hideThreshold = safeTop + 120
+                    let showThreshold = safeTop + 140
+                    
+                    // Hide drag handle when scrolled up (content near top)
+                    if contentTopY < hideThreshold {
+                        dragHandleReady = false
+                        dragHandleVisible = false
+                    } else if contentTopY > showThreshold {
+                        dragHandleReady = true
+                        dragHandleVisible = true
+                    }
                 }
             }
-            .toolbar(showBottomUI ? .visible : .hidden, for: .tabBar)
+            .safeAreaPadding(.top)
+            .scrollIndicators(.hidden)
+            .coordinateSpace(name: "scroll")
+            
+            
+            Button {
+                viewModel.reset()
+                resetAnimation()
+            } label: {
+                Group {
+                    if #available(iOS 26, *) {
+                        Label("Try Another", systemImage: "arrow.left")
+                            .padding(.vertical, 18)
+                            .font(Font.body.bold())
+                            .frame(maxWidth: 314, minHeight: 60)
+                            .foregroundColor(colorScheme == .dark ? .black : .white)
+                            .glassEffect(.regular.tint(AppColor.Button.primary).interactive(), in: .rect(cornerRadius: 30))
+                    } else {
+                        Label("Try Another", systemImage: "arrow.left")
+                            .padding(.vertical, 18)
+                            .font(Font.body.bold())
+                            .frame(maxWidth: 314, minHeight: 60)
+                            .foregroundColor(colorScheme == .dark ? .black : .white)
+                            .background(
+                                AppColor.Button.primary
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: 30))
+                    }
+                }
+            }
+            .accessibilityLabel("Try another translation")
+            .accessibilityHint("Go back to input to translate another text")
+            .padding(.bottom, 16)
+            .opacity(showBottomUI ? CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 360.0))) : 0)
+            .offset(y: dragOffset * 0.65)
+            .scaleEffect(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 900.0))), anchor: .top)
+            .animation(.interactiveSpring(response: 0.50, dampingFraction: 0.82), value: dragOffset)
+            .animation(reduceMotion ? nil : .easeIn(duration: 0.5), value: showBottomUI)
+        }
+        .onAppear {
+            if shouldPlaySequentialAnimation {
+                if reduceMotion {
+                    stage = 1
+                    triggerBurstHaptic()
+                    showBurst = true
+                    showPulse = false
+                    dividerProgress = 1.0
+                    showTranslated = true
+                    showDetectedSlangButton = true
+                    showBottomUI = true
+                    alignToInputPosition = false
+                    moveUp = true
+                    dragHandleReady = true
+                } else {
+                    dragHandleReady = false
+                    playSequentialAnimation()
+                }
+                shouldPlaySequentialAnimation = false
+            }
+        }
+        .toolbar(showBottomUI ? .visible : .hidden, for: .tabBar)
+        .background(
+            GeometryReader { geo in
+                Color.clear
+                    .preference(key: ScrollOffsetKey.self,
+                                value: geo.frame(in: .named("scroll")).minY)
+            }
+        )
     }
     
     private func resetAnimation() {
@@ -361,12 +426,23 @@ struct TranslateResultSection: View {
                                 withAnimation(.easeIn(duration: 0.3)) {
                                     showBottomUI = true
                                 }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) {
+                                    withAnimation(.easeInOut(duration: 0.35)) {
+                                        dragHandleReady = true
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+    
+    var safeTop: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+            .first?.safeAreaInsets.top ?? 60
     }
     
     private func playBurstSound() {
@@ -387,6 +463,27 @@ struct TranslateResultSection: View {
         playBurstSound()
         
         HapticManager.shared.playExplosionHaptic()
+    }
+}
+
+struct ScrollOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
+struct ResultTopYKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
+struct ResultContentTopYKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
