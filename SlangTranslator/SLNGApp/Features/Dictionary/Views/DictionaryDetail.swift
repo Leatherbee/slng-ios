@@ -106,12 +106,12 @@ struct DictionaryDetail: View {
                              ForEach(Array(variants.prefix(6).enumerated()), id: \.offset) { idx, v in
                                  similiarButton(title: v.slang, isActive: idx == selectedVariantIndex) {
                                      Analytics.logEvent("dictionary_similar_selected", parameters: ["index": idx])
-                                     showBurst = false
-                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
-                                         showBurst = true
-                                         playBurstSound()
-                                         selectedVariantIndex = idx
-                                     }
+                                    showBurst = false
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                                        showBurst = true
+                                        triggerBurstHaptic()
+                                        selectedVariantIndex = idx
+                                    }
                                    
                                  }
                              }
@@ -241,6 +241,11 @@ struct DictionaryDetail: View {
         } catch {
             fatalError()
         }
+    }
+    
+    private func triggerBurstHaptic() {
+        playBurstSound()
+        HapticManager.shared.playExplosionHaptic()
     }
 
 }
