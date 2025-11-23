@@ -9,6 +9,7 @@ import Foundation
 import FirebaseAnalytics
 import AVFoundation
 struct DictionaryDetail: View {
+    @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
     @Environment(PopupManager.self) private var popupManager
     @State private var slangData: SlangModel?
     @State private var variants: [SlangModel] = []
@@ -105,12 +106,12 @@ struct DictionaryDetail: View {
                              ForEach(Array(variants.prefix(6).enumerated()), id: \.offset) { idx, v in
                                  similiarButton(title: v.slang, isActive: idx == selectedVariantIndex) {
                                      Analytics.logEvent("dictionary_similar_selected", parameters: ["index": idx])
-                                     showBurst = false
-                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
-                                         showBurst = true
-                                         playBurstSound()
-                                         selectedVariantIndex = idx
-                                     }
+                                    showBurst = false
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                                        showBurst = true
+                                        triggerBurstHaptic()
+                                        selectedVariantIndex = idx
+                                    }
                                    
                                  }
                              }
@@ -229,6 +230,7 @@ struct DictionaryDetail: View {
     }
     
     private func playBurstSound() {
+        guard soundEffectEnabled else { return }
         guard let url = Bundle.main.url(forResource: "whoosh", withExtension: "mp3") else { return }
         
         do {
@@ -239,6 +241,11 @@ struct DictionaryDetail: View {
         } catch {
             fatalError()
         }
+    }
+    
+    private func triggerBurstHaptic() {
+        playBurstSound()
+        HapticManager.shared.playExplosionHaptic()
     }
 
 }
@@ -320,12 +327,6 @@ struct WrapLayoutCenter: Layout {
         }
     }
 }
-
-
-
-
-
-
 
 //
 struct DictionaryDetail_Previews: PreviewProvider {

@@ -24,6 +24,7 @@ struct DictionaryView: View {
     @State private var lastOverlayLetter: String = ""
     @State private var jumpAnimated: Bool = true
     @State private var lastJumpTime: CFTimeInterval = 0
+    @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -319,6 +320,12 @@ class SoundManager {
     
     // Ultra smooth playback dengan advanced features
     func playClick(withVelocity velocity: Double = 0) {
+        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
+        let enabled: Bool = {
+            if defaults.object(forKey: "soundEffectEnabled") == nil { return true }
+            return defaults.bool(forKey: "soundEffectEnabled")
+        }()
+        guard enabled else { return }
         let currentTime = CACurrentMediaTime()
         
         // Update velocity dengan smoothing
@@ -380,12 +387,20 @@ class SoundManager {
     
     // System sound alternative dengan ultra smooth haptic
     func playSystemClick(intensity: CGFloat = 0.5) {
-        AudioServicesPlaySystemSound(1104)
-        
-        // Ultra smooth haptic dengan proper intensity
-        let generator = UIImpactFeedbackGenerator(style: .heavy)
-        generator.prepare()
-        generator.impactOccurred(intensity: intensity)
+        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
+        let soundOn: Bool = {
+            if defaults.object(forKey: "soundEffectEnabled") == nil { return true }
+            return defaults.bool(forKey: "soundEffectEnabled")
+        }()
+        if soundOn {
+            AudioServicesPlaySystemSound(1104)
+        }
+
+        if Haptics.isEnabled {
+            let generator = UIImpactFeedbackGenerator(style: .heavy)
+            generator.prepare()
+            generator.impactOccurred(intensity: intensity)
+        }
     }
     
     // Enable/disable pitch variation
@@ -505,7 +520,9 @@ public struct SwiftUIWheelPicker<Item>: View {
                                        
                                        // Smooth velocity reset dengan decay
                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                           engine.impactOccurred(intensity: 0.4)
+                                           if Haptics.isEnabled {
+                                               engine.impactOccurred(intensity: 0.4)
+                                           }
 
                                            isQuickScrolling = false
                                            soundManager.resetVelocity()

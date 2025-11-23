@@ -15,11 +15,11 @@ struct KeyboardSettingView: View {
     @State private var showShareSheetPreview: Bool = false
     @State private var searchText = ""
     
-    @AppStorage("settings.autoCorrect", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
+    @AppStorage("settings.autoCorrect", store: UserDefaults.shared)
     private var autoCorrect: Bool = true
-    @AppStorage("settings.autoCaps", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
+    @AppStorage("settings.autoCaps", store: UserDefaults.shared)
     private var autoCapslock: Bool = true
-    @AppStorage("settings.keyboardLayout", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!)
+    @AppStorage("settings.keyboardLayout", store: UserDefaults.shared)
         
     private var keyboardLayoutRaw: String = LayoutType.qwerty.rawValue
 

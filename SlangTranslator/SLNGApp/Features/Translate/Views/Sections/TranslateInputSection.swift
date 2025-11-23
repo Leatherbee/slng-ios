@@ -11,7 +11,7 @@ struct TranslateInputSection: View {
     @ObservedObject var viewModel: TranslateViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.accessibilityReduceMotion) var reduceMotion
-    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
+    @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false
     var textNamespace: Namespace.ID
     var adjustFontSizeDebounced: () -> Void
     
@@ -19,6 +19,9 @@ struct TranslateInputSection: View {
     @Binding var shouldPlaySequentialAnimation: Bool
     @Binding var dynamicTextStyle: Font.TextStyle
     var dragOffset: CGFloat
+    
+    var onDragChanged: (DragGesture.Value) -> Void
+    var onDragEnded: (DragGesture.Value) -> Void
         
     var body: some View {
         VStack {
@@ -113,7 +116,7 @@ struct TranslateInputSection: View {
         .contentShape(Rectangle())
         .onTapGesture { UIApplication.shared.dismissKeyboard() }
         .background(
-            Color.backgroundPrimary
+            AppColor.Background.primary
                 .ignoresSafeArea()
                 .onTapGesture {
                     UIApplication.shared.dismissKeyboard()
@@ -123,6 +126,11 @@ struct TranslateInputSection: View {
         .opacity(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 260.0))))
         .scaleEffect(CGFloat(max(0.0, 1.0 - (Double(dragOffset) / 900.0))), anchor: .top)
         .animation(.interactiveSpring(response: 0.25, dampingFraction: 0.82), value: dragOffset)
+        .gesture(
+            DragGesture(minimumDistance: 5) // Light sensitivity - easy to trigger
+                .onChanged(onDragChanged)
+                .onEnded(onDragEnded)
+        )
     }
 }
 

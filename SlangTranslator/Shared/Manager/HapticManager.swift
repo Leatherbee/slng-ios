@@ -7,11 +7,17 @@
 
 import CoreHaptics
 import AVFoundation
+import UIKit
 
 class HapticManager {
     static let shared = HapticManager()
     
     private var engine: CHHapticEngine?
+    private var isEnabled: Bool {
+        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
+        if defaults.object(forKey: "hapticEnabled") == nil { return true }
+        return defaults.bool(forKey: "hapticEnabled")
+    }
     
     init() {
         prepareHaptics()
@@ -37,6 +43,7 @@ class HapticManager {
     }
     
     func playBurstHaptic() {
+        guard isEnabled else { return }
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
         
         var events = [CHHapticEvent]()
@@ -76,6 +83,7 @@ class HapticManager {
     }
     
     func playExplosionHaptic() {
+        guard isEnabled else { return }
         guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
         
         var events = [CHHapticEvent]()
@@ -111,11 +119,14 @@ class HapticManager {
         events.append(rumble)
         
         do {
+            try engine?.start()
             let pattern = try CHHapticPattern(events: events, parameters: [])
             let player = try engine?.makePlayer(with: pattern)
             try player?.start(atTime: 0)
         } catch {
-            print("Failed to play explosion haptic: \(error)")
+            let generator = UIImpactFeedbackGenerator(style: .heavy)
+            generator.prepare()
+            generator.impactOccurred(intensity: 1.0)
         }
     }
 }

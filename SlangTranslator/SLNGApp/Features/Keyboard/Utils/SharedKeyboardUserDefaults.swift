@@ -8,5 +8,7 @@
 import SwiftUI
 
 extension UserDefaults {
-    static let shared = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+    static var shared: UserDefaults {
+        UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
+    }
 }

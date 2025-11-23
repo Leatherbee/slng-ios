@@ -11,10 +11,10 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(Router.self) private var route
     @Binding var showSettings: Bool
-    @AppStorage("selectedTheme", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var selectedThemeRaw: String = ThemeOption.light.rawValue
-    @AppStorage("hapticEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var hapticEnabled: Bool = true
-    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
-    @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
+    @AppStorage("selectedTheme", store: UserDefaults.shared) private var selectedThemeRaw: String = ThemeOption.light.rawValue
+    @AppStorage("hapticEnabled", store: UserDefaults.shared) private var hapticEnabled: Bool = true
+    @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false
+    @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
     enum ThemeOption: String { case dark, light }
     
     var body: some View {
@@ -146,7 +146,7 @@ struct SettingsView: View {
         }
         .background(Color(AppColor.Background.secondary))
         .onAppear {
-            let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+            let defaults = UserDefaults.shared
             if defaults.object(forKey: "selectedTheme") == nil {
                 let style = UIScreen.main.traitCollection.userInterfaceStyle
                 selectedThemeRaw = style == .dark ? ThemeOption.dark.rawValue : ThemeOption.light.rawValue

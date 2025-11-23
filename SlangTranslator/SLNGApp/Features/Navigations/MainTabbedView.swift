@@ -18,6 +18,7 @@ struct MainTabbedView: View {
     @State private var selectedTab: TabSelection = .translate
     @State private var popupManager = PopupManager()
     @State private var searchText = ""
+    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
     
     var body: some View{
         ZStack {
@@ -32,7 +33,9 @@ struct MainTabbedView: View {
                 .accessibilityInputLabels(["Translate Tab"])
                 
                 Tab("Keyboard", systemImage: "keyboard", value: .keyboard) {
-                    KeyboardView(onReturnFromSettings: {})
+                    KeyboardView(onReturnFromSettings: {
+                        hasSetupKeyboard = true
+                    })
                 }
                 .accessibilityLabel("Keyboard tab")
                 .accessibilityHint("Keyboard page")

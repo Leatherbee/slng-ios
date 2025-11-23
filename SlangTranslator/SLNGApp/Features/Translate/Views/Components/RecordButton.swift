@@ -22,12 +22,15 @@ struct RecordButton: View {
     @State private var dripPlayer: AVAudioPlayer?
     @State private var releasePlayer: AVAudioPlayer?
     @State private var pressStartAt: Date?
+    @State private var isPressed: Bool = false
+    @State private var buttonScale: CGFloat = 1.0
     private let minHoldDuration: TimeInterval = 1.4
-    @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
+    @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
+                // Animated ripples when recording
                 if isRecording {
                     let normalized = max(0, min(1, CGFloat((audioLevel + 160) / 160)))
     
@@ -35,17 +38,22 @@ struct RecordButton: View {
                         .fill(AppColor.Button.primary.opacity(0.14))
                         .frame(width: 140, height: 140)
                         .scaleEffect(1 + normalized * 1.0)
+                        .animation(.easeOut(duration: 0.1), value: normalized)
                     
                     Circle()
                         .fill(AppColor.Button.primary.opacity(0.10))
                         .frame(width: 180, height: 180)
                         .scaleEffect(1 + normalized * 1.5)
+                        .animation(.easeOut(duration: 0.15), value: normalized)
                     
                     Circle()
                         .fill(AppColor.Button.primary.opacity(0.20))
                         .frame(width: 90, height: 90)
+                        .scaleEffect(buttonScale)
+                        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: buttonScale)
                 }
 
+                // Hit area when not recording
                 if !isRecording {
                     Circle()
                         .fill(Color.gray.opacity(0.0001))
@@ -53,6 +61,8 @@ struct RecordButton: View {
                         .overlay(
                             Circle().stroke(Color.gray.opacity(0.01), lineWidth: 1)
                         )
+                        .scaleEffect(buttonScale)
+                        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: buttonScale)
                         .allowsHitTesting(true)
                 }
             }
@@ -63,23 +73,33 @@ struct RecordButton: View {
             .frame(width: geometry.size.width, height: geometry.size.height)
             .zIndex(999)
             
-            .gesture(
+            .simultaneousGesture(
                 DragGesture(minimumDistance: 0)
-                    .onChanged { value in dragOffset = value.translation }
+                    .onChanged { value in
+                        withAnimation(.interactiveSpring(response: 0.3, dampingFraction: 0.8)) {
+                            dragOffset = value.translation
+                        }
+                    }
                     .onEnded { value in
-                        position.x += value.translation.width
-                        position.y += value.translation.height
-                        dragOffset = .zero
-                        
-                        position.x = min(max(position.x, 40), geometry.size.width - 40)
-                        position.y = min(max(position.y, 40), geometry.size.height - 40)
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                            position.x += value.translation.width
+                            position.y += value.translation.height
+                            dragOffset = .zero
+                            position.x = min(max(position.x, 40), geometry.size.width - 40)
+                            position.y = min(max(position.y, 40), geometry.size.height - 40)
+                        }
                     }
             )
             
             .onLongPressGesture(
-                minimumDuration: 0.4,
+                minimumDuration: 0.3,
                 maximumDistance: 50,
                 pressing: { pressing in
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                        isPressed = pressing
+                        buttonScale = pressing ? 0.9 : 1.0
+                    }
+                    
                     if pressing && !isRecording {
                         isRecording = true
                         onStart()
@@ -108,32 +128,42 @@ struct RecordButton: View {
                         y: geometry.size.height - 120
                     )
                 }
+                if soundEffectEnabled {
+                    if dripPlayer == nil, let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") {
+                        dripPlayer = try? AVAudioPlayer(contentsOf: url)
+                        dripPlayer?.volume = 0.85
+                        dripPlayer?.prepareToPlay()
+                    }
+                    if releasePlayer == nil, let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") {
+                        releasePlayer = try? AVAudioPlayer(contentsOf: url)
+                        releasePlayer?.volume = 0.85
+                        releasePlayer?.prepareToPlay()
+                    }
+                }
             }
         }
     }
     
     private func playDripSound() {
         guard soundEffectEnabled else { return }
-        guard let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") else { return }
-        do {
-            dripPlayer = try AVAudioPlayer(contentsOf: url)
+        if dripPlayer == nil, let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") {
+            dripPlayer = try? AVAudioPlayer(contentsOf: url)
             dripPlayer?.volume = 0.85
             dripPlayer?.prepareToPlay()
-            dripPlayer?.play()
-        } catch {
         }
+        dripPlayer?.currentTime = 0
+        dripPlayer?.play()
     }
 
     private func playReleaseSound() {
         guard soundEffectEnabled else { return }
-        guard let url = Bundle.main.url(forResource: "water-release", withExtension: "mp3") else { return }
-        do {
-            releasePlayer = try AVAudioPlayer(contentsOf: url)
+        if releasePlayer == nil, let url = Bundle.main.url(forResource: "water-drip", withExtension: "mp3") {
+            releasePlayer = try? AVAudioPlayer(contentsOf: url)
             releasePlayer?.volume = 0.9
             releasePlayer?.prepareToPlay()
-            releasePlayer?.play()
-        } catch {
         }
+        releasePlayer?.currentTime = 0
+        releasePlayer?.play()
     }
 
     private func startSonar() {
@@ -149,6 +179,8 @@ struct RecordButton: View {
     private func stopSonar() {
         timer?.invalidate()
         timer = nil
-        pulseScale = 1.0
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+            pulseScale = 1.0
+        }
     }
 }
