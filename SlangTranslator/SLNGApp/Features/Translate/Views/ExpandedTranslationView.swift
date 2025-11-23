@@ -6,26 +6,26 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct ExpandedTranslationView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     let text: String
     let onClose: () -> Void
     
+    private let rotationChangePublisher = NotificationCenter.default
+        .publisher(for: UIDevice.orientationDidChangeNotification)
+    @State private var isOrientationLocked = false
+
     @Environment(\.dismiss) private var dismiss
+    
+    var fullScreen: Bool = false
     
     var body: some View {
         ZStack(alignment: .topLeading) {
             Color(AppColor.Background.secondary)
                 .ignoresSafeArea()
-            
-            OrientationController(
-                            orientation: .landscape,
-                            fallback: .landscapeRight
-                        )
-                        .allowsHitTesting(false)
-                        .frame(width: 0, height: 0)
-            
+
             GeometryReader { geo in
                 ScrollView(.vertical, showsIndicators: true){
                     VStack {
@@ -44,11 +44,6 @@ struct ExpandedTranslationView: View {
             }
             
             Button {
-                OrientationController(
-                                    orientation: .portrait,
-                                    fallback: .portrait
-                                )
-                                .lockImmediately()
                 dismiss()
                 onClose()
             } label: {
@@ -74,61 +69,54 @@ struct ExpandedTranslationView: View {
             .accessibilityIdentifier("ExpandedTranslationView.Close")
         }
         .onAppear {
-            setOrientation(.landscape, fallback: .landscapeRight)
+            changeOrientation(to: .landscape)
         }
-    }
-}
-
-struct OrientationController: UIViewControllerRepresentable {
-    let orientation: UIInterfaceOrientationMask
-    let fallback: UIInterfaceOrientation
-
-    func makeUIViewController(context: Context) -> UIViewController {
-        let vc = UIViewController()
-        lock()
-        return vc
-    }
-
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
-
-    private func lock() {
-        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            if #available(iOS 16.0, *) {
-                let prefs = UIWindowScene.GeometryPreferences.iOS(interfaceOrientations: orientation)
-                try? scene.requestGeometryUpdate(prefs)
-            } else {
-                UIDevice.current.setValue(fallback.rawValue, forKey: "orientation")
-            }
+        .onDisappear {
+            changeOrientation(to: .portrait)
         }
+//        .onReceive(rotationChangePublisher) { _ in
+//            if isOrientationLocked {
+//                changeOrientation(to: .portrait)
+//            }
+//        }
     }
-}
-
-
-extension ExpandedTranslationView {
-    func setOrientation(_ mask: UIInterfaceOrientationMask, fallback: UIInterfaceOrientation) {
-        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+    
+    func changeOrientation(to orientation: UIInterfaceOrientationMask) {
+        // tell the app to change the orientation
+        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        
+        if fullScreen {
             if #available(iOS 16.0, *) {
-                let prefs = UIWindowScene.GeometryPreferences.iOS(interfaceOrientations: mask)
-                try? scene.requestGeometryUpdate(prefs)
+                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape))
             } else {
-                UIDevice.current.setValue(fallback.rawValue, forKey: "orientation")
+                // Fallback on earlier versions
             }
         } else {
-            UIDevice.current.setValue(fallback.rawValue, forKey: "orientation")
-        }
-    }
-}
-
-extension OrientationController {
-    func lockImmediately() {
-        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             if #available(iOS 16.0, *) {
-                let prefs = UIWindowScene.GeometryPreferences.iOS(interfaceOrientations: orientation)
-                try? scene.requestGeometryUpdate(prefs)
+                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
             } else {
-                UIDevice.current.setValue(fallback.rawValue, forKey: "orientation")
+                // Fallback on earlier versions
             }
         }
     }
 }
-
+//
+//private enum OrientationLock {
+//    static func set(_ mask: UIInterfaceOrientationMask, rotateTo fallback: UIInterfaceOrientation) {
+//        DispatchQueue.main.async {
+//            apply(mask: mask, fallback: fallback)
+//        }
+//    }
+//    
+//    private static func apply(mask: UIInterfaceOrientationMask, fallback: UIInterfaceOrientation) {
+//        if #available(iOS 16.0, *) {
+//            if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+//                let prefs = UIWindowScene.GeometryPreferences.iOS(interfaceOrientations: mask)
+//                try? scene.requestGeometryUpdate(prefs)
+//            }
+//        } else {
+//            UIDevice.current.setValue(fallback.rawValue, forKey: "orientation")
+//            UIViewController.attemptRotationToDeviceOrientation()
+//        }
+//    }
+//}
