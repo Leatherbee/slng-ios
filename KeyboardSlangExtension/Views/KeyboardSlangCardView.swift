@@ -110,6 +110,12 @@ struct KeyboardSlangCardView: View {
             isExpanded.toggle()
         }
         
+        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
+        let isHapticOn: Bool = {
+            if defaults.object(forKey: "hapticEnabled") == nil { return true }
+            return defaults.bool(forKey: "hapticEnabled")
+        }()
+        guard isHapticOn else { return }
         if isExpanded {
             generator.impactOccurred(intensity: 0.7)
         } else {

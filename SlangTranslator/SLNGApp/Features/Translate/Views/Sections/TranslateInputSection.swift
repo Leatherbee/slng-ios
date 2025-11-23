@@ -11,7 +11,7 @@ struct TranslateInputSection: View {
     @ObservedObject var viewModel: TranslateViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.accessibilityReduceMotion) var reduceMotion
-    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
+    @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false
     var textNamespace: Namespace.ID
     var adjustFontSizeDebounced: () -> Void
     

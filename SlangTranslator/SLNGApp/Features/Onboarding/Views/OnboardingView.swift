@@ -14,8 +14,7 @@ struct OnboardingView: View {
     @State var isSecondPage: Bool = true
     @SceneStorage("onboarding.pageNumber") var pageNumber: Int = 1
     @State var trialKeyboardText: String = ""
-    @AppStorage("hasSetupKeyboard", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var hasSetupKeyboard = false
-    
+    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
 
     @FocusState private var focusedField: Bool
     
@@ -34,12 +33,20 @@ struct OnboardingView: View {
                 OnboardingFourthPage(pageNumber: $pageNumber)
             }
             else if pageNumber==5{
-                KeyboardView(isOnboarding: true) {
-                    hasSetupKeyboard = true
-                    
-                    withAnimation {
-                        pageNumber = 6
+                NavigationStack {
+                    KeyboardView(isOnboarding: true, onSkipOnboarding: {
+                        @AppStorage("hasOnboarded") var hasOnboarded = false
+                        hasOnboarded = true
+                        Analytics.logEvent("tutorial_complete", parameters: [
+                            "source": "skip_keyboard_setup"
+                        ])
+                    }) {
+                        hasSetupKeyboard = true
+                        withAnimation {
+                            pageNumber = 6
+                        }
                     }
+                    .navigationBarTitleDisplayMode(.inline)
                 }
             }
             else if pageNumber==6{

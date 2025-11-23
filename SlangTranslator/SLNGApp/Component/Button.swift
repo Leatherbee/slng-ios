@@ -18,7 +18,7 @@ struct PrimaryButton<Label: View>: View {
     
     @State private var isPressed: Bool = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
+    @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false
     
     init(
         buttonColor: Color,

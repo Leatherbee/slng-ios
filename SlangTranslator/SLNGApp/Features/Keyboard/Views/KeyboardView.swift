@@ -9,20 +9,26 @@ import SwiftUI
 
 struct KeyboardView: View {
     @StateObject private var viewModel = KeyboardStatusViewModel()
+    @AppStorage("hasSetupKeyboard", store: UserDefaults.shared) private var hasSetupKeyboard = false
+    @Environment(\.scenePhase) private var scenePhase
     
     var isOnboarding: Bool = false
+    var onSkipOnboarding: (() -> Void)? = nil
     var onReturnFromSettings: () -> Void
     var body: some View {
         Group{
-            if viewModel.isKeyboardEnabled && !isOnboarding {
+            if (viewModel.isKeyboardEnabled || hasSetupKeyboard) && !isOnboarding {
                 KeyboardSettingView()
                     .accessibilityLabel("Keyboard settings")
                     .accessibilityHint("Manage keyboard translator preferences and options")
                     .accessibilityIdentifier("KeyboardView.Settings")
             } else {
-                SetupKeyboardView(viewModel: viewModel) {
+                SetupKeyboardView(viewModel: viewModel, onReturnFromSettings: {
+                    UserDefaults.shared.set(true, forKey: "hasSetupKeyboard")
+                    hasSetupKeyboard = true
+                    viewModel.updateKeyboardStatus()
                     onReturnFromSettings()
-                }
+                }, isOnboarding: isOnboarding, onSkipOnboarding: onSkipOnboarding)
                 .accessibilityLabel("Keyboard setup")
                 .accessibilityHint("Follow instructions to enable the slang translator keyboard")
                 .accessibilityIdentifier("KeyboardView.Setup")
@@ -30,6 +36,14 @@ struct KeyboardView: View {
         }
         .onAppear {
             viewModel.updateKeyboardStatus()
+        }
+        .onChange(of: hasSetupKeyboard) { _, _ in
+            viewModel.updateKeyboardStatus()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                viewModel.updateKeyboardStatus()
+            }
         }
     }
 }

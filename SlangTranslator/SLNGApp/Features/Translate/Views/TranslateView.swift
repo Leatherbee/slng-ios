@@ -18,8 +18,8 @@ struct TranslateView: View {
     @State private var shouldPlaySequentialAnimation = false
     @State private var hasShownTranslateResult: Bool = false
     @State private var fontSizeWorkItem: DispatchWorkItem?
-    @AppStorage("hasRequestedSpeechMic", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var hasRequestedSpeechMic = false
-    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
+    @AppStorage("hasRequestedSpeechMic", store: UserDefaults.shared) private var hasRequestedSpeechMic = false
+    @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false
     
     @FocusState private var isKeyboardActive: Bool
     

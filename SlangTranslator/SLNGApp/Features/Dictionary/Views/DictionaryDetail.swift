@@ -9,7 +9,7 @@ import Foundation
 import FirebaseAnalytics
 import AVFoundation
 struct DictionaryDetail: View {
-    @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
+    @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
     @Environment(PopupManager.self) private var popupManager
     @State private var slangData: SlangModel?
     @State private var variants: [SlangModel] = []
@@ -322,12 +322,6 @@ struct WrapLayoutCenter: Layout {
         }
     }
 }
-
-
-
-
-
-
 
 //
 struct DictionaryDetail_Previews: PreviewProvider {

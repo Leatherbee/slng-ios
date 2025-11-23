@@ -13,7 +13,7 @@ struct TranslateResultSection: View {
     @ObservedObject var viewModel: TranslateViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.accessibilityReduceMotion) var reduceMotion
-    @AppStorage("reduceMotionEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var reduceMotionEnabled: Bool = false
+    @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false
     
     var textNamespace: Namespace.ID
     var adjustFontSizeDebounced: () -> Void
@@ -34,7 +34,7 @@ struct TranslateResultSection: View {
     @State private var showBottomUI = false
     @State private var moveUp: Bool = false
     @State private var audioPlayer: AVAudioPlayer?
-    @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
+    @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
     
     @Binding var dragOffset: CGFloat
     @Binding var showSettings: Bool

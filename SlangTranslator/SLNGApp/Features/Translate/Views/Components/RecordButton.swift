@@ -25,7 +25,7 @@ struct RecordButton: View {
     @State private var isPressed: Bool = false
     @State private var buttonScale: CGFloat = 1.0
     private let minHoldDuration: TimeInterval = 1.4
-    @AppStorage("soundEffectEnabled", store: UserDefaults(suiteName: "group.prammmoe.SLNG")!) private var soundEffectEnabled: Bool = true
+    @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
     
     var body: some View {
         GeometryReader { geometry in

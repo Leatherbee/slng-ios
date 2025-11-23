@@ -9,7 +9,7 @@ import UIKit
 
 public enum Haptics {
     public static var isEnabled: Bool {
-        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
+        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
         if defaults.object(forKey: "hapticEnabled") == nil { return true }
         return defaults.bool(forKey: "hapticEnabled")
     }
