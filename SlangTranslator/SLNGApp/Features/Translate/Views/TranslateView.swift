@@ -260,7 +260,7 @@ struct TranslateView: View {
                 onDragChanged: handleResultDragChanged,
                 onDragEnded: handleResultDragEnded
             )
-            .background(AppColor.Background.secondary)
+            .background(AppColor.Onboarding.background)
             
         }
     }

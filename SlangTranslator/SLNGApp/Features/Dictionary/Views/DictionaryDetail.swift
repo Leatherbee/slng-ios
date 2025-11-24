@@ -65,7 +65,7 @@ struct DictionaryDetail: View {
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(AppColor.Background.secondary)
+            .background(AppColor.Onboarding.background)
             GeometryReader { screenGeo in
                 SunburstView(trigger: $showBurst)
                     .allowsHitTesting(false)

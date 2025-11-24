@@ -41,5 +41,16 @@ enum AppColor {
         static let secondary = Color("textSecondary")
         static let disable = Color("textDisable")
     }
+    
+    // MARK: - Onboarding
+    enum Onboarding {
+        static let background = Color("onboardingBackground")
+        static let text = Color("onboardingText")
+        static let textTitle = Color("onboardingTextTitle")
+        enum button {
+            static let color = Color("onboardingButton")
+            static let text = Color("onboardingButtonText")
+        }
+    }
 }
 

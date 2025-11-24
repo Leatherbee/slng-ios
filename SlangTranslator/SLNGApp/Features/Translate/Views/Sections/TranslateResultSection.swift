@@ -47,7 +47,7 @@ struct TranslateResultSection: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            AppColor.Background.secondary.ignoresSafeArea()
+            AppColor.Onboarding.background.ignoresSafeArea()
             
             GeometryReader { screenGeo in
                 SunburstView(trigger: $showBurst)
@@ -228,7 +228,7 @@ struct TranslateResultSection: View {
                                     ForEach(viewModel.slangData, id: \.slang) { slangData in
                                         TranslateSlangCardView(
                                             slangData: slangData,
-                                            backgroundColor: AppColor.Background.secondary
+                                            backgroundColor: .clear
                                         )
                                         .opacity(showDetectedSlang ? 1 : 0)
                                         .animation(

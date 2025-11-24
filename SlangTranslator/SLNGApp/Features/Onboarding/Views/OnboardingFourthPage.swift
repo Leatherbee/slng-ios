@@ -62,7 +62,7 @@ struct OnboardingFourthPage: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Stay fluent in the ever-changing slang world")
                         .font(.system(.largeTitle, design: .serif, weight: .bold))
-                        .foregroundColor(AppColor.Text.primary)
+                        .foregroundColor(AppColor.Onboarding.textTitle)
                         .multilineTextAlignment(.leading)
                         .lineLimit(nil)
                         .minimumScaleFactor(0.5)
@@ -77,8 +77,8 @@ struct OnboardingFourthPage: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 10)
                 PrimaryButton(
-                    buttonColor: AppColor.Button.primary,
-                    textColor: AppColor.Button.Text.primary,
+                    buttonColor: AppColor.Onboarding.button.color,
+                    textColor: AppColor.Onboarding.button.text,
                     accessibilityLabel: "Continue",
                     accessibilityHint: "Goes to the next onboarding page",
                     action: {
@@ -97,7 +97,7 @@ struct OnboardingFourthPage: View {
             .padding()
             .padding(.bottom, 33)
         }
-        .background(AppColor.Background.secondary)
+        .background(AppColor.Onboarding.background)
     }
 }
 
