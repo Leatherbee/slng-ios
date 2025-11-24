@@ -35,9 +35,15 @@ struct SettingsView: View {
                         .padding(10)
                         .background(
                             Group {
-                                Circle()
-                                    .fill(AppColor.Background.secondary)
-                                    .frame(width: 44, height: 44)
+                                if #available(iOS 26, *) {
+                                    Circle()
+                                        .glassEffect(.regular.interactive())
+                                        .frame(width: 44, height: 44)
+                                } else {
+                                    Circle()
+                                        .fill(.ultraThinMaterial)
+                                        .frame(width: 44, height: 44)
+                                }
                             }
                         )
                 }
@@ -83,8 +89,8 @@ struct SettingsView: View {
                     .contentShape(.rect)
                     
                 }
-                .listRowBackground(AppColor.Background.secondary)
-                
+                .listRowBackground(AppColor.List.primary)
+
                 Section {
                     HStack {
                         Image(systemName: "water.waves")
@@ -96,7 +102,7 @@ struct SettingsView: View {
                     .contentShape(.rect)
                     
                 }
-                .listRowBackground(AppColor.Background.secondary)
+                .listRowBackground(AppColor.List.primary)
                 
                 Section {
                     Button {
@@ -126,7 +132,7 @@ struct SettingsView: View {
                     }
                     
                 }
-                .listRowBackground(AppColor.Background.secondary)
+                .listRowBackground(AppColor.List.primary)
             }
             .scrollIndicators(.hidden)
             .scrollContentBackground(.hidden)

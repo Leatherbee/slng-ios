@@ -9,7 +9,6 @@ final class SpeechStreamingManager: NSObject {
     private let recognizer: SFSpeechRecognizer?
 
     override init() {
-        // Default ke bahasa Indonesia; sesuaikan bila perlu
         self.recognizer = SFSpeechRecognizer(locale: Locale(identifier: "id-ID"))
         super.init()
     }

@@ -29,7 +29,7 @@ struct DictionaryView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             // Background layer
-            AppColor.Background.primary
+            AppColor.Background.secondary
                 .ignoresSafeArea()
             
             // Main content

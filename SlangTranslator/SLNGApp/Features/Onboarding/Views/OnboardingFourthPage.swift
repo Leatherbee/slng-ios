@@ -60,14 +60,14 @@ struct OnboardingFourthPage: View {
             
             VStack(spacing: 32) {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("Stay fluent in the ever-changing slang world")
+                    Text("Understand slang even as it evolves")
                         .font(.system(.largeTitle, design: .serif, weight: .bold))
                         .foregroundColor(AppColor.Onboarding.textTitle)
                         .multilineTextAlignment(.leading)
                         .lineLimit(nil)
                         .minimumScaleFactor(0.5)
                     
-                    Text("Discover new phrases, abbreviations, and real-life examples that show how Indonesian actually talk.")
+                    Text("Translate indonesian sentences, even when they mix slang, abbreviation, and everyday expressions.")
                         .font(.subheadline)
                         .foregroundColor(AppColor.Text.secondary)
                         .multilineTextAlignment(.leading)

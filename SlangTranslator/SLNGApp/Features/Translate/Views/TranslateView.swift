@@ -52,13 +52,13 @@ struct TranslateView: View {
             .offset(y: showSettings ? UIScreen.main.bounds.height * 0.9 : dragOffset * 0.45)
             .opacity(showSettings ? 0 : (1 - min(1.0, dragOffset / 420.0)))
             .animation(curtainEase, value: showSettings)
-            .background(viewModel.isTranslated ? AppColor.Background.secondary : AppColor.Background.primary)
+            .background(viewModel.isTranslated ? AppColor.Onboarding.background : AppColor.Background.secondary)
             .overlay(alignment: .top) {
                 if !viewModel.isLoading && isDragHandleReady && isDragHandleVisible {
-                    VStack(spacing: 8) {
+                    VStack(spacing: 4) {
                         RoundedRectangle(cornerRadius: 20)
                             .frame(width: 40, height: 4)
-                            .foregroundStyle(AppColor.Button.primary)
+                            .foregroundStyle(isDragPressed ? AppColor.Button.primary : (showDragHint ? AppColor.Button.primary : AppColor.Hint.primary))
                             .offset(y: showDragHint ? 6 : 0)
                             .scaleEffect(showDragHint ? 1.1 : 1.0)
                             .scaleEffect(isDragPressed ? 1.08 : 1.0)
@@ -75,7 +75,7 @@ struct TranslateView: View {
 
                         Text("Settings")
                             .font(.system(.footnote, design: .default, weight: .bold))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(showDragHint ? .secondary : AppColor.Hint.primary)
                             .opacity(showDragHint ? 0.9 : 1)
                             .offset(y: showDragHint ? 6 : 0)
                             .scaleEffect(showDragHint ? 0.9 : 1.0)
@@ -112,7 +112,7 @@ struct TranslateView: View {
                 ZStack {
                     GeometryReader { geo in
                         VStack(spacing: 0) {
-                            (viewModel.isTranslated ? AppColor.Background.secondary : AppColor.Background.primary)
+                            (viewModel.isTranslated ? AppColor.Onboarding.background : AppColor.Background.secondary)
                                 .frame(
                                     height: showSettings
                                     ? geo.size.height
@@ -154,6 +154,7 @@ struct TranslateView: View {
         // No global gesture here - each section handles its own
 
         
+        .background((viewModel.isTranslated ? AppColor.Onboarding.background : AppColor.Background.secondary).ignoresSafeArea())
         .animation(.easeInOut(duration: 0.25), value: viewModel.isTranslated)
         .onAppear {
             if !hasRequestedSpeechMic {
@@ -242,7 +243,7 @@ struct TranslateView: View {
                 onDragChanged: handleInputDragChanged,
                 onDragEnded: handleInputDragEnded
             )
-            .background(AppColor.Background.primary)
+            .background(AppColor.Background.secondary)
             
             
         } else {
@@ -260,7 +261,7 @@ struct TranslateView: View {
                 onDragChanged: handleResultDragChanged,
                 onDragEnded: handleResultDragEnded
             )
-            .background(AppColor.Onboarding.background)
+            .background(AppColor.Background.secondary)
             
         }
     }

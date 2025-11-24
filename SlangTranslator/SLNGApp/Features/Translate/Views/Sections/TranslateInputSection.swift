@@ -51,7 +51,7 @@ struct TranslateInputSection: View {
                     .allowsHitTesting(!(viewModel.isRecording || viewModel.isTranscribing))
                 
                 if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isRecording || viewModel.isTranscribing {
-                    Text(viewModel.isTranscribing ? "Okay… I’m piecing that together..." : (viewModel.isRecording ? "Alright, I'm all ears..." : "Heard a slang you don't get? Type here"))
+                    Text(viewModel.isTranscribing ? "Okay… I’m piecing that together..." : (viewModel.isRecording ? "Alright, I'm all ears..." : "Heard a slang you don't get? Type here or hold below to say it"))
                         .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
                         .foregroundColor(Color.textDisable)
                         .padding(.horizontal, 5)
@@ -116,7 +116,7 @@ struct TranslateInputSection: View {
         .contentShape(Rectangle())
         .onTapGesture { UIApplication.shared.dismissKeyboard() }
         .background(
-            AppColor.Background.primary
+            AppColor.Background.secondary
                 .ignoresSafeArea()
                 .onTapGesture {
                     UIApplication.shared.dismissKeyboard()
@@ -139,4 +139,3 @@ extension View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
-
