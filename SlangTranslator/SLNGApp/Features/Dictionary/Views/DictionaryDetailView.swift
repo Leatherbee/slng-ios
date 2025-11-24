@@ -2,10 +2,12 @@
 //  DictionaryDetailView.swift
 //  SlangTranslator
 //
-//  Created by Filza Rizki Ramadhan on 19/11/25.
+//  Created by Pramuditha Muhammad Ikhwan on 25/11/25.
 //
+
 import SwiftUI
 import FirebaseAnalytics
+
 
 struct DictionaryDetailView: View {
     let slangData: SlangModel?
@@ -17,13 +19,12 @@ struct DictionaryDetailView: View {
         
         GeometryReader { geo in
             VStack{
-                VStack(spacing: 32){
+                VStack(spacing: 10){
                     let current = variants.indices.contains(selectedVariantIndex) ? variants[selectedVariantIndex] : slangData
                     Text(current?.slang ?? "")
                         .font(.system(size: 64, design: .serif))
                         .foregroundColor(AppColor.Text.primary)
                         .textSelection(.enabled)
-//                    Button(buttonColor: AppColor.Button.primary, textColor: AppColor.Button.Text.primary)
                     Button {
                         viewModel.speak(current?.slang ?? "", language: "id")
                     } label: {
@@ -52,6 +53,7 @@ struct DictionaryDetailView: View {
                     .cornerRadius(37)
                     .shadow(radius: -10)
                     .modifier(GlassIfAvailable(isActive: true))
+                    .padding(.bottom, 32)
                     
                     VStack(spacing: 24){
                         Text(current?.translationEN ?? "")
@@ -82,16 +84,11 @@ struct DictionaryDetailView: View {
                     }
                 }
             }
-            .padding(.top ,geo.size.height * 0.20)
+            .padding(.top ,geo.size.height * 0.16)
             .padding(.horizontal)
             .frame(maxWidth: geo.size.width, maxHeight: geo.size.height, alignment: .top)
-            
         }
- 
-         
     }
-    
-  
 }
 
 @available(iOS 15.0, *)
@@ -99,24 +96,18 @@ private struct GlassIfAvailable: ViewModifier {
     let isActive: Bool
     
     func body(content: Content) -> some View {
-        if #available(iOS 26.0, *), isActive {
+        if #available(iOS 26, *), isActive {
             content
-                .modifier(CustomGlass())
-                
+                .clipShape(RoundedRectangle(cornerRadius: 37))
+                .glassEffect(.regular.interactive())
         } else {
             content
+                .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 37))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 37)
+                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                )
         }
-    }
-}
-
-private struct CustomGlass: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 37))
-            .overlay(
-                RoundedRectangle(cornerRadius: 37)
-                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
-            )
     }
 }

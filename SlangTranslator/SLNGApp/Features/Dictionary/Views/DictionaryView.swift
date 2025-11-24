@@ -29,7 +29,7 @@ struct DictionaryView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             // Background layer
-            AppColor.Background.primary
+            AppColor.Background.secondary
                 .ignoresSafeArea()
             
             // Main content
@@ -138,9 +138,34 @@ struct DictionaryView: View {
             if count == 0 {
                 selected = 0
                 viewModel.activeLetter = nil
-            } else if selected >= count {
-                selected = max(0, count - 1)
+            } else {
+                let q = viewModel.searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                var best = selected
+                if !q.isEmpty {
+                    best = viewModel.filteredCanonicals.firstIndex(where: { $0.canonical.lowercased().hasPrefix(q) })
+                    ?? viewModel.filteredCanonicals.firstIndex(where: { group in
+                        group.variants.contains { $0.slang.lowercased().hasPrefix(q) }
+                    })
+                    ?? 0
+                }
+                selected = min(max(0, best), count - 1)
             }
+            scrollToIndexTrigger = selected
+            updateActiveLetterFromSelection()
+        }
+        .onChange(of: viewModel.searchText) {
+            let count = viewModel.filteredCanonicals.count
+            guard count > 0 else { return }
+            let q = viewModel.searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            var best = selected
+            if !q.isEmpty {
+                best = viewModel.filteredCanonicals.firstIndex(where: { $0.canonical.lowercased().hasPrefix(q) })
+                ?? viewModel.filteredCanonicals.firstIndex(where: { group in
+                    group.variants.contains { $0.slang.lowercased().hasPrefix(q) }
+                })
+                ?? 0
+            }
+            selected = min(max(0, best), count - 1)
             scrollToIndexTrigger = selected
             updateActiveLetterFromSelection()
         }

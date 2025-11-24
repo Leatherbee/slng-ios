@@ -167,14 +167,15 @@ struct OnboardingView: View {
         ZStack(alignment: .bottom) {
             // Main content
             VStack(spacing: 0) {
-                VStack(alignment: .center, spacing: 16) {
+                VStack(alignment: .center, spacing: 8) {
                     let icon = Image(systemName: "globe")
                     Text("Switch to SLNG")
                         .font(.system(.largeTitle, design: .serif, weight: .bold))
-                        .padding(.top, 12) 
+                        .foregroundStyle(AppColor.Button.primary)
+                        .padding(.top, 12)
                     Text("Tap and hold \(icon) key below. Select SLNG Keyboard.")
                         .font(.subheadline)
-                        .foregroundColor(AppColor.Text.primary)
+                        .foregroundColor(AppColor.Text.secondary)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 292, minHeight: 50)
                 }
@@ -201,7 +202,7 @@ struct OnboardingView: View {
             }
             
             PrimaryButton(
-                buttonColor: AppColor.Button.primary,
+                buttonColor: AppColor.Button.onboarding,
                 textColor: AppColor.Button.Text.primary,
                 accessibilityLabel: "Continue",
                 accessibilityHint: "Completes onboarding",

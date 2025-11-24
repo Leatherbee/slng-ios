@@ -251,8 +251,10 @@ private struct GlassIfAvailable: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 26.0, *), isActive {
             content
-                .modifier(CustomGlass())  
-                
+                .glassEffect(.regular.interactive())
+        } else if isActive {
+            content
+                .modifier(CustomGlass())
         } else {
             content
         }

@@ -1212,6 +1212,45 @@
     ]
   },
   {
+    "canonicalForm": "gue",
+    "canonicalPronunciation": "goo-eh",
+    "variants": [
+      {
+        "slang": "gue",
+        "pronunciation": "gue",
+        "translationID": "aku / saya",
+        "translationEN": "I / me",
+        "contextID": "Pronomina informal yang sangat umum di Jakarta dan sekitarnya; dipakai dalam percakapan santai antar teman, media sosial, dan komunikasi sehari-hari.",
+        "contextEN": "A highly common informal first-person pronoun in Jakarta slang, used in casual conversations, social media, and everyday interactions.",
+        "exampleID": "Gue lagi ngoding dari pagi.",
+        "exampleEN": "I’ve been coding since this morning.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "gw",
+        "pronunciation": "gue",
+        "translationID": "aku / saya",
+        "translationEN": "I / me",
+        "contextID": "Varian pendek dari 'gue', sering dipakai dalam chat cepat atau gaya penulisan yang lebih singkat.",
+        "contextEN": "A shorter variant of 'gue', often used in quick chats or more compact writing styles.",
+        "exampleID": "Gw lapar banget sekarang.",
+        "exampleEN": "I’m really hungry right now.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "gua",
+        "pronunciation": "gua",
+        "translationID": "aku / saya",
+        "translationEN": "I / me",
+        "contextID": "Varian lain dengan nuansa lebih santai atau sedikit lebih keras tergantung penuturnya; umum di percakapan sehari-hari.",
+        "contextEN": "Another variant with a slightly rougher or looser nuance depending on the speaker; common in daily conversations.",
+        "exampleID": "Gua lupa bawa kunci tadi.",
+        "exampleEN": "I forgot to bring my keys earlier.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
     "canonicalForm": "aku",
     "canonicalPronunciation": "a-ku",
     "variants": [
@@ -52550,6 +52589,23 @@
         "exampleID": "Kondisi cuaca hari ini parah banget.",
         "exampleEN": "The weather conditions today are extremely severe.",
         "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "parah",
+    "canonicalPronunciation": "pa-rah",
+    "variants": [
+      {
+        "slang": "parah",
+        "pronunciation": "pa-rah",
+        "translationID": "gila bagus / luar biasa",
+        "translationEN": "insanely good / amazing",
+        "contextID": "Dipakai sebagai hiperbola positif untuk menyatakan sesuatu yang sangat bagus, keren, atau melebihi ekspektasi.",
+        "contextEN": "Used as a positive hyperbole to describe something extremely good, impressive, or beyond expectations.",
+        "exampleID": "Editing videomu parah sih, mulus banget transisinya.",
+        "exampleEN": "Your video editing is insane, the transitions are super smooth.",
+        "sentiment": "positive"
       }
     ]
   },

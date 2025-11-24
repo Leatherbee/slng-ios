@@ -89,6 +89,9 @@ struct TranslateResultSection: View {
                                     .animation((reduceMotion || reduceMotionEnabled) ? nil : .easeInOut(duration: 0.5), value: moveUp)
                                     .textSelection(.enabled)
                                     .onTapGesture {
+                                        showDetectedSlangButton = false
+                                        showDetectedSlang = false
+                                        showBottomUI = false
                                         viewModel.editText(text: viewModel.inputText)
                                     }
                                     .fixedSize(horizontal: false, vertical: true)
@@ -474,4 +477,3 @@ struct ResultContentTopYKey: PreferenceKey {
         value = nextValue()
     }
 }
-

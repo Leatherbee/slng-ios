@@ -24,11 +24,7 @@ final class SlangSwiftDataImpl {
         if let keyword, !keyword.isEmpty {
             predicate = #Predicate<SlangModel> { slang in
                 slang.slang.localizedStandardContains(keyword) ||
-                slang.canonicalForm.localizedStandardContains(keyword) ||
-                slang.translationID.localizedStandardContains(keyword) ||
-                slang.translationEN.localizedStandardContains(keyword) ||
-                slang.contextID.localizedStandardContains(keyword) ||
-                slang.contextEN.localizedStandardContains(keyword)
+                slang.canonicalForm.localizedStandardContains(keyword)
             }
         }
         
@@ -94,11 +90,7 @@ final class SlangSwiftDataImpl {
     private func fetchAllMatching(keyword: String) -> [SlangModel] {
         let predicate = #Predicate<SlangModel> { slang in
             slang.slang.localizedStandardContains(keyword) ||
-            slang.canonicalForm.localizedStandardContains(keyword) ||
-            slang.translationID.localizedStandardContains(keyword) ||
-            slang.translationEN.localizedStandardContains(keyword) ||
-            slang.contextID.localizedStandardContains(keyword) ||
-            slang.contextEN.localizedStandardContains(keyword)
+            slang.canonicalForm.localizedStandardContains(keyword)
         }
         
         let descriptor = FetchDescriptor<SlangModel>(
@@ -118,11 +110,7 @@ final class SlangSwiftDataImpl {
         if let keyword, !keyword.isEmpty {
             predicate = #Predicate<SlangModel> { slang in
                 slang.slang.localizedStandardContains(keyword) ||
-                slang.canonicalForm.localizedStandardContains(keyword) ||
-                slang.translationID.localizedStandardContains(keyword) ||
-                slang.translationEN.localizedStandardContains(keyword) ||
-                slang.contextID.localizedStandardContains(keyword) ||
-                slang.contextEN.localizedStandardContains(keyword)
+                slang.canonicalForm.localizedStandardContains(keyword)
             }
         }
         

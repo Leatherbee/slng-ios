@@ -13,12 +13,14 @@ enum AppColor {
     enum Background {
         static let primary = Color("backgroundPrimary")
         static let secondary = Color("backgroundSecondary")
+        static let pureBlack = Color("pureBlack")
     }
     
     // MARK: - Button
     enum Button {
         static let primary = Color("buttonPrimary")
         static let secondary = Color("buttonSecondary")
+        static let onboarding = Color("buttonEnable")
         
         enum Text {
             static let primary = Color("buttonTextPrimary")
@@ -44,13 +46,21 @@ enum AppColor {
     
     // MARK: - Onboarding
     enum Onboarding {
-        static let background = Color("onboardingBackground")
-        static let text = Color("onboardingText")
+        static let background = Color("OnboardingBackground")
+        static let text = Color("OnboardingText")
         static let textTitle = Color("onboardingTextTitle")
         enum button {
-            static let color = Color("onboardingButton")
+            static let color = Color("OnboardingButton")
             static let text = Color("onboardingButtonText")
         }
+    }
+    
+    enum List {
+        static let primary = Color("listRowPrimary")
+    }
+    
+    enum Hint {
+        static let primary = Color("dragHint")
     }
 }
 

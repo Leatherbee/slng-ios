@@ -25,9 +25,10 @@ struct SetupKeyboardView: View {
                 {
                     Text("Setup Keyboard")
                         .font(.system(.largeTitle, design: .serif, weight: .bold))
+                        .foregroundStyle(AppColor.Button.primary)
                     Spacer()
                 }
-                Text("Follow the instruction bellow to setup keyboard translator")
+                Text("Follow these quick steps to enable real-time translation in any app.")
                     .font(.footnote)
                     .foregroundStyle(AppColor.Text.secondary)
                 
@@ -38,7 +39,7 @@ struct SetupKeyboardView: View {
                 Spacer()
                 
             }
-            .padding(.top,44)
+            .padding(.top, 20)
             .padding(.horizontal,20)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
@@ -46,7 +47,7 @@ struct SetupKeyboardView: View {
                 Spacer()
                 VStack(spacing: 10){
                     PrimaryButton(
-                        buttonColor: AppColor.Button.primary,
+                        buttonColor: AppColor.Button.onboarding,
                         textColor: .onboardingTextPrimary,
                         accessibilityLabel: "Add SLNG keyboard",
                         accessibilityHint: "Opens iOS Settings to enable the keyboard",
@@ -63,13 +64,12 @@ struct SetupKeyboardView: View {
                     
                     Text("This will open IOS system settings")
                         .font(.footnote)
-                    
-                    
+                        .foregroundStyle(AppColor.Text.secondary)
                 }
                 .frame(maxWidth: .infinity, minHeight: 150)
                 .padding(.horizontal)
                 .padding(.bottom, 50)
-                .background(Color(.systemGray6))
+                .background(AppColor.Background.secondary)
             }
         }
         .toolbar {
@@ -87,6 +87,7 @@ struct SetupKeyboardView: View {
                 }
             }
         }
+        .background(AppColor.Background.secondary)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             checkKeyboardStatus()
         }
