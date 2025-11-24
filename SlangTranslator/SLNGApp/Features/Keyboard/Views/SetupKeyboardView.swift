@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Lottie
+internal import Combine
 
 struct SetupKeyboardView: View {
     @ObservedObject var viewModel: KeyboardStatusViewModel
@@ -17,6 +18,7 @@ struct SetupKeyboardView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var hasTriggeredReturn = false
     @Environment(\.scenePhase) private var scenePhase
+    @State private var subscriptions: Set<AnyCancellable> = []
 
     var body: some View {
         ZStack {
@@ -91,8 +93,12 @@ struct SetupKeyboardView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             checkKeyboardStatus()
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            checkKeyboardStatus()
+        }
         .onAppear(){
             checkKeyboardStatus()
+            setupReactiveSinks()
         }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
@@ -104,14 +110,70 @@ struct SetupKeyboardView: View {
     private func checkKeyboardStatus() {
         viewModel.updateKeyboardStatus()
         DispatchQueue.main.async {
-            let didOpen = UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings")
+            let didOpenSettings = UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings")
             let hasSetup = UserDefaults.shared.bool(forKey: "hasSetupKeyboard")
-            if (viewModel.isFullAccessEnabled || didOpen || hasSetup) && !hasTriggeredReturn {
+            if (viewModel.isFullAccessEnabled || didOpenSettings || hasSetup) && !hasTriggeredReturn {
                 hasOpenKeyboardSetting = true
                 hasTriggeredReturn = true
                 onReturnFromSettings()
+                UserDefaults.standard.set(false, forKey: "didOpenKeyboardSettings")
             }
         }
+    }
+    
+    private func setupReactiveSinks() {
+        NotificationCenter.default.publisher(
+            for: UserDefaults.didChangeNotification,
+            object: UserDefaults.shared
+        )
+        .receive(on: RunLoop.main)
+        .sink { _ in
+            checkKeyboardStatus()
+        }
+        .store(in: &subscriptions)
+
+        viewModel.$isFullAccessEnabled
+            .receive(on: RunLoop.main)
+            .sink { fullAccess in
+                if fullAccess && !hasTriggeredReturn {
+                    hasOpenKeyboardSetting = true
+                    hasTriggeredReturn = true
+                    onReturnFromSettings()
+                }
+            }
+            .store(in: &subscriptions)
+
+        NotificationCenter.default.publisher(
+            for: UIApplication.willEnterForegroundNotification
+        )
+        .receive(on: RunLoop.main)
+        .sink { _ in
+            let didOpenSettings = UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings")
+            let hasSetup = UserDefaults.shared.bool(forKey: "hasSetupKeyboard")
+            if (didOpenSettings || hasSetup) && !hasTriggeredReturn {
+                hasOpenKeyboardSetting = true
+                hasTriggeredReturn = true
+                onReturnFromSettings()
+                UserDefaults.standard.set(false, forKey: "didOpenKeyboardSettings")
+            }
+        }
+        .store(in: &subscriptions)
+
+        NotificationCenter.default.publisher(
+            for: UIApplication.didBecomeActiveNotification
+        )
+        .receive(on: RunLoop.main)
+        .sink { _ in
+            let didOpenSettings = UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings")
+            let hasSetup = UserDefaults.shared.bool(forKey: "hasSetupKeyboard")
+            if (didOpenSettings || hasSetup) && !hasTriggeredReturn {
+                hasOpenKeyboardSetting = true
+                hasTriggeredReturn = true
+                onReturnFromSettings()
+                UserDefaults.standard.set(false, forKey: "didOpenKeyboardSettings")
+            }
+        }
+        .store(in: &subscriptions)
     }
     
     private func openKeyboardSettings() {
