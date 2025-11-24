@@ -17,15 +17,13 @@ struct KeyboardView: View {
     var onReturnFromSettings: () -> Void
     var body: some View {
         Group{
-            if (viewModel.isKeyboardEnabled || hasSetupKeyboard) && !isOnboarding {
+            if (viewModel.isKeyboardEnabled || hasSetupKeyboard || viewModel.isFullAccessEnabled) && !isOnboarding {
                 KeyboardSettingView()
                     .accessibilityLabel("Keyboard settings")
                     .accessibilityHint("Manage keyboard translator preferences and options")
                     .accessibilityIdentifier("KeyboardView.Settings")
             } else {
                 SetupKeyboardView(viewModel: viewModel, onReturnFromSettings: {
-                    UserDefaults.shared.set(true, forKey: "hasSetupKeyboard")
-                    hasSetupKeyboard = true
                     viewModel.updateKeyboardStatus()
                     onReturnFromSettings()
                 }, isOnboarding: isOnboarding, onSkipOnboarding: onSkipOnboarding)

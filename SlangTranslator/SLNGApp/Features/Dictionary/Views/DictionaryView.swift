@@ -293,7 +293,7 @@ class SoundManager {
             try AVAudioSession.sharedInstance().setCategory(
                 .ambient,
                 mode: .default,
-                options: [.mixWithOthers, .allowBluetooth]
+                options: [.mixWithOthers, .allowBluetoothHFP]
             )
             try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.005) // Low latency
             try AVAudioSession.sharedInstance().setActive(true)
@@ -656,7 +656,7 @@ public struct SwiftUIWheelPicker<Item>: View {
         
         // Smooth animation dengan variable duration
         let distance = abs(newIndex - lastSelection)
-        let duration: Double = animated ? min(0.3, max(0.15, Double(distance) * 0.02)) : 0
+        let _: Double = animated ? min(0.3, max(0.15, Double(distance) * 0.02)) : 0
         
         withAnimation(.easeOut(duration: 0.2)) {
             proxy.scrollTo(newIndex, anchor: .center)

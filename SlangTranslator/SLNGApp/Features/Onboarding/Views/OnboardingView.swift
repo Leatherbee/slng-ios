@@ -57,11 +57,6 @@ struct OnboardingView: View {
             // If the keyboard has already been set up, fast-forward to the test page.
             if hasSetupKeyboard && pageNumber < 6 {
                 pageNumber = 6
-            } else if UserDefaults.standard.bool(forKey: "didOpenKeyboardSettings") && pageNumber < 6 {
-                // Fallback: if we returned from Settings and the view was recreated,
-                // mark setup as done and jump to test page.
-                hasSetupKeyboard = true
-                pageNumber = 6
             }
         }
         .onChange(of: hasSetupKeyboard) { oldValue, newValue in
