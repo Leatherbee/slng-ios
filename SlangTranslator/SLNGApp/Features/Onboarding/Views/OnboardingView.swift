@@ -76,21 +76,21 @@ struct OnboardingView: View {
             Spacer()
             VStack(alignment: .leading) {
                 Text("CATCH")
-                    .foregroundColor(AppColor.Button.secondary)
+                    .foregroundColor(AppColor.Onboarding.text.opacity(0.4))
                 Text("THE VIBE,")
-                    .foregroundColor(AppColor.Text.primary)
+                    .foregroundColor(AppColor.Onboarding.text)
                 Text("NOT JUST THE")
-                    .foregroundColor(AppColor.Button.secondary)
+                    .foregroundColor(AppColor.Onboarding.text.opacity(0.4))
                 Text("WORDS")
-                    .foregroundColor(AppColor.Text.primary)
+                    .foregroundColor(AppColor.Onboarding.text)
             }
             .font(.system(size: 64, weight: .bold, design: .serif))
             .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack(spacing: 16){
                 PrimaryButton(
-                    buttonColor: AppColor.Button.primary,
-                    textColor: AppColor.Button.Text.primary,
+                    buttonColor: AppColor.Onboarding.button.color,
+                    textColor: AppColor.Onboarding.button.text,
                     accessibilityLabel: "Get Started",
                     accessibilityHint: "Goes to the next onboarding page",
                     action: {
@@ -118,7 +118,7 @@ struct OnboardingView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 16)
-        .background(AppColor.Background.secondary)
+        .background(AppColor.Onboarding.background)
     }
     
     private var secondPage: some View {
@@ -246,7 +246,7 @@ struct OnBoardingPage<Content: View>: View {
                 VStack(alignment: .leading, spacing: 16){
                     Text(onBoardingTitle)
                         .font(.system(.largeTitle, design: .serif, weight: .bold))
-                        .foregroundColor(AppColor.Text.primary)
+                        .foregroundColor(AppColor.Onboarding.textTitle)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .minimumScaleFactor(0.5)
                     Text(onBoardingContent)
@@ -257,8 +257,8 @@ struct OnBoardingPage<Content: View>: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 PrimaryButton(
-                    buttonColor: AppColor.Button.primary,
-                    textColor: AppColor.Button.Text.primary,
+                    buttonColor: AppColor.Onboarding.button.color,
+                    textColor: AppColor.Onboarding.button.text,
                     accessibilityLabel: "Continue",
                     accessibilityHint: "Goes to the next onboarding page",
                     action: {
@@ -287,6 +287,7 @@ struct OnBoardingPage<Content: View>: View {
         .padding()
         .padding(.bottom, 33)
         .frame(maxWidth: .infinity)
+        .background(AppColor.Onboarding.background)
     }
 }
 

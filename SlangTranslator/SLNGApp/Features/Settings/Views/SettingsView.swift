@@ -31,19 +31,13 @@ struct SettingsView: View {
                 } label: {
                     Image(systemName: "xmark")
                         .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(AppColor.Background.primary)
+                        .foregroundStyle(AppColor.Text.primary)
                         .padding(10)
                         .background(
                             Group {
-                                if #available(iOS 26, *) {
-                                    Circle()
-                                        .glassEffect(.regular.tint(AppColor.Text.primary).interactive())
-                                        .frame(width: 44, height: 44)
-                                } else {
-                                    Circle()
-                                        .fill(AppColor.Text.primary)
-                                        .frame(width: 44, height: 44)
-                                }
+                                Circle()
+                                    .fill(AppColor.Background.secondary)
+                                    .frame(width: 44, height: 44)
                             }
                         )
                 }
@@ -53,7 +47,7 @@ struct SettingsView: View {
             .padding(.top, 20)
             .padding(.horizontal, 20)
             .padding(.bottom, 8)
-            .background(Color(AppColor.Background.secondary))
+            .background(Color(AppColor.Onboarding.background))
             
             List {
                 Section {
@@ -89,7 +83,7 @@ struct SettingsView: View {
                     .contentShape(.rect)
                     
                 }
-                .listRowBackground(Color.listRowPrimary)
+                .listRowBackground(AppColor.Background.secondary)
                 
                 Section {
                     HStack {
@@ -102,7 +96,7 @@ struct SettingsView: View {
                     .contentShape(.rect)
                     
                 }
-                .listRowBackground(Color.listRowPrimary)
+                .listRowBackground(AppColor.Background.secondary)
                 
                 Section {
                     Button {
@@ -132,11 +126,11 @@ struct SettingsView: View {
                     }
                     
                 }
-                .listRowBackground(Color.listRowPrimary)
+                .listRowBackground(AppColor.Background.secondary)
             }
             .scrollIndicators(.hidden)
             .scrollContentBackground(.hidden)
-            .background(Color(AppColor.Background.secondary))
+            .background(Color(AppColor.Onboarding.background))
             .onChange(of: soundEffectEnabled) { oldValue, newValue in
                 Analytics.logEvent("settings_changed", parameters: [
                     "setting_name": "sound_effect",
@@ -144,7 +138,7 @@ struct SettingsView: View {
                 ])
             }
         }
-        .background(Color(AppColor.Background.secondary))
+        .background(Color(AppColor.Onboarding.background))
         .onAppear {
             let defaults = UserDefaults.shared
             if defaults.object(forKey: "selectedTheme") == nil {
