@@ -23,31 +23,35 @@ struct DictionaryDetailView: View {
                         .font(.system(size: 64, design: .serif))
                         .foregroundColor(AppColor.Text.primary)
                         .textSelection(.enabled)
-                    
-                    PrimaryButton(buttonColor: AppColor.Button.primary, textColor: AppColor.Button.Text.primary) {
+//                    Button(buttonColor: AppColor.Button.primary, textColor: AppColor.Button.Text.primary)
+                    Button {
                         viewModel.speak(current?.slang ?? "", language: "id")
                     } label: {
                         HStack(spacing: 8){
                             (
                                 Text("/")
                                     .font(.system(size: 14.5, weight: .bold))
-                                    .foregroundColor(AppColor.Button.Text.primary) +
+                                    .foregroundColor(.white) +
                                 Text(current?.pronunciation ?? "")
                                     .font(.system(size: 14.5, weight: .bold))
-                                    .foregroundColor(AppColor.Button.Text.primary) +
+                                    .foregroundColor(.white) +
                                 Text("/")
                                     .font(.system(size: 14.5, weight: .bold))
-                                    .foregroundColor(AppColor.Button.Text.primary)
+                                    .foregroundColor(.white)
                             )
                             .frame(height: 20)
                             Image(systemName: "speaker.wave.3")
                                 .font(.system(size: 14.5, weight: .semibold))
-                            
+                                .foregroundColor(.white)
                             
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                     }
+                    .background(AppColor.StatusBar.color.opacity(0.2))
+                    .cornerRadius(37)
+                    .shadow(radius: -10)
+                    .modifier(GlassIfAvailable(isActive: true))
                     
                     VStack(spacing: 24){
                         Text(current?.translationEN ?? "")
@@ -88,4 +92,31 @@ struct DictionaryDetailView: View {
     }
     
   
+}
+
+@available(iOS 15.0, *)
+private struct GlassIfAvailable: ViewModifier {
+    let isActive: Bool
+    
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *), isActive {
+            content
+                .modifier(CustomGlass())
+                
+        } else {
+            content
+        }
+    }
+}
+
+private struct CustomGlass: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 37))
+            .overlay(
+                RoundedRectangle(cornerRadius: 37)
+                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
+            )
+    }
 }

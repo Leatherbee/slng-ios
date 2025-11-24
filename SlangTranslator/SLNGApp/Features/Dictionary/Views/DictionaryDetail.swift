@@ -23,7 +23,7 @@ struct DictionaryDetail: View {
     @State private var audioPlayer: AVAudioPlayer?
     @State private var scale: CGFloat = 1
     @State private var opacity: CGFloat = 1
-
+    
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
@@ -42,22 +42,14 @@ struct DictionaryDetail: View {
                         } label: {
                             Image(systemName: "xmark")
                                 .font(.system(size: 17, weight: .medium))
-                                .foregroundColor(AppColor.Button.Text.primary)
+                                .foregroundColor(.white)
                         }
                         .frame(width: 43, height: 43)
-                        .background(
-                            Group {
-                                if #available(iOS 26, *) {
-                                    Circle()
-                                        .glassEffect(.regular.tint(AppColor.Button.primary).interactive())
-                                } else {
-                                    Circle()
-                                        .fill(AppColor.Button.primary)
-                                }
-                            }
-                        )
+                        .background(AppColor.StatusBar.color.opacity(0.2))
                         .clipShape(.circle)
                         .transition(.opacity)
+                        .shadow(radius: -10)
+                        .modifier(GlassIfAvailable(isActive: true))
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -83,10 +75,10 @@ struct DictionaryDetail: View {
             .scaleEffect(scale)
             .opacity(opacity)
             .onChange(of: showBurst) {
-                if showBurst { 
+                if showBurst {
                     scale = 0.8
                     opacity = 0.8
-
+                    
                     withAnimation(.spring(response: 0.8, dampingFraction: 0.8)) {
                         scale = 1
                         opacity = 1
@@ -94,33 +86,33 @@ struct DictionaryDetail: View {
                 }
             }
             VStack{
-                 Spacer()
-                     .frame(height: 450)
-                 VStack(spacing:64){
-                     VStack(spacing: 16){
-                         Text("Word Variations")
-                             .font(.system(size: 18, design: .serif))
-                             .multilineTextAlignment(.center)
-                             .foregroundColor(AppColor.Text.primary)
-                         WrapLayoutCenter(spacing: 8, lineSpacing: 8) {
-                             ForEach(Array(variants.prefix(6).enumerated()), id: \.offset) { idx, v in
-                                 similiarButton(title: v.slang, isActive: idx == selectedVariantIndex) {
-                                     Analytics.logEvent("dictionary_similar_selected", parameters: ["index": idx])
+                Spacer()
+                    .frame(height: 450)
+                VStack(spacing:64){
+                    VStack(spacing: 16){
+                        Text("Word Variations")
+                            .font(.system(size: 18, design: .serif))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(AppColor.Text.primary)
+                        WrapLayoutCenter(spacing: 8, lineSpacing: 8) {
+                            ForEach(Array(variants.prefix(6).enumerated()), id: \.offset) { idx, v in
+                                similiarButton(title: v.slang, isActive: idx == selectedVariantIndex) {
+                                    Analytics.logEvent("dictionary_similar_selected", parameters: ["index": idx])
                                     showBurst = false
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
                                         showBurst = true
                                         triggerBurstHaptic()
                                         selectedVariantIndex = idx
                                     }
-                                   
-                                 }
-                             }
-                         }
-                     }
-                 }
-             }
-              .frame(maxWidth: .infinity, maxHeight: .infinity)
-              Spacer()
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            Spacer()
         }
         
         .onAppear() {
@@ -151,7 +143,7 @@ struct DictionaryDetail: View {
                             .font(.system(size: 17, design: .serif))
                             .foregroundColor(AppColor.Text.primary)
                     }
-
+                    
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Example")
                             .font(.system(size: 17, design: .serif))
@@ -165,7 +157,7 @@ struct DictionaryDetail: View {
                         .foregroundColor(AppColor.Text.primary)
                         .multilineTextAlignment(.leading)
                     }
-
+                    
                     Spacer(minLength: 0)
                 }
                 .padding()
@@ -195,7 +187,7 @@ struct DictionaryDetail: View {
                             .foregroundColor(AppColor.Text.primary.opacity(0.6))
                             .clipShape(.circle)
                         }
-                      
+                        
                     }
                 }
             }
@@ -204,30 +196,33 @@ struct DictionaryDetail: View {
         }
     }
     
-    private struct similiarButton:  View {
+    private struct similiarButton: View {
         let title: String
         let isActive: Bool
         let onTap: () -> Void
-
+        
         var body: some View {
-            Button { onTap() } label: {
+            Button(action: onTap) {
                 Text(title)
                     .font(.system(size: 16, design: .serif))
-                    .foregroundColor(isActive ? AppColor.Button.Text.primary : AppColor.Text.primary)
+                    .foregroundColor(isActive ? .white : AppColor.Text.primary)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(isActive ? AppColor.Button.primary : .clear)
+            .background(isActive ? AppColor.StatusBar.color.opacity(0.2) : .clear)
             .cornerRadius(37)
             .overlay {
-                RoundedRectangle(cornerRadius: 37)
-                    .inset(by: 0.5)
-                    .stroke(
-                        AppColor.Button.primary
-                    )
+                if !isActive {
+                    RoundedRectangle(cornerRadius: 37)
+                        .inset(by: 0.5)
+                        .stroke(AppColor.Button.primary)
+                }
             }
+            .modifier(GlassIfAvailable(isActive: isActive))
         }
     }
+    
+    
     
     private func playBurstSound() {
         guard soundEffectEnabled else { return }
@@ -247,7 +242,33 @@ struct DictionaryDetail: View {
         playBurstSound()
         HapticManager.shared.playExplosionHaptic()
     }
+    
+}
+@available(iOS 15.0, *)
+private struct GlassIfAvailable: ViewModifier {
+    let isActive: Bool
+    
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *), isActive {
+            content
+                .modifier(CustomGlass())  
+                
+        } else {
+            content
+        }
+    }
+}
 
+private struct CustomGlass: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 37))
+            .overlay(
+                RoundedRectangle(cornerRadius: 37)
+                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
+            )
+    }
 }
 
 struct WrapLayoutCenter: Layout {
