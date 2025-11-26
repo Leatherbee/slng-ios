@@ -107,6 +107,23 @@ struct TranslateView: View {
                     )
                 }
             }
+            .overlay(alignment: .top) {
+                if let msg = viewModel.errorMessage, !msg.isEmpty {
+                    Text(msg)
+                        .font(.system(.footnote, design: .default, weight: .bold))
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.red.opacity(0.08))
+                        )
+                        .padding(.top, safeTop + 8)
+                        .padding(.horizontal, 24)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .animation(.easeInOut(duration: 0.25), value: viewModel.errorMessage)
+                }
+            }
                         
             if (showSettings || dragOffset > 0) && !(viewModel.isRecording || viewModel.isTranscribing) {
                 ZStack {

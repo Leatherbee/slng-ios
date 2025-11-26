@@ -137,7 +137,16 @@ final class TranslateViewModel: ObservableObject {
                     ReviewRequestManager.shared.recordSTTAndMaybePrompt()
                 } catch {
                     await MainActor.run {
-                        self.errorMessage = error.localizedDescription
+                        let ns = error as NSError
+                        let code = ns.code
+                        let status = (ns.userInfo["status"] as? Int) ?? code
+                        if status == 429 {
+                            self.errorMessage = "Whoaa wait... you're not that special... please wait..."
+                        } else if status == 500 {
+                            self.errorMessage = "Sh*t servers, broke again... lemme check..."
+                        } else {
+                            self.errorMessage = error.localizedDescription
+                        }
                         self.isTranscribing = false
                     }
                 }
@@ -206,7 +215,14 @@ final class TranslateViewModel: ObservableObject {
                 ])
             } catch {
                 await MainActor.run {
-                    self.errorMessage = error.localizedDescription
+                    let ns = error as NSError
+                    let code = ns.code
+                    let status = (ns.userInfo["status"] as? Int) ?? code
+                    if status == 429 {
+                        self.errorMessage = "Whoaa wait... you're not that special... please wait..."
+                    } else {
+                        self.errorMessage = error.localizedDescription
+                    }
                     self.isLoading = false
                 }
                 Analytics.logEvent("network_status", parameters: [
