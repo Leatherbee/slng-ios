@@ -18,12 +18,11 @@ struct LottieAnimationUIView: UIViewRepresentable {
         
         let animationView = LottieAnimationView(name: animationName)
         animationView.loopMode = .loop
-        animationView.contentMode = .scaleAspectFit // atau .scaleAspectFill
+        animationView.contentMode = .scaleAspectFit
         animationView.translatesAutoresizingMaskIntoConstraints = false
         
         containerView.addSubview(animationView)
         
-        // Set constraints
         NSLayoutConstraint.activate([
             animationView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             animationView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),

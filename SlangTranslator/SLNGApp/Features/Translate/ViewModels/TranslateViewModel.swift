@@ -134,6 +134,7 @@ final class TranslateViewModel: ObservableObject {
                         self.inputText = text
                         self.isTranscribing = false
                     }
+                    ReviewRequestManager.shared.recordSTTAndMaybePrompt()
                 } catch {
                     await MainActor.run {
                         self.errorMessage = error.localizedDescription
@@ -193,6 +194,7 @@ final class TranslateViewModel: ObservableObject {
                         print("Unknown source")
                     }
                 }
+                ReviewRequestManager.shared.recordTranslationAndMaybePrompt()
                 let elapsedMs = Int(Date().timeIntervalSince(startTime) * 1000)
                 let bucket: String = elapsedMs < 50 ? "<50ms" : elapsedMs < 100 ? "50-100ms" : elapsedMs < 250 ? "100-250ms" : elapsedMs < 500 ? "250-500ms" : ">=500ms"
                 Analytics.logEvent("latency_bucket", parameters: [
@@ -261,4 +263,3 @@ final class TranslateViewModel: ObservableObject {
         }
     }
 }
-

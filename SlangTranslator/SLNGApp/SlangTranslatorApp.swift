@@ -27,6 +27,7 @@ struct SlangTranslatorApp: App {
         if defaults.object(forKey: "selectedTheme") == nil {
             defaults.set("system", forKey: "selectedTheme")
         }
+        ReviewRequestManager.shared.recordAppOpenAndMaybePrompt()
     }
     
     var body: some Scene {
