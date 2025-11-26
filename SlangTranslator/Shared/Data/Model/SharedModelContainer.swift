@@ -15,24 +15,24 @@ final class SharedModelContainer {
     let container: ModelContainer
     
     private init() {
-        let schema = Schema([
-            TranslationModel.self,
-            SlangModel.self
-        ])
-        
         let appGroupID = "group.prammmoe.SLNG"
-        
         guard let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) else {
             fatalError("Cannot find AppGroup")
         }
-        
         let storeURL = appGroupURL.appendingPathComponent("translations.sqlite")
-        let config = ModelConfiguration(url: storeURL, allowsSave: true)
-        
-        do  {
-            self.container = try ModelContainer(for: schema, configurations: [config])
+        let schemaLatest = Schema(versionedSchema: SLNGSchemaLatest.self)
+        let config = ModelConfiguration(schema: schemaLatest, url: storeURL, allowsSave: true)
+        do {
+            self.container = try ModelContainer(for: schemaLatest, migrationPlan: SLNGMigrationPlan.self, configurations: [config])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            do {
+                let schemaV1 = Schema(versionedSchema: SLNGSchemaV1.self)
+                let configV1 = ModelConfiguration(schema: schemaV1, url: storeURL, allowsSave: true)
+                _ = try ModelContainer(for: schemaV1, configurations: [configV1])
+                self.container = try ModelContainer(for: schemaLatest, migrationPlan: SLNGMigrationPlan.self, configurations: [config])
+            } catch {
+                fatalError("Could not create ModelContainer: \(error)")
+            }
         }
     }
     
@@ -40,4 +40,3 @@ final class SharedModelContainer {
         container.mainContext
     }
 }
-

@@ -11,11 +11,11 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(Router.self) private var route
     @Binding var showSettings: Bool
-    @AppStorage("selectedTheme", store: UserDefaults.shared) private var selectedThemeRaw: String = ThemeOption.light.rawValue
+    @AppStorage("selectedTheme", store: UserDefaults.shared) private var selectedThemeRaw: String = ThemeOption.system.rawValue
     @AppStorage("hapticEnabled", store: UserDefaults.shared) private var hapticEnabled: Bool = true
     @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false
     @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
-    enum ThemeOption: String { case dark, light }
+    enum ThemeOption: String { case dark, light, system }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -74,20 +74,18 @@ struct SettingsView: View {
                             .tint(.green)
                     }
                     .contentShape(.rect)
-
-                    HStack {
-                        Image(systemName: "swirl.circle.righthalf.filled")
-                        Text("Theme")
-                        Spacer()
-                        Picker("", selection: $selectedThemeRaw) {
-                            Text("Light").tag(ThemeOption.light.rawValue)
-                            Text("Dark").tag(ThemeOption.dark.rawValue)
-                        }
-                        .pickerStyle(.segmented)
-                        .frame(maxWidth: 180)
-                    }
-                    .contentShape(.rect)
                     
+                    Button {
+                        route.go(to: .settingsTheme)
+                    } label: {
+                        HStack {
+                            Image(systemName: "swirl.circle.righthalf.filled")
+                            Text("Theme")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                        }
+                        .contentShape(.rect)
+                    }
                 }
                 .listRowBackground(AppColor.List.primary)
 
@@ -148,8 +146,7 @@ struct SettingsView: View {
         .onAppear {
             let defaults = UserDefaults.shared
             if defaults.object(forKey: "selectedTheme") == nil {
-                let style = UIScreen.main.traitCollection.userInterfaceStyle
-                selectedThemeRaw = style == .dark ? ThemeOption.dark.rawValue : ThemeOption.light.rawValue
+                selectedThemeRaw = ThemeOption.system.rawValue
             }
         }
     }

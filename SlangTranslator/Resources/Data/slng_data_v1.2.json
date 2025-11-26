@@ -59546,6 +59546,23 @@
     ]
   },
   {
+    "canonicalForm": "slay",
+    "canonicalPronunciation": "sl-ei",
+    "variants": [
+      {
+        "slang": "slay",
+        "pronunciation": "sl-ei",
+        "translationID": "keren banget / tampil maksimal",
+        "translationEN": "to look amazing / to perform exceptionally well",
+        "contextID": "Dipakai sebagai pujian ketika seseorang terlihat keren, percaya diri, atau melakukan sesuatu dengan sangat baik, biasanya di media sosial atau percakapan santai.",
+        "contextEN": "Used as a compliment when someone looks great, confident, or performs exceptionally well, often in social media or casual conversation.",
+        "exampleID": "Outfit kamu slay banget hari ini.",
+        "exampleEN": "Your outfit absolutely slays today.",
+        "sentiment": "positive"
+      }
+    ]
+  },
+  {
     "canonicalForm": "slmnya",
     "canonicalPronunciation": "se-lam-nya",
     "variants": [
@@ -60613,6 +60630,23 @@
         "exampleID": "Dia nyuruh aku beli makanan.",
         "exampleEN": "He asked me to buy food.",
         "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "sus",
+    "canonicalPronunciation": "sas",
+    "variants": [
+      {
+        "slang": "sus",
+        "pronunciation": "sas",
+        "translationID": "mencurigakan",
+        "translationEN": "suspicious",
+        "contextID": "Biasanya dipakai saat sesuatu atau seseorang terlihat mencurigakan, janggal, atau kayak ada yang disembunyikan. Asal-usulnya populer dari game Among Us, lalu menyebar ke percakapan sehari-hari.",
+        "contextEN": "Used when something or someone feels suspicious, odd, or like they’re hiding something. Popularized by the game Among Us, then adopted into everyday slang.",
+        "exampleID": "Dia tiba-tiba baik banget, agak sus sih.",
+        "exampleEN": "He suddenly became super nice, kinda sus.",
+        "sentiment": "negative"
       }
     ]
   },

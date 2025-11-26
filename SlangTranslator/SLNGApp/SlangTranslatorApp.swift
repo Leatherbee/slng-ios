@@ -15,18 +15,17 @@ import FirebaseAnalytics
 struct SlangTranslatorApp: App {
     @State private var router = Router()
     @AppStorage("hasOnboarded") private var hasOnboarded = false
-    @AppStorage("selectedTheme", store: UserDefaults.shared) private var selectedThemeRaw: String = "light"
+    @AppStorage("selectedTheme", store: UserDefaults.shared) private var selectedThemeRaw: String = "system"
     let container = SharedModelContainer.shared.container
     
-    
     init() {
+        FirebaseApp.configure()
         let container = SharedModelContainer.shared.container
         let repo = SlangRepositoryImpl(container: container)
         _ = repo.loadAll()
         let defaults = UserDefaults.shared
         if defaults.object(forKey: "selectedTheme") == nil {
-            let style = UIScreen.main.traitCollection.userInterfaceStyle
-            defaults.set(style == .dark ? "dark" : "light", forKey: "selectedTheme")
+            defaults.set("system", forKey: "selectedTheme")
         }
     }
     
@@ -39,7 +38,7 @@ struct SlangTranslatorApp: App {
                     OnboardingView()
                 }
             }
-            .preferredColorScheme(selectedThemeRaw == "dark" ? .dark : .light)
+            .preferredColorScheme(selectedThemeRaw == "system" ? nil : (selectedThemeRaw == "dark" ? .dark : .light))
         }
         .modelContainer(container)
     }
@@ -113,4 +112,3 @@ struct SlangTranslatorApp: App {
         }
     }
 }
-
