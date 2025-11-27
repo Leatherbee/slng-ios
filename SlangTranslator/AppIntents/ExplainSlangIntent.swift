@@ -12,7 +12,7 @@ struct ExplainSlangIntent: AppIntent {
     static var title: LocalizedStringResource = "Explain Slang"
     static var description = IntentDescription("Detect and explain Indonesian slang in text, including full English translation and sentiment tone.")
 
-    @Parameter(title: "Text")
+    @Parameter(title: "Text", requestValueDialog: "Input Slang")
     var text: String
 
     func perform() async throws -> some IntentResult & ReturnsValue<[SlangResult]> & ProvidesDialog {

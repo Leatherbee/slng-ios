@@ -10,19 +10,26 @@ import UIKit
 import SwiftData
 import Firebase
 import FirebaseAnalytics
+import AppIntents
+import UserNotifications
+import FirebaseMessaging
 
 @main
 struct SlangTranslatorApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var router = Router()
     @AppStorage("hasOnboarded") private var hasOnboarded = false
     @AppStorage("selectedTheme", store: UserDefaults.shared) private var selectedThemeRaw: String = "system"
     let container = SharedModelContainer.shared.container
     
     init() {
-        FirebaseApp.configure()
+        // FirebaseApp.configure()
         let container = SharedModelContainer.shared.container
         let repo = SlangRepositoryImpl(container: container)
         _ = repo.loadAll()
+        if #available(iOS 16.0, *) {
+            _ = MyAppShortcuts.appShortcuts
+        }
         let defaults = UserDefaults.shared
         if defaults.object(forKey: "selectedTheme") == nil {
             defaults.set("system", forKey: "selectedTheme")
@@ -111,5 +118,34 @@ struct SlangTranslatorApp: App {
                 defaults.removeObject(forKey: key)
             }
         }
+    }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseApp.configure()
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
+            if granted {
+                DispatchQueue.main.async {
+                    application.registerForRemoteNotifications()
+                }
+            }
+        }
+        Messaging.messaging().delegate = self
+        return true
+    }
+
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound, .badge])
+    }
+
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        let defaults = UserDefaults.shared
+        defaults.set(fcmToken ?? "", forKey: "fcmToken")
     }
 }
