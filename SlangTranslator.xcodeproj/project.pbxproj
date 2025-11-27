@@ -16,6 +16,7 @@
 		50FCF7A12EBCFD8300B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7A02EBCFD8300B2C472 /* Lottie */; };
 		50FCF94C2EBF510E00B2C472 /* EmojiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF94B2EBF510E00B2C472 /* EmojiKit */; };
 		50FCF9502EBF527700B2C472 /* EmojiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF94F2EBF527700B2C472 /* EmojiKit */; };
+		50F060CE2ECA61BB0081A1CE /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060CD2ECA61BB0081A1CE /* FirebaseMessaging */; };
 		50FDB6942EB200AC004304A3 /* KeyboardSlangExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -185,6 +186,7 @@
 				50F060C82ECA61BB0081A1CB /* FirebaseAnalyticsCore in Frameworks */,
 				50F060C62ECA61BB0081A1CB /* FirebaseAnalytics in Frameworks */,
 				50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */,
+				50F060CE2ECA61BB0081A1CE /* FirebaseMessaging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +283,7 @@
 				50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */,
 				50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */,
 				50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */,
+				50F060CD2ECA61BB0081A1CE /* FirebaseMessaging */,
 			);
 			productName = SlangTranslator;
 			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
@@ -660,7 +663,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlangTranslator/Info.plist;
@@ -679,7 +682,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG;
 				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -705,7 +708,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlangTranslator/Info.plist;
@@ -724,7 +727,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG;
 				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -828,7 +831,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Share Sheet";
@@ -840,7 +843,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -864,7 +867,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Share Sheet";
@@ -876,7 +879,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -900,7 +903,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Keyboard";
@@ -912,7 +915,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -935,7 +938,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RR3T853788;
+				DEVELOPMENT_TEAM = V5CA498GBP;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Keyboard";
@@ -947,7 +950,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1089,6 +1092,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */;
 			productName = EmojiKit;
+		};
+		50F060CD2ECA61BB0081A1CE /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
