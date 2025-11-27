@@ -25,15 +25,18 @@ final class AudioRecorderManager: NSObject {
         try session.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker])
         try session.setActive(true)
         
+        // 16 bit PCM, strictly same to backend
         let settings: [String: Any] = [
-            AVFormatIDKey: kAudioFormatMPEG4AAC,
-            AVSampleRateKey: 44100,
+            AVFormatIDKey: kAudioFormatLinearPCM,
+            AVSampleRateKey: 16000,
             AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+            AVLinearPCMBitDepthKey: 16,
+            AVLinearPCMIsBigEndianKey: false,
+            AVLinearPCMIsFloatKey: false
         ]
         
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-            .appendingPathExtension("m4a")
+            .appendingPathExtension("wav")
         
         recorder = try? AVAudioRecorder(url: url, settings: settings)
         recorder?.isMeteringEnabled = true
@@ -52,7 +55,7 @@ final class AudioRecorderManager: NSObject {
         stopLevelTimer()
         let url = recorder.url
         let data = try Data(contentsOf: url)
-        return (data, url.lastPathComponent, "audio/m4a")
+        return (data, url.lastPathComponent, "audio/wav")
     }
     
     func stop() {

@@ -8,6 +8,7 @@
 import SwiftUI
 import Lottie
 internal import Combine
+import FirebaseAnalytics
 
 struct SetupKeyboardView: View {
     @ObservedObject var viewModel: KeyboardStatusViewModel
@@ -54,6 +55,9 @@ struct SetupKeyboardView: View {
                         accessibilityLabel: "Add SLNG keyboard",
                         accessibilityHint: "Opens iOS Settings to enable the keyboard",
                         action: {
+                            Analytics.logEvent("add_keyboard_pressed", parameters: [
+                                "source": isOnboarding ? "onboarding" : "settings"
+                            ])
                             openKeyboardSettings()
                         }
                     ) {
@@ -78,6 +82,9 @@ struct SetupKeyboardView: View {
             if isOnboarding {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button{
+                        Analytics.logEvent("skip_onboarding_pressed", parameters: [
+                            "screen": "setup_keyboard"
+                        ])
                         onSkipOnboarding?()
                     } label: {
                         HStack {

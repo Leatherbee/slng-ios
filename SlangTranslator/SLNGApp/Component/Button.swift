@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAnalytics
 
 struct PrimaryButton<Label: View>: View {
     let buttonColor: Color
@@ -40,6 +41,9 @@ struct PrimaryButton<Label: View>: View {
         Button {
             Haptics.primaryButtonTap()
             SoundPlayer.play("button-2.wav")
+            Analytics.logEvent("button_tap", parameters: [
+                "label": accessibilityLabelOverride ?? ""
+            ])
             action()
         } label: {
             Group {

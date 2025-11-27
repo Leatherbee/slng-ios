@@ -8,6 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		503E21582ED8947B0048DDD6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21572ED8947B0048DDD6 /* FirebaseMessaging */; };
+		503E215A2ED8A3F30048DDD6 /* EmojiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21592ED8A3F30048DDD6 /* EmojiKit */; };
+		503E215C2ED8A3F30048DDD6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 503E215B2ED8A3F30048DDD6 /* FirebaseAnalytics */; };
+		503E215E2ED8A3F30048DDD6 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 503E215D2ED8A3F30048DDD6 /* FirebaseAnalyticsCore */; };
+		503E21602ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 503E215F2ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport */; };
+		503E21642ED8A3F30048DDD6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21632ED8A3F30048DDD6 /* FirebaseMessaging */; };
+		503E21662ED8A4220048DDD6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21652ED8A4220048DDD6 /* FirebaseAnalytics */; };
+		503E21682ED8A4220048DDD6 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21672ED8A4220048DDD6 /* FirebaseAnalyticsCore */; };
+		503E216A2ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21692ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport */; };
+		503E216C2ED8A4220048DDD6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 503E216B2ED8A4220048DDD6 /* FirebaseMessaging */; };
 		50F060C62ECA61BB0081A1CB /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */; };
 		50F060C82ECA61BB0081A1CB /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */; };
 		50F060CA2ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */; };
@@ -16,7 +26,6 @@
 		50FCF7A12EBCFD8300B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7A02EBCFD8300B2C472 /* Lottie */; };
 		50FCF94C2EBF510E00B2C472 /* EmojiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF94B2EBF510E00B2C472 /* EmojiKit */; };
 		50FCF9502EBF527700B2C472 /* EmojiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF94F2EBF527700B2C472 /* EmojiKit */; };
-		50F060CE2ECA61BB0081A1CE /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060CD2ECA61BB0081A1CE /* FirebaseMessaging */; };
 		50FDB6942EB200AC004304A3 /* KeyboardSlangExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -85,12 +94,14 @@
 		50FCF2072EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Resources/Data/slng_data_v1.2.json,
 				Shared/Common/Colors.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Data/Model/SharedModelContainer.swift,
 				Shared/Data/Model/SlangModel.swift,
 				Shared/Data/Model/TranslationModel.swift,
+				Shared/Data/Model/VersionedSchema.swift,
 				Shared/Domain/Entities/SlangData.swift,
 				Shared/Domain/Entities/TranslationData.swift,
 				Shared/Domain/Entities/TranslationResult.swift,
@@ -108,12 +119,14 @@
 		50FCF2082EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Resources/Data/slng_data_v1.2.json,
 				Shared/Common/Colors.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Data/Model/SharedModelContainer.swift,
 				Shared/Data/Model/SlangModel.swift,
 				Shared/Data/Model/TranslationModel.swift,
+				Shared/Data/Model/VersionedSchema.swift,
 				Shared/Domain/Entities/SlangData.swift,
 				Shared/Domain/Entities/TranslationData.swift,
 				Shared/Domain/Entities/TranslationResult.swift,
@@ -181,12 +194,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				503E21582ED8947B0048DDD6 /* FirebaseMessaging in Frameworks */,
 				50FCF94C2EBF510E00B2C472 /* EmojiKit in Frameworks */,
 				50F060CA2ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport in Frameworks */,
 				50F060C82ECA61BB0081A1CB /* FirebaseAnalyticsCore in Frameworks */,
 				50F060C62ECA61BB0081A1CB /* FirebaseAnalytics in Frameworks */,
 				50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */,
-				50F060CE2ECA61BB0081A1CE /* FirebaseMessaging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,7 +221,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				503E215A2ED8A3F30048DDD6 /* EmojiKit in Frameworks */,
+				503E21602ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
+				503E21642ED8A3F30048DDD6 /* FirebaseMessaging in Frameworks */,
 				50FCF79D2EBCFD7E00B2C472 /* Lottie in Frameworks */,
+				503E215C2ED8A3F30048DDD6 /* FirebaseAnalytics in Frameworks */,
+				503E215E2ED8A3F30048DDD6 /* FirebaseAnalyticsCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,8 +234,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				503E216C2ED8A4220048DDD6 /* FirebaseMessaging in Frameworks */,
 				50FCF9502EBF527700B2C472 /* EmojiKit in Frameworks */,
+				503E216A2ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
 				50FCF7A12EBCFD8300B2C472 /* Lottie in Frameworks */,
+				503E21662ED8A4220048DDD6 /* FirebaseAnalytics in Frameworks */,
+				503E21682ED8A4220048DDD6 /* FirebaseAnalyticsCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,7 +305,7 @@
 				50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */,
 				50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */,
 				50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */,
-				50F060CD2ECA61BB0081A1CE /* FirebaseMessaging */,
+				503E21572ED8947B0048DDD6 /* FirebaseMessaging */,
 			);
 			productName = SlangTranslator;
 			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
@@ -353,6 +375,11 @@
 			name = ExplainSlangExtension;
 			packageProductDependencies = (
 				50FCF79C2EBCFD7E00B2C472 /* Lottie */,
+				503E21592ED8A3F30048DDD6 /* EmojiKit */,
+				503E215B2ED8A3F30048DDD6 /* FirebaseAnalytics */,
+				503E215D2ED8A3F30048DDD6 /* FirebaseAnalyticsCore */,
+				503E215F2ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport */,
+				503E21632ED8A3F30048DDD6 /* FirebaseMessaging */,
 			);
 			productName = ExplainSlangExtension;
 			productReference = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */;
@@ -377,6 +404,10 @@
 			packageProductDependencies = (
 				50FCF7A02EBCFD8300B2C472 /* Lottie */,
 				50FCF94F2EBF527700B2C472 /* EmojiKit */,
+				503E21652ED8A4220048DDD6 /* FirebaseAnalytics */,
+				503E21672ED8A4220048DDD6 /* FirebaseAnalyticsCore */,
+				503E21692ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport */,
+				503E216B2ED8A4220048DDD6 /* FirebaseMessaging */,
 			);
 			productName = KeyboardSlangExtension;
 			productReference = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */;
@@ -663,7 +694,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlangTranslator/Info.plist;
@@ -682,7 +713,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
 				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -708,7 +739,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlangTranslator/Info.plist;
@@ -727,7 +758,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
 				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -831,7 +862,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Share Sheet";
@@ -843,7 +874,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.SLNGShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -867,7 +898,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Share Sheet";
@@ -879,7 +910,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.SLNGShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -903,7 +934,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Keyboard";
@@ -915,7 +946,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.KeyboardSlangExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -938,7 +969,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V5CA498GBP;
+				DEVELOPMENT_TEAM = RR3T853788;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Keyboard";
@@ -950,7 +981,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.KeyboardSlangExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1053,6 +1084,56 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		503E21572ED8947B0048DDD6 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		503E21592ED8A3F30048DDD6 /* EmojiKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */;
+			productName = EmojiKit;
+		};
+		503E215B2ED8A3F30048DDD6 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		503E215D2ED8A3F30048DDD6 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		503E215F2ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsIdentitySupport;
+		};
+		503E21632ED8A3F30048DDD6 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		503E21652ED8A4220048DDD6 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		503E21672ED8A4220048DDD6 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		503E21692ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsIdentitySupport;
+		};
+		503E216B2ED8A4220048DDD6 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
@@ -1092,11 +1173,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */;
 			productName = EmojiKit;
-		};
-		50F060CD2ECA61BB0081A1CE /* FirebaseMessaging */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import FirebaseAnalytics
 
 struct ExpandedTranslationView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
@@ -44,6 +45,7 @@ struct ExpandedTranslationView: View {
             }
             
             Button {
+                Analytics.logEvent("expanded_translation_close", parameters: nil)
                 dismiss()
                 onClose()
             } label: {

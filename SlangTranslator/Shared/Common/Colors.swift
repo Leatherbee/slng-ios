@@ -62,5 +62,9 @@ enum AppColor {
     enum Hint {
         static let primary = Color("dragHint")
     }
+    
+    enum Divider {
+        static let primary = Color("dividerPrimary").opacity(0.4)
+    }
 }
 

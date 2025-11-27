@@ -26,6 +26,10 @@ struct DictionaryDetailView: View {
                         .foregroundColor(AppColor.Text.primary)
                         .textSelection(.enabled)
                     Button {
+                        Analytics.logEvent("dictionary_pronounce_pressed", parameters: [
+                            "slang": current?.slang ?? "",
+                            "pronunciation": current?.pronunciation ?? ""
+                        ])
                         viewModel.speak(current?.slang ?? "", language: "id")
                     } label: {
                         HStack(spacing: 8){

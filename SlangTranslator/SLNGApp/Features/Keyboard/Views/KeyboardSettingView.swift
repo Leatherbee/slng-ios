@@ -74,6 +74,7 @@ struct KeyboardSettingView: View {
                 .padding(.top, 4)
             
             Button {
+                Analytics.logEvent("settings_show_instructions", parameters: nil)
                 showShareSheetPreview = true
             } label: {
                 VStack(spacing: 4) {
@@ -230,6 +231,7 @@ struct ShareSheetPreviewSheet: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
+                        Analytics.logEvent("settings_instructions_close", parameters: nil)
                         dismiss()
                     } label: {
                         Image(systemName: "xmark")

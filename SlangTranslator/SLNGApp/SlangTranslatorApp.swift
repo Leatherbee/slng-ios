@@ -19,11 +19,11 @@ struct SlangTranslatorApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var router = Router()
     @AppStorage("hasOnboarded") private var hasOnboarded = false
-    @AppStorage("selectedTheme", store: UserDefaults.shared) private var selectedThemeRaw: String = "light"
+    @AppStorage("selectedTheme", store: UserDefaults.shared) private var selectedThemeRaw: String = "system"
     let container = SharedModelContainer.shared.container
     
-    
     init() {
+        // FirebaseApp.configure()
         let container = SharedModelContainer.shared.container
         let repo = SlangRepositoryImpl(container: container)
         _ = repo.loadAll()
@@ -32,9 +32,9 @@ struct SlangTranslatorApp: App {
         }
         let defaults = UserDefaults.shared
         if defaults.object(forKey: "selectedTheme") == nil {
-            let style = UIScreen.main.traitCollection.userInterfaceStyle
-            defaults.set(style == .dark ? "dark" : "light", forKey: "selectedTheme")
+            defaults.set("system", forKey: "selectedTheme")
         }
+        ReviewRequestManager.shared.recordAppOpenAndMaybePrompt()
     }
     
     var body: some Scene {
@@ -46,7 +46,7 @@ struct SlangTranslatorApp: App {
                     OnboardingView()
                 }
             }
-            .preferredColorScheme(selectedThemeRaw == "dark" ? .dark : .light)
+            .preferredColorScheme(selectedThemeRaw == "system" ? nil : (selectedThemeRaw == "dark" ? .dark : .light))
         }
         .modelContainer(container)
     }
@@ -125,13 +125,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
         UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
-            if granted {
-                DispatchQueue.main.async {
-                    application.registerForRemoteNotifications()
-                }
-            }
-        }
         Messaging.messaging().delegate = self
         return true
     }

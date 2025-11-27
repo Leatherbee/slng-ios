@@ -167,6 +167,7 @@ struct DictionaryDetail: View {
                     ToolbarItem(placement: .topBarLeading) {
                         if #available(iOS 26.0, *) {
                             Button {
+                                Analytics.logEvent("dictionary_info_close", parameters: nil)
                                 showInfoSheet.toggle()
                             } label: {
                                 Image(systemName: "xmark")
@@ -178,6 +179,7 @@ struct DictionaryDetail: View {
                             .clipShape(.circle)
                         } else {
                             Button {
+                                Analytics.logEvent("dictionary_info_close", parameters: nil)
                                 showInfoSheet.toggle()
                             } label: {
                                 Image(systemName: "xmark")

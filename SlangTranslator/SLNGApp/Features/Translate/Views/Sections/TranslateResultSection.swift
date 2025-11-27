@@ -8,6 +8,7 @@
 import SwiftUI
 import AVFoundation
 import UIKit
+import FirebaseAnalytics
 
 struct TranslateResultSection: View {
     @ObservedObject var viewModel: TranslateViewModel
@@ -140,6 +141,9 @@ struct TranslateResultSection: View {
                             if viewModel.slangDetected.isEmpty {
                                 HStack(spacing: 10) {
                                     Button {
+                                        Analytics.logEvent("expand_translation_pressed", parameters: [
+                                            "context": "no_slang"
+                                        ])
                                         viewModel.expandedView()
                                         showExpanded = true
                                     } label: {
@@ -147,7 +151,12 @@ struct TranslateResultSection: View {
                                     .accessibilityLabel("Expand translation")
                                     .accessibilityHint("Open fullscreen translation view")
                                     
-                                    Button { viewModel.copyToClipboard() } label: {
+                                    Button {
+                                        Analytics.logEvent("copy_translation_pressed", parameters: [
+                                            "context": "no_slang"
+                                        ])
+                                        viewModel.copyToClipboard()
+                                    } label: {
                                     }
                                     .accessibilityLabel("Copy translation")
                                     .accessibilityHint("Copy translated text to clipboard")
@@ -175,6 +184,9 @@ struct TranslateResultSection: View {
                                 HStack {
                                     HStack(spacing: 10) {
                                         Button {
+                                            Analytics.logEvent("expand_translation_pressed", parameters: [
+                                                "context": "with_slang"
+                                            ])
                                             viewModel.expandedView()
                                             showExpanded = true
                                         } label: {
@@ -183,7 +195,12 @@ struct TranslateResultSection: View {
                                         .accessibilityLabel("Expand translation")
                                         .accessibilityHint("Open fullscreen translation view")
                                         
-                                        Button { viewModel.copyToClipboard() } label: {
+                                        Button {
+                                            Analytics.logEvent("copy_translation_pressed", parameters: [
+                                                "context": "with_slang"
+                                            ])
+                                            viewModel.copyToClipboard()
+                                        } label: {
                                             Image(systemName: "doc.on.doc")
                                         }
                                         .accessibilityLabel("Copy translation")
@@ -191,6 +208,10 @@ struct TranslateResultSection: View {
                                     }
                                     Spacer()
                                     Button {
+                                        Analytics.logEvent("detected_slang_toggle", parameters: [
+                                            "state": viewModel.isDetectedSlangShown ? "close" : "open",
+                                            "count": viewModel.slangDetected.count
+                                        ])
                                         viewModel.showDetectedSlang()
                                     } label: {
                                         Group {
@@ -308,6 +329,7 @@ struct TranslateResultSection: View {
                 accessibilityLabel: "Try another translation",
                 accessibilityHint: "Go back to input to translate another text",
                 action: {
+                    Analytics.logEvent("try_another_button_pressed", parameters: nil)
                     viewModel.reset()
                     resetAnimation()
                 }

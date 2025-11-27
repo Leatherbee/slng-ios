@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import AVFoundation
 internal import Combine
 import SwiftData
 import FirebaseAnalytics
@@ -29,6 +30,7 @@ final class TranslateViewModel: ObservableObject {
     @Published var result: TranslationResult? = nil
     @Published var isRecording: Bool = false
     @Published var isTranscribing: Bool = false
+    @Published var sttPlaceholder: String? = nil
     @Published var audioLevel: Float = -160
     @Published var isRecorderUIVisible: Bool = false
     
@@ -94,7 +96,7 @@ final class TranslateViewModel: ObservableObject {
     func startRecording() {
         audioRecorder.requestPermission { micGranted in
             if !micGranted {
-                Task { @MainActor in self.errorMessage = "Microphone access denied" }
+                Task { @MainActor in self.errorMessage = "Mic’s locked. Open Settings and free it" }
                 Analytics.logEvent("permissions_response", parameters: [
                     "permission_type": "microphone",
                     "result": "denied"
@@ -108,7 +110,10 @@ final class TranslateViewModel: ObservableObject {
                     }
                 }
                 try self.audioRecorder.start()
-                Task { @MainActor in self.isRecording = true }
+                Task { @MainActor in
+                    self.sttPlaceholder = nil
+                    self.isRecording = true
+                }
                 Analytics.logEvent("permissions_response", parameters: [
                     "permission_type": "microphone",
                     "result": "authorized"
@@ -120,6 +125,17 @@ final class TranslateViewModel: ObservableObject {
     }
     
     func stopRecordingAndTranscribe() {
+        // Hard gate: if mic not active or permission not granted, avoid backend calls
+        let perm = AVAudioApplication.shared.recordPermission
+        if perm != .granted {
+            Task { @MainActor in
+                self.errorMessage = "Your mic said no. Respectfully, fix that in Settings"
+                self.isRecording = false
+                self.isTranscribing = false
+                self.audioLevel = -160
+            }
+            return
+        }
         speechStreamingManager.stop()
         do {
             let result = try audioRecorder.stopAndFetchData()
@@ -131,12 +147,30 @@ final class TranslateViewModel: ObservableObject {
                 do {
                     let text = try await speechUseCase.execute(audioData: result.data, fileName: result.fileName, mimeType: result.mimeType)
                     await MainActor.run {
-                        self.inputText = text
-                        self.isTranscribing = false
+                        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if trimmed.isEmpty {
+                            let randomFallback = emptySTTMessages.randomElement() ?? "Seems like you didn’t say anything"
+                            self.sttPlaceholder = randomFallback
+                            self.isTranscribing = false
+                        } else {
+                            self.sttPlaceholder = nil
+                            self.inputText = text
+                            self.isTranscribing = false
+                        }
                     }
+                    ReviewRequestManager.shared.recordSTTAndMaybePrompt()
                 } catch {
                     await MainActor.run {
-                        self.errorMessage = error.localizedDescription
+                        let ns = error as NSError
+                        let code = ns.code
+                        let status = (ns.userInfo["status"] as? Int) ?? code
+                        if status == 429 {
+                            self.errorMessage = "You’re tapping faster than my brain can think… chill for a sec"
+                        } else if status == 500 {
+                            self.errorMessage = "Yeah that’s on me, not you. Fixing the chaos"
+                        } else {
+                            self.errorMessage = error.localizedDescription
+                        }
                         self.isTranscribing = false
                     }
                 }
@@ -160,6 +194,7 @@ final class TranslateViewModel: ObservableObject {
             return
         }
         
+        sttPlaceholder = nil
         inputText = text
 
         let normalized = text.lowercased()
@@ -193,6 +228,7 @@ final class TranslateViewModel: ObservableObject {
                         print("Unknown source")
                     }
                 }
+                ReviewRequestManager.shared.recordTranslationAndMaybePrompt()
                 let elapsedMs = Int(Date().timeIntervalSince(startTime) * 1000)
                 let bucket: String = elapsedMs < 50 ? "<50ms" : elapsedMs < 100 ? "50-100ms" : elapsedMs < 250 ? "100-250ms" : elapsedMs < 500 ? "250-500ms" : ">=500ms"
                 Analytics.logEvent("latency_bucket", parameters: [
@@ -204,7 +240,14 @@ final class TranslateViewModel: ObservableObject {
                 ])
             } catch {
                 await MainActor.run {
-                    self.errorMessage = error.localizedDescription
+                    let ns = error as NSError
+                    let code = ns.code
+                    let status = (ns.userInfo["status"] as? Int) ?? code
+                    if status == 429 {
+                        self.errorMessage = "Whoaa wait... you're not that special... please wait..."
+                    } else {
+                        self.errorMessage = error.localizedDescription
+                    }
                     self.isLoading = false
                 }
                 Analytics.logEvent("network_status", parameters: [
@@ -228,6 +271,7 @@ final class TranslateViewModel: ObservableObject {
         result = nil
         isLoading = false
         errorMessage = nil
+        sttPlaceholder = nil
     }
     
     func editText(text: String) {
@@ -241,6 +285,7 @@ final class TranslateViewModel: ObservableObject {
         result = nil
         isLoading = false
         errorMessage = nil
+        sttPlaceholder = nil
     }
     
     func copyToClipboard() {
@@ -260,5 +305,33 @@ final class TranslateViewModel: ObservableObject {
             isDetectedSlangShown.toggle()
         }
     }
+    
+    private let emptySTTMessages = [
+        "Transcribing the void… still void, try again or just type, your call.",
+        "If silence was a language, you nailed it, wanna retry or just type it?",
+        "Silence level: legendary, try again or just type, whatever works.",
+        "That was spiritual, but I need sound, wanna try again or just type?",
+        "Bro said… literally nothing, retry or just type, no pressure.",
+        "Seems like you didn’t say anything, try again or just type, up to you.",
+        
+        "Your mic just heard pure emptiness, try again or type it out.",
+        "Nothing but silence detected, wanna give it another shot or type?",
+        "You summoned zero decibels, retry or just type if that’s easier.",
+        "Absolute quiet, iconic, try again or type your thoughts instead.",
+        "You spoke in telepathy again, retry or just type for real.",
+        "The mic caught air vibes only, try again or type something.",
+        "That was deep silence, impressive, now retry or type it.",
+        "Empty audio received, wanna try again or just type it in?",
+        "You whispered to the void, and the void whispered back nothing, try again or type.",
+        "Silence detected, aesthetic choice, retry or type, whatever vibes.",
+        "Not a single sound wave survived, try again or just type.",
+        "Your silence was loud, but not helpful, try again or type.",
+        "Mic picked up existential nothingness, retry or type, go for it.",
+        "Zero words given, zero words returned, try again or type instead.",
+        "The universe heard you say absolutely nothing, try again or type.",
+        "Bold silence move, retry or type, your decision.",
+        "Void energy strong today, try again or type something.",
+        "Your audio said *nothing but vibes*, retry or type it below.",
+        "Silence mastery unlocked, try again or just type."
+    ]
 }
-

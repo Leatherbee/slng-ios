@@ -87,7 +87,7 @@ extension Router {
         case .settingsLanguage:
             LanguageSettingView()
         case .settingsTheme:
-            ThemeSettingView()
+            ThemeSettingsView()
         case .settingsAbout:
             AboutView()
         }
