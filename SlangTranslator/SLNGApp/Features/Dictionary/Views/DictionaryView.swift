@@ -28,11 +28,9 @@ struct DictionaryView: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            // Background layer
             AppColor.Background.secondary
                 .ignoresSafeArea()
             
-            // Main content
             VStack(spacing: 24) {
                 HStack {
                     SwiftUIWheelPicker(
@@ -55,29 +53,29 @@ struct DictionaryView: View {
                         let distance = abs(selected - idx)
                         let (fontSize, opacity, rowHeight): (CGFloat, Double, CGFloat)
                         switch distance {
-                        case 0: (fontSize, opacity, rowHeight) = (64, 1.0, 76)
-                        case 1: (fontSize, opacity, rowHeight) = (48, 0.8, 57)
-                        case 2: (fontSize, opacity, rowHeight) = (34, 0.6, 58)
-                        case 3: (fontSize, opacity, rowHeight) = (28, 0.4, 41)
+                        case 0: (fontSize, opacity, rowHeight) = (60, 1.0, 76)
+                        case 1: (fontSize, opacity, rowHeight) = (44, 0.8, 57)
+                        case 2: (fontSize, opacity, rowHeight) = (30, 0.6, 58)
+                        case 3: (fontSize, opacity, rowHeight) = (24, 0.4, 41)
                         case 4: (fontSize, opacity,rowHeight) = (20, 0.2, 33)
                         default: (fontSize, opacity, rowHeight) = (20, 0.0, 33)
                         }
 
                         return AnyView(
-                            HStack(spacing: 32) {
+                            HStack(spacing: 28) {
                                 Text(item)
                                     .font(.system(size: fontSize, weight: isSelected ? .bold : .medium, design: .serif))
                                     .padding(.leading, 8)
                                     .opacity(opacity)
                                     .scaleEffect(isSelected ? 1.1 : 1.0)
                                     .lineLimit(1)
-                                    .truncationMode(.tail)
+                                    .minimumScaleFactor(0.4)
                                     .layoutPriority(1)
 
                                 if isSelected {
                                     Image(systemName: "arrow.right")
                                         .resizable()
-                                        .frame(width: 48, height: 24)
+                                        .frame(width: 44, height: 24)
                                         .foregroundColor(.primary)
                                         .transition(.asymmetric(
                                             insertion: .move(edge: .trailing).combined(with: .opacity),
@@ -238,48 +236,40 @@ struct DictionaryView: View {
     }
 }
 
-// MARK: - Ultra Smooth Sound Manager dengan Advanced Audio Engine
 class SoundManager {
     static let shared = SoundManager()
     
-    // Expanded audio player pool untuk ultra smooth playback
     private var audioPlayers: [AVAudioPlayer] = []
-    private let poolSize = 8 // Lebih banyak player untuk smoothness maksimal
+    private let poolSize = 8
     private var currentPlayerIndex = 0
     
-    // Advanced velocity tracking dengan smoothing
     private var lastPlayTime: TimeInterval = 0
     private var scrollVelocity: Double = 0
     private var velocityHistory: [Double] = []
-    private let maxVelocityHistory = 5 // Lebih banyak history untuk smoothing lebih baik
+    private let maxVelocityHistory = 5
     private var smoothedVelocity: Double = 0
     
-    // Exponential smoothing untuk velocity (lebih responsive)
     private let smoothingFactor: Double = 0.3
     
-    // Ultra dynamic intervals dengan lebih banyak gradasi
     private var dynamicInterval: TimeInterval {
         switch smoothedVelocity {
-        case 0..<0.2:      return 0.07   // Sangat lambat
-        case 0.2..<0.4:    return 0.06   // Lambat
-        case 0.4..<0.6:    return 0.05  // Sedang lambat
-        case 0.6..<0.8:    return 0.04  // Sedang
-        case 0.8..<1.2:    return 0.03  // Sedang cepat
-        case 1.2..<2.0:    return 0.02  // Cepat
-        case 2.0..<3.5:    return 0.018  // Sangat cepat
-        default:           return 0.013  // Ultra cepat
+        case 0..<0.2:      return 0.07
+        case 0.2..<0.4:    return 0.06
+        case 0.4..<0.6:    return 0.05
+        case 0.6..<0.8:    return 0.04
+        case 0.8..<1.2:    return 0.03
+        case 1.2..<2.0:    return 0.02
+        case 2.0..<3.5:    return 0.018
+        default:           return 0.013
         }
     }
     
-    // Volume curve yang lebih smooth dengan easing
     private var adaptiveVolume: Float {
         let normalizedVelocity = min(smoothedVelocity / 4.0, 1.0)
-        // Ease-out curve untuk transisi volume yang lebih smooth
         let easedValue = 1.0 - pow(normalizedVelocity, 0.7)
-        return Float(0.12 + (easedValue * 0.1)) // Range: 0.12 - 0.28
+        return Float(0.12 + (easedValue * 0.1))
     }
     
-    // Pitch variation untuk variety (optional, bisa di-enable/disable)
     private var shouldVaryPitch = false
     
     private init() {
@@ -289,13 +279,12 @@ class SoundManager {
     
     private func setupAudioSession() {
         do {
-            // Optimize audio session untuk low latency
             try AVAudioSession.sharedInstance().setCategory(
                 .ambient,
                 mode: .default,
                 options: [.mixWithOthers, .allowBluetoothHFP]
             )
-            try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.005) // Low latency
+            try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.005)
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
             print("Audio session setup failed: \(error)")
@@ -308,14 +297,13 @@ class SoundManager {
             return
         }
         
-        // Create larger pool with optimized settings
         for _ in 0..<poolSize {
             do {
                 let player = try AVAudioPlayer(contentsOf: url)
                 player.prepareToPlay()
                 player.volume = 0.25
                 player.numberOfLoops = 0
-                player.enableRate = shouldVaryPitch // Enable pitch variation if needed
+                player.enableRate = shouldVaryPitch
                 audioPlayers.append(player)
             } catch {
                 print("Failed to create audio player: \(error)")
@@ -323,18 +311,15 @@ class SoundManager {
         }
     }
     
-    // Exponential moving average untuk velocity smoothing
     func updateScrollVelocity(_ velocity: Double) {
         let newVelocity = abs(velocity)
         
-        // Exponential smoothing
         if smoothedVelocity == 0 {
             smoothedVelocity = newVelocity
         } else {
             smoothedVelocity = (smoothingFactor * newVelocity) + ((1 - smoothingFactor) * smoothedVelocity)
         }
         
-        // Keep history for additional smoothing
         velocityHistory.append(newVelocity)
         if velocityHistory.count > maxVelocityHistory {
             velocityHistory.removeFirst()
@@ -343,7 +328,6 @@ class SoundManager {
         scrollVelocity = newVelocity
     }
     
-    // Ultra smooth playback dengan advanced features
     func playClick(withVelocity velocity: Double = 0) {
         let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
         let enabled: Bool = {
@@ -353,51 +337,41 @@ class SoundManager {
         guard enabled else { return }
         let currentTime = CACurrentMediaTime()
         
-        // Update velocity dengan smoothing
         if velocity > 0 {
             updateScrollVelocity(velocity)
         }
         
-        // Ultra adaptive throttling
         guard currentTime - lastPlayTime >= dynamicInterval else { return }
         lastPlayTime = currentTime
         
         guard !audioPlayers.isEmpty else { return }
         
-        // Round-robin through player pool
         let player = audioPlayers[currentPlayerIndex]
         currentPlayerIndex = (currentPlayerIndex + 1) % audioPlayers.count
         
-        // Stop player jika masih playing (untuk ultra responsive sound)
         if player.isPlaying {
             player.stop()
         }
         
-        // Apply adaptive volume dengan smooth transition
         player.volume = adaptiveVolume
         
-        // Optional: Vary pitch slightly untuk variety (more natural feel)
         if shouldVaryPitch {
             let pitchVariation = 0.95 + (CGFloat.random(in: 0...0.1))
             player.rate = Float(pitchVariation)
         }
         
-        // Reset and play
         player.currentTime = 0
         player.play()
     }
     
-    // Smooth velocity decay saat tidak ada input
     func decayVelocity() {
-        smoothedVelocity *= 0.85 // Decay factor
+        smoothedVelocity *= 0.85
         if smoothedVelocity < 0.01 {
             smoothedVelocity = 0
         }
     }
     
-    // Reset dengan smooth transition
     func resetVelocity() {
-        // Smooth decay instead of instant reset
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             for _ in 0..<10 {
@@ -410,7 +384,6 @@ class SoundManager {
         }
     }
     
-    // System sound alternative dengan ultra smooth haptic
     func playSystemClick(intensity: CGFloat = 0.5) {
         let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
         let soundOn: Bool = {
@@ -428,7 +401,6 @@ class SoundManager {
         }
     }
     
-    // Enable/disable pitch variation
     func setPitchVariation(enabled: Bool) {
         shouldVaryPitch = enabled
         for player in audioPlayers {
@@ -437,7 +409,6 @@ class SoundManager {
     }
 }
 
-// MARK: - Ultra Smooth SwiftUIWheelPicker
 public struct SwiftUIWheelPicker<Item>: View {
     private let items: [Item]
     @Binding private var selection: Int
@@ -455,14 +426,12 @@ public struct SwiftUIWheelPicker<Item>: View {
     @State private var visibleRange: Range<Int> = 0..<10
     @State private var containerCenterY: CGFloat = 0
     
-    // Ultra smooth sound tracking
     private let soundManager = SoundManager.shared
     @State private var lastSelectionTime: TimeInterval = 0
     @State private var selectionVelocity: Double = 0
     @State private var velocityUpdateTimer: Timer?
     @State private var lastSelection: Int = 0
     
-    // Smooth animation tracking
     @State private var isQuickScrolling = false
 
     public init(
@@ -511,7 +480,6 @@ public struct SwiftUIWheelPicker<Item>: View {
                                engine.prepare()
                                lastSelection = selection
                                
-                               // Setup continuous velocity updates untuk smoothness
                                setupVelocityTimer()
                                
                                DispatchQueue.main.async {
@@ -543,7 +511,6 @@ public struct SwiftUIWheelPicker<Item>: View {
                                    .onEnded { _ in
                                        dragging = false
                                        
-                                       // Smooth velocity reset dengan decay
                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                            if Haptics.isEnabled {
                                                engine.impactOccurred(intensity: 0.4)
@@ -586,7 +553,6 @@ public struct SwiftUIWheelPicker<Item>: View {
             }
     }
     
-    // Setup timer untuk continuous velocity smoothing
     private func setupVelocityTimer() {
         velocityUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.016, repeats: true) { _ in
             if !dragging && selectionVelocity > 0.01 {
@@ -605,15 +571,12 @@ public struct SwiftUIWheelPicker<Item>: View {
         if nearest != selection {
             let currentTime = CACurrentMediaTime()
             
-            // Hitung velocity dengan smoothing lebih baik
             if lastSelectionTime > 0 {
                 let timeDelta = currentTime - lastSelectionTime
                 let indexDelta = abs(nearest - lastSelection)
                 
-                // Velocity berdasarkan jarak dan waktu
                 let rawVelocity = timeDelta > 0 ? Double(indexDelta) / timeDelta : 0
                 
-                // Smooth velocity calculation
                 selectionVelocity = (selectionVelocity * 0.6) + (rawVelocity * 0.4)
             }
             
@@ -621,12 +584,10 @@ public struct SwiftUIWheelPicker<Item>: View {
             lastSelection = selection
             selection = nearest
             
-            // Ultra smooth sound playback
             DispatchQueue.global(qos: .userInteractive).async {
                 soundManager.playClick(withVelocity: selectionVelocity)
             }
             
-            // Smooth haptic dengan velocity-based intensity
             if shouldFeedback && Haptics.isEnabled {
                 let normalizedVelocity = min(selectionVelocity / 15.0, 1.0)
                 let intensity = max(0.2, 1.0 - CGFloat(normalizedVelocity * 0.7))
@@ -654,7 +615,6 @@ public struct SwiftUIWheelPicker<Item>: View {
         updateVisibleRange(around: newIndex)
         guard let proxy = scrollProxy else { return }
         
-        // Smooth animation dengan variable duration
         let distance = abs(newIndex - lastSelection)
         let _: Double = animated ? min(0.3, max(0.15, Double(distance) * 0.02)) : 0
         
@@ -673,7 +633,6 @@ public struct SwiftUIWheelPicker<Item>: View {
         updateVisibleRange(around: index)
         guard let proxy = scrollProxy else { return }
         
-        // Ultra smooth animation untuk jump, bisa dimatikan saat drag alphabet
         let shouldAnimate = animated && jumpAnimated
         if shouldAnimate {
             withAnimation(.easeOut(duration: 0.18)) {
@@ -711,7 +670,6 @@ private struct RowCenterKey: PreferenceKey {
         value.append(contentsOf: nextValue())
     }
 }
-// MARK: - Keyboard Observer
 final class KeyboardObserver: ObservableObject {
     @Published var height: CGFloat = 0
     private var cancellables: Set<AnyCancellable> = []
@@ -745,8 +703,3 @@ final class KeyboardObserver: ObservableObject {
         height = max(0, rawHeight - bottomSafeArea)
     }
 }
-// Preview
-//#Preview {
-//    DictionaryView()
-//        .environment(PopupManager())
-//}
