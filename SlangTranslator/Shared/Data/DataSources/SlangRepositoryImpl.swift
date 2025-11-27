@@ -63,16 +63,16 @@ final class SlangRepositoryImpl: SlangRepository {
         let descriptor = FetchDescriptor<SlangModel>()
         let existing = (try? context.fetch(descriptor)) ?? []
         
-        // If there is hash changes or data is empty, sync from JSON.
-        if previousHash != currentHash || existing.isEmpty {
+        let shouldSync = (previousHash != currentHash) || existing.isEmpty
+        if shouldSync {
             print("Syncing data from JSON...")
             upsertFromJSON()
-            if let currentHash {
-                defaults?.set(currentHash, forKey: Self.jsonHashKey)
-            }
+            if let currentHash { defaults?.set(currentHash, forKey: Self.jsonHashKey) }
+            let final = (try? context.fetch(descriptor)) ?? []
+            print("Loaded \(final.count) from Local DB. JSON synced.")
+        } else {
+            print("Loaded \(existing.count) from Local DB. JSON is not changed.")
         }
-        
-        print("Loaded \(existing.count) from Local DB. JSON is not changed.")
     }
     
     private func upsertFromJSON() {
@@ -84,6 +84,8 @@ final class SlangRepositoryImpl: SlangRepository {
         
         do {
             let allSlangs = try SlangData.decodeFromStream(stream)
+            let canonicalCount = Set(allSlangs.map { $0.canonicalForm }).count
+            print("Decoded \(allSlangs.count) slangs across \(canonicalCount) canonical forms")
             
             let descriptor = FetchDescriptor<SlangModel>()
             let existing = (try? context.fetch(descriptor)) ?? []
@@ -133,12 +135,11 @@ final class SlangRepositoryImpl: SlangRepository {
                 }
             }
             
-            for model in existing where !seenIds.contains(model.id) {
-                context.delete(model)
-            }
+            let toDelete = existing.filter { !seenIds.contains($0.id) }
+            for model in toDelete { context.delete(model) }
             
             try? context.save()
-            print("Sync finished: \(processed) slangs upserted, \(existing.count - seenIds.count) deleted.")
+            print("Sync finished: \(processed) slangs upserted, \(toDelete.count) deleted.")
         } catch {
             print("Failed to parse slang JSON: \(error)")
         }

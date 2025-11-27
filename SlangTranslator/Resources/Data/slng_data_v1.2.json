@@ -313,6 +313,17 @@
     "canonicalPronunciation": "a-da-lah",
     "variants": [
       {
+        "slang": "adalah",
+        "pronunciation": "a-da-lah",
+        "translationID": "adalah",
+        "translationEN": "is",
+        "contextID": "Dipakai apa adanya tanpa perubahan, biasanya dalam konteks informal ketika pengguna ingin tetap memakai kata baku tapi dalam vibe yang santai.",
+        "contextEN": "Used as-is without modification, often in informal contexts where the speaker keeps the standard word but in a relaxed tone.",
+        "exampleID": "Ini adalah tempat nongkrong favorit gue.",
+        "exampleEN": "This is my favorite hangout spot.",
+        "sentiment": "neutral"
+      },
+      {
         "slang": "adlah",
         "pronunciation": "ad-lah",
         "translationID": "adalah",
@@ -331,17 +342,6 @@
         "contextID": "Merupakan singkatan dari 'adalah', digunakan dalam percakapan informal, terutama di media sosial dan pesan teks, untuk menghemat waktu dan ruang.",
         "contextEN": "It is an abbreviation of 'adalah', commonly used in informal conversations, especially in social media and text messages, to save time and space.",
         "exampleID": "Dia adlh teman terbaikku.",
-        "exampleEN": "He is my best friend.",
-        "sentiment": "neutral"
-      },
-      {
-        "slang": "adlh",
-        "pronunciation": "a-de-lah",
-        "translationID": "adalah",
-        "translationEN": "is",
-        "contextID": "Digunakan dalam percakapan informal untuk menyatakan identitas atau keadaan seseorang atau sesuatu.",
-        "contextEN": "Used in informal conversations to state the identity or condition of someone or something.",
-        "exampleID": "Dia adlh teman baikku.",
         "exampleEN": "He is my best friend.",
         "sentiment": "neutral"
       }
@@ -9505,6 +9505,28 @@
         "contextEN": "Used to express agreement or acknowledgment that something is correct or right.",
         "exampleID": "Iya, itu rights banget.",
         "exampleEN": "Yes, that's totally right.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "benul",
+        "pronunciation": "be-nul",
+        "translationID": "betul / benar",
+        "translationEN": "correct / right",
+        "contextID": "Digunakan sebagai versi lucu dan santai dari 'betul', sering dipakai untuk membalas pesan dengan vibe playful atau manis.",
+        "contextEN": "A playful, casual version of ‘betul’, often used to respond in a cute or lighthearted tone.",
+        "exampleID": "Iyaa benul gitu.",
+        "exampleEN": "Yess that’s right.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "benulski",
+        "pronunciation": "be-nul-ski",
+        "translationID": "betul (versi bercanda, gaya meme)",
+        "translationEN": "correct (meme style)",
+        "contextID": "Variasi meme dengan tambahan '-ski' yang sering dipakai untuk lucu-lucuan.",
+        "contextEN": "Meme-style variant using the '-ski' suffix for comedic effect.",
+        "exampleID": "Iya benulski itu.",
+        "exampleEN": "Yep that’s correctski.",
         "sentiment": "positive"
       }
     ]
@@ -23699,6 +23721,39 @@
     "canonicalPronunciation": "ge-mas",
     "variants": [
       {
+        "slang": "gemas",
+        "pronunciation": "ge-mas",
+        "translationID": "gemas",
+        "translationEN": "adorable / cute",
+        "contextID": "Dipakai dalam Bahasa Indonesia standar untuk menggambarkan sesuatu yang lucu, menarik, atau membuat ingin menyentuh karena saking imutnya.",
+        "contextEN": "Used in standard Indonesian to describe something cute, appealing, or endearing enough to trigger affection.",
+        "exampleID": "Anak kucing itu sangat gemas.",
+        "exampleEN": "That kitten is very adorable.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "gemec",
+        "pronunciation": "ge-mec",
+        "translationID": "gemas",
+        "translationEN": "adorable / cute",
+        "contextID": "Dipakai sebagai versi centil dan playful dari 'gemas', biasanya dalam percakapan manja, menggoda, atau saat melihat sesuatu yang super lucu.",
+        "contextEN": "Used as a playful and flirty variant of 'gemas', often in cute or teasing conversations, or when reacting to something extremely adorable.",
+        "exampleID": "Ih kucingnya gemec banget pengen cubit!",
+        "exampleEN": "The cat is so gemec I wanna squish it!",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "kiyowo",
+        "pronunciation": "ki-yo-wo",
+        "translationID": "gemas / imut banget",
+        "translationEN": "so cute / adorable",
+        "contextID": "Serapan dari bahasa Korea 'gwiyeowo', digunakan untuk menggambarkan sesuatu yang sangat imut atau menggemaskan. Umum dipakai di chat, konten K-pop/K-drama, dan ekspresi lucu ala Gen-Z.",
+        "contextEN": "Borrowed from the Korean word 'gwiyeowo', used to describe something extremely cute or adorable. Common in chats, K-pop/K-drama content, and Gen-Z expressions.",
+        "exampleID": "Anak kucingnya kiyowo banget sumpah!",
+        "exampleEN": "The kitten is so kiyowo, seriously!",
+        "sentiment": "positive"
+      },
+      {
         "slang": "emeessss",
         "pronunciation": "e-me-es",
         "translationID": "gemas",
@@ -30769,21 +30824,15 @@
         "exampleID": "Dia masih jomblo, padahal banyak yang suka sama dia.",
         "exampleEN": "He's still single, even though many people like him.",
         "sentiment": "neutral"
-      }
-    ]
-  },
-  {
-    "canonicalForm": "jombsss",
-    "canonicalPronunciation": "jom-bsss",
-    "variants": [
+      },
       {
-        "slang": "jombsss",
-        "pronunciation": "jom-bsss",
+        "slang": "jombs",
+        "pronunciation": "jom-bs",
         "translationID": "jomblo",
         "translationEN": "single",
         "contextID": "Digunakan oleh anak muda untuk merujuk pada status tidak memiliki pasangan, sering kali dengan nuansa santai atau humor.",
         "contextEN": "Used by young people to refer to the status of being without a partner, often with a casual or humorous tone.",
-        "exampleID": "Gue lagi jombsss, gak ada yang ngajak jalan.",
+        "exampleID": "Gue lagi jombs, gak ada yang ngajak jalan.",
         "exampleEN": "I'm single, no one is asking me out.",
         "sentiment": "neutral"
       }
@@ -32349,14 +32398,14 @@
         "sentiment": "positive"
       },
       {
-        "slang": "xlian",
-        "pronunciation": "e-xel-i-an",
+        "slang": "kelen",
+        "pronunciation": "ke-len",
         "translationID": "kalian",
         "translationEN": "you (plural)",
-        "contextID": "Digunakan dalam percakapan santai atau informal antara teman-teman, sering kali untuk menyiratkan kedekatan atau kebersamaan.",
-        "contextEN": "Used in casual or informal conversations among friends, often implying closeness or camaraderie.",
-        "exampleID": "Gimana kabar xlian hari ini?",
-        "exampleEN": "How are you all doing today?",
+        "contextID": "Dipakai dalam percakapan santai, sering berkonotasi gen-z, bercanda, atau sedikit menggoda. Mirip 'kalian' tapi dengan vibe lebih playful dan akrab.",
+        "contextEN": "Used in casual conversations, often with a gen-z, playful, or teasing tone. Similar to 'kalian' but with a more relaxed and friendly vibe.",
+        "exampleID": "Kelen udah makan belum?",
+        "exampleEN": "Have you guys eaten yet?",
         "sentiment": "positive"
       }
     ]
@@ -39181,6 +39230,17 @@
         "exampleID": "Wah, acara itu krik banget deh.",
         "exampleEN": "Wow, that event was so cringe.",
         "sentiment": "negative"
+      },
+      {
+        "slang": "cringe",
+        "pronunciation": "krinj",
+        "translationID": "memalukan / bikin merinding jijik",
+        "translationEN": "embarrassing / cringe",
+        "contextID": "Dipakai untuk hal yang memalukan atau awkward.",
+        "contextEN": "Used for embarrassing or awkward moments.",
+        "exampleID": "Videonya cringe parah.",
+        "exampleEN": "That video is super cringe.",
+        "sentiment": "negative"
       }
     ]
   },
@@ -42951,18 +43011,73 @@
     ]
   },
   {
-    "canonicalForm": "manjain",
-    "canonicalPronunciation": "man-jain",
+    "canonicalForm": "manja",
+    "canonicalPronunciation": "man-ja",
     "variants": [
       {
+        "slang": "manja",
+        "pronunciation": "man-ja",
+        "translationID": "manja / clingy",
+        "translationEN": "clingy / spoiled-cute",
+        "contextID": "Dipakai untuk menggambarkan sikap lembut, minta perhatian, atau ingin dimanja dalam konteks hubungan, pertemanan, atau bercanda.",
+        "contextEN": "Used to describe soft, attention-seeking, or clingy behavior in relationships, friendships, or playful interactions.",
+        "exampleID": "Dia lagi manja banget pengen ditemenin terus.",
+        "exampleEN": "They're super clingy and want company all the time.",
+        "sentiment": "positive"
+      },
+      {
         "slang": "manjain",
-        "pronunciation": "man-jain",
+        "pronunciation": "man-ja-in",
         "translationID": "memanjakan",
-        "translationEN": "to pamper",
-        "contextID": "Digunakan untuk menggambarkan tindakan memanjakan seseorang, biasanya dengan cara memberikan perhatian atau fasilitas lebih dari yang diperlukan.",
-        "contextEN": "Used to describe the act of pampering someone, often by providing more attention or amenities than necessary.",
-        "exampleID": "Dia selalu manjain anaknya dengan mainan mahal.",
-        "exampleEN": "She always pampers her child with expensive toys.",
+        "translationEN": "to spoil someone",
+        "contextID": "Dipakai saat seseorang memberikan perhatian ekstra atau perlakuan lembut ke orang lain.",
+        "contextEN": "Used when giving extra affection or gentle attention to someone.",
+        "exampleID": "Jangan dimanjain terus nanti kebiasaan.",
+        "exampleEN": "Don't spoil them too much or they’ll get used to it.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "manjiss",
+        "pronunciation": "man-jis",
+        "translationID": "manja cute",
+        "translationEN": "cute-clingy",
+        "contextID": "Versi gemesnya manja, biasanya dipakai di chat lucu atau teasing.",
+        "contextEN": "A cuter, sweeter version of ‘manja’, often used in flirty or playful chats.",
+        "exampleID": "Ih manjiss banget sih kamu.",
+        "exampleEN": "Ugh you're so cute-clingy.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "manjakek",
+        "pronunciation": "man-ja-kek",
+        "translationID": "manja dramatis / lebay",
+        "translationEN": "dramatic clingy",
+        "contextID": "Dipakai ketika seseorang bersikap manja secara sengaja dan lebay untuk lucu-lucuan.",
+        "contextEN": "Used when someone acts clingy in an exaggerated, comedic way.",
+        "exampleID": "Dia manjakek banget kalo ga ditanggepin.",
+        "exampleEN": "They get dramatically clingy when ignored.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "mengkek",
+        "pronunciation": "meng-kek",
+        "translationID": "manja lebay / manja berlebihan",
+        "translationEN": "over-the-top clingy / hyper-cute",
+        "contextID": "Digunakan sebagai ekspresi manja hiperaktif—campuran childish, playful, dan dramatis. Sering muncul di TikTok atau chat bercanda untuk menandai perilaku 'manja yang sudah kelewatan'.",
+        "contextEN": "Used as a hyperactive, over-the-top form of clinginess—childish, playful, and dramatic. Common in TikTok or playful chats to signal exaggerated cute behavior.",
+        "exampleID": "Aduh jangan mengkek gitu lah wkwk.",
+        "exampleEN": "Don’t be THAT clingy omg hahaha.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "clingy",
+        "pronunciation": "kling-gi",
+        "translationID": "manja / nempel terus / butuh perhatian",
+        "translationEN": "clingy / needy / attached",
+        "contextID": "Digunakan untuk menggambarkan seseorang yang suka menempel, minta ditemani, atau selalu ingin dekat secara emosional maupun fisik. Biasanya dipakai dalam konteks hubungan atau pertemanan yang akrab.",
+        "contextEN": "Used to describe someone who constantly wants attention, affection, or closeness, either emotionally or physically. Common in relationships or close friendships.",
+        "exampleID": "Dia clingy banget kalau lagi kangen.",
+        "exampleEN": "He gets really clingy when he misses someone.",
         "sentiment": "positive"
       }
     ]
@@ -43082,6 +43197,17 @@
         "contextEN": "Used to express admiration or strong approval for something.",
         "exampleID": "Pelajaran hari ini mantaaap banget!",
         "exampleEN": "Today's lesson was awesome!",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "mantul",
+        "pronunciation": "man-tul",
+        "translationID": "mantap betul / keren banget",
+        "translationEN": "super awesome / really great",
+        "contextID": "Dipakai untuk mengekspresikan rasa kagum atau pujian yang sangat positif. Merupakan gabungan dari ‘mantap’ dan ‘betul’, yang kemudian menjadi slang populer di chat dan media sosial.",
+        "contextEN": "Used to express strong admiration or positive approval. Originates from combining 'mantap' and 'betul', turning into a popular internet slang.",
+        "exampleID": "Presentasi kamu tadi mantul banget!",
+        "exampleEN": "Your presentation earlier was super awesome!",
         "sentiment": "positive"
       }
     ]
@@ -45263,18 +45389,29 @@
     ]
   },
   {
-    "canonicalForm": "menyindir",
+    "canonicalForm": "nyindir",
     "canonicalPronunciation": "me-nyin-dir",
     "variants": [
       {
-        "slang": "menyindir",
-        "pronunciation": "men-yin-dir",
-        "translationID": "menyindir",
+        "slang": "nyindir",
+        "pronunciation": "nyin-dir",
+        "translationID": "nyindir",
         "translationEN": "to insinuate / to make a sarcastic remark",
         "contextID": "Digunakan ketika seseorang ingin menyampaikan kritik atau sindiran dengan cara yang halus dan tidak langsung, sering kali untuk menunjukkan ketidakpuasan atau ketidaksetujuan.",
         "contextEN": "Used when someone wants to convey criticism or sarcasm in a subtle and indirect manner, often to express dissatisfaction or disagreement.",
         "exampleID": "Dia nyindir cara aku kerja yang lambat.",
         "exampleEN": "He insinuated about my slow work pace.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "nyepet",
+        "pronunciation": "nye-pet",
+        "translationID": "nyindir halus / nyeletuk pedas",
+        "translationEN": "subtle shade / snarky remark",
+        "contextID": "Dipakai untuk menggambarkan seseorang yang melontarkan komentar sinis, menyindir, atau nyeletuk pedas tapi tidak secara frontal. Biasanya dipakai saat suasana bercanda, debat ringan, atau drama medsos.",
+        "contextEN": "Used to describe someone making snarky, subtle, or slightly hurtful remarks without being openly confrontational. Common in jokes, light arguments, or social-media drama.",
+        "exampleID": "Tadi dia bilang 'beberapa orang tuh ya suka telat terus' — itu nyepet banget sih.",
+        "exampleEN": "She said ‘some people are always late’ — that was definitely shade.",
         "sentiment": "negative"
       }
     ]
@@ -56788,6 +56925,50 @@
         "exampleID": "Ayo kita nyantai di pantai sambil ngobrol.",
         "exampleEN": "Let's chill at the beach while we chat.",
         "sentiment": "positive"
+      },
+      {
+        "slang": "sans",
+        "pronunciation": "sans",
+        "translationID": "santai / nggak masalah",
+        "translationEN": "chill / it’s fine",
+        "contextID": "Dipakai untuk merespons situasi secara santai, menandakan bahwa tidak ada masalah, tidak tersinggung, atau semuanya baik-baik saja. Umum di kalangan Gen-Z untuk mencairkan suasana.",
+        "contextEN": "Used as a relaxed response indicating everything is fine, no hard feelings, or no problem. Common among Gen-Z to keep conversations chill.",
+        "exampleID": "Santai aja bro, gue sans kok.",
+        "exampleEN": "Chill bro, I’m sans.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "santuy",
+        "pronunciation": "san-tuy",
+        "translationID": "santai",
+        "translationEN": "relaxed",
+        "contextID": "Bentuk lebih lokal dari 'sans', sering dipakai untuk menandai mood santai tanpa tekanan.",
+        "contextEN": "A more Indonesian-local variant used to signal a relaxed, stress-free vibe.",
+        "exampleID": "Udah santuy aja, nggak usah panik.",
+        "exampleEN": "Just relax, no need to panic.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "sansu",
+        "pronunciation": "san-su",
+        "translationID": "santai banget",
+        "translationEN": "super chill",
+        "contextID": "Versi playful yang sering muncul di chat bercanda untuk menekankan vibe santai.",
+        "contextEN": "A playful variant used in chats to emphasize a super chill attitude.",
+        "exampleID": "Gapapa kok, gue sansu banget.",
+        "exampleEN": "It’s alright, I’m super chill.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "sans bangets",
+        "pronunciation": "sans ba-ngets",
+        "translationID": "santai sekali",
+        "translationEN": "extremely chill",
+        "contextID": "Dipakai ketika seseorang benar-benar tidak merasa terganggu pada situasi yang biasanya bikin orang kesel.",
+        "contextEN": "Used when someone is completely unbothered by a situation that would usually irritate others.",
+        "exampleID": "Dia dimarahin tapi tetep sans bangets.",
+        "exampleEN": "He got scolded but stayed extremely chill.",
+        "sentiment": "positive"
       }
     ]
   },
@@ -59547,17 +59728,28 @@
   },
   {
     "canonicalForm": "slay",
-    "canonicalPronunciation": "sl-ei",
+    "canonicalPronunciation": "slei",
     "variants": [
       {
         "slang": "slay",
-        "pronunciation": "sl-ei",
-        "translationID": "keren banget / tampil maksimal",
-        "translationEN": "to look amazing / to perform exceptionally well",
-        "contextID": "Dipakai sebagai pujian ketika seseorang terlihat keren, percaya diri, atau melakukan sesuatu dengan sangat baik, biasanya di media sosial atau percakapan santai.",
-        "contextEN": "Used as a compliment when someone looks great, confident, or performs exceptionally well, often in social media or casual conversation.",
-        "exampleID": "Outfit kamu slay banget hari ini.",
-        "exampleEN": "Your outfit absolutely slays today.",
+        "pronunciation": "slei",
+        "translationID": "keren / stunning",
+        "translationEN": "stunning / killing it",
+        "contextID": "Dipakai ketika seseorang tampil keren, pede, atau stylish.",
+        "contextEN": "Used when someone looks cool, confident, or stylish.",
+        "exampleID": "Fit lo slay banget.",
+        "exampleEN": "Your fit is totally slay.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "slayy",
+        "pronunciation": "slei",
+        "translationID": "keren banget",
+        "translationEN": "super slay",
+        "contextID": "Versi dramatis buat penekanan.",
+        "contextEN": "Exaggerated dramatic variant.",
+        "exampleID": "Makeup-nya slayy.",
+        "exampleEN": "Her makeup is slayy.",
         "sentiment": "positive"
       }
     ]
@@ -65330,6 +65522,1330 @@
         "exampleID": "Dia benar-benar zonk saat mencoba menjelaskan ide itu.",
         "exampleEN": "He was really foolish trying to explain that idea.",
         "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "gaskan",
+    "canonicalPronunciation": "gas-kan",
+    "variants": [
+      {
+        "slang": "gaskeun",
+        "pronunciation": "gas-ke-un",
+        "translationID": "ayo lanjut / ayo jalan",
+        "translationEN": "let’s go / send it",
+        "contextID": "Dipakai untuk mengajak atau menyetujui sesuatu dengan semangat, biasanya saat situasi ramai atau spontan.",
+        "contextEN": "Used to hype up agreement or to enthusiastically proceed with something.",
+        "exampleID": "Udah malem tapi masih mau nongkrong? Gaskeun!",
+        "exampleEN": "It’s late but you still wanna hang out? Let’s go!",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "gasken",
+        "pronunciation": "gas-ken",
+        "translationID": "ayo lanjut",
+        "translationEN": "let’s go",
+        "contextID": "Versi singkat, sering dipakai di game online dan chat cepat.",
+        "contextEN": "Shorter version, heavily used in online games or fast chats.",
+        "exampleID": "Ranked lagi? Gasken.",
+        "exampleEN": "Another ranked match? Let’s go.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "gaskan",
+        "pronunciation": "gas-kan",
+        "translationID": "ayo lanjut",
+        "translationEN": "send it / let’s do it",
+        "contextID": "Dipakai saat ingin menunjukkan vibe lebih santai atau bercanda.",
+        "contextEN": "Used to convey a chill or playful vibe.",
+        "exampleID": "Promo diskon? Gaskan lah.",
+        "exampleEN": "Discount promo? Send it.",
+        "sentiment": "positive"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "cuan",
+    "canonicalPronunciation": "cu-an",
+    "variants": [
+      {
+        "slang": "cuan",
+        "pronunciation": "cu-an",
+        "translationID": "untung / profit",
+        "translationEN": "profit / gain",
+        "contextID": "Berarti mendapat keuntungan, dipakai di konteks bisnis kecil, saham, crypto, atau jualan online.",
+        "contextEN": "Means gaining profit, used in business, trading, crypto, or online selling contexts.",
+        "exampleID": "Jualan kemarin cuan gede.",
+        "exampleEN": "Yesterday’s sales made big profit.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "cuanparah",
+        "pronunciation": "cu-an-pa-rah",
+        "translationID": "untung besar",
+        "translationEN": "major profit",
+        "contextID": "Bentuk hiperbola untuk menekankan besarnya keuntungan.",
+        "contextEN": "Hyperbolic form to emphasize massive profit.",
+        "exampleID": "Event itu bikin gue cuanparah.",
+        "exampleEN": "That event made me crazy profit.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "kecuanan",
+        "pronunciation": "ke-cu-an-an",
+        "translationID": "mendapat cuan",
+        "translationEN": "being in profit",
+        "contextID": "Dipakai saat seseorang lagi hoki atau sedang banyak untung.",
+        "contextEN": "Used when someone is being lucky or consistently making profit.",
+        "exampleID": "Akhir-akhir ini gue kecuanan mulu.",
+        "exampleEN": "Lately I keep making profits.",
+        "sentiment": "positive"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "salty",
+    "canonicalPronunciation": "sol-ti",
+    "variants": [
+      {
+        "slang": "salty",
+        "pronunciation": "sol-ti",
+        "translationID": "tersinggung / iri / baper",
+        "translationEN": "bitter / annoyed / jealous",
+        "contextID": "Dipakai ketika seseorang terlihat kesal, iri, atau merasa kalah dan tidak terima.",
+        "contextEN": "Used when someone is visibly annoyed, jealous, or can’t take a loss.",
+        "exampleID": "Kalah sekali langsung salty.",
+        "exampleEN": "Losing once and he’s already salty.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "saltian",
+        "pronunciation": "sol-ti-an",
+        "translationID": "lagi salty",
+        "translationEN": "being salty",
+        "contextID": "Bentuk bercanda untuk menandai seseorang yang baru saja tersinggung atau kalah.",
+        "contextEN": "Playful form used to tease someone who’s just gotten annoyed.",
+        "exampleID": "Udah lah jangan saltian mulu bro.",
+        "exampleEN": "Come on don’t be salty all the time.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "ngegas",
+    "canonicalPronunciation": "nge-gas",
+    "variants": [
+      {
+        "slang": "ngegas",
+        "pronunciation": "nge-gas",
+        "translationID": "marah / ngebacot / agresif",
+        "translationEN": "snapping / being aggressive",
+        "contextID": "Dipakai ketika seseorang tiba-tiba emosi, nyolot, atau ngomong kasar.",
+        "contextEN": "Used when someone suddenly snaps, gets aggressive, or speaks harshly.",
+        "exampleID": "Baru ditanya dikit langsung ngegas.",
+        "exampleEN": "Just asked a little and he snapped.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "gasian",
+        "pronunciation": "ga-si-an",
+        "translationID": "lagi ngegas",
+        "translationEN": "in aggressive mode",
+        "contextID": "Untuk menyindir seseorang yang lagi baper atau marah berlebihan.",
+        "contextEN": "Used to tease someone being overly emotional or aggressive.",
+        "exampleID": "Sabar bro, gasian amat sih.",
+        "exampleEN": "Relax, man, why so aggressive.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "ngab",
+    "canonicalPronunciation": "ngab",
+    "variants": [
+      {
+        "slang": "ngab",
+        "pronunciation": "ngab",
+        "translationID": "bro / cowok",
+        "translationEN": "bro / dude",
+        "contextID": "Dipakai untuk memanggil teman laki-laki dengan vibe santai atau bercanda.",
+        "contextEN": "Used to address male friends with a casual or joking tone.",
+        "exampleID": "Ngab, sini dulu bentar.",
+        "exampleEN": "Bro, come here for a sec.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "ngabb",
+        "pronunciation": "ngab",
+        "translationID": "bro",
+        "translationEN": "bro",
+        "contextID": "Versi lebih playful dengan penekanan di akhir.",
+        "contextEN": "Playful variant with elongated ending.",
+        "exampleID": "Santai ngabb.",
+        "exampleEN": "Chill brooo.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "bocil",
+    "canonicalPronunciation": "bo-cil",
+    "variants": [
+      {
+        "slang": "bocil",
+        "pronunciation": "bo-cil",
+        "translationID": "anak kecil",
+        "translationEN": "little kid",
+        "contextID": "Dipakai untuk menyebut anak kecil atau orang dewasa yang kelakuannya kekanak-kanakan.",
+        "contextEN": "Used for little kids or adults acting childish.",
+        "exampleID": "Tingkahnya bocil banget.",
+        "exampleEN": "He’s acting like such a kid.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "bocil kematian",
+        "pronunciation": "bo-cil ke-ma-ti-an",
+        "translationID": "bocil toxic",
+        "translationEN": "toxic kid",
+        "contextID": "Frasa bercanda untuk menyebut bocil yang ribut atau toxic saat main game.",
+        "contextEN": "Joking term for loud or toxic kids in games.",
+        "exampleID": "Lobi rame bocil kematian lagi.",
+        "exampleEN": "The lobby’s full of toxic kids again.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "nolep",
+    "canonicalPronunciation": "no-lep",
+    "variants": [
+      {
+        "slang": "nolep",
+        "pronunciation": "no-lep",
+        "translationID": "tidak punya kehidupan sosial",
+        "translationEN": "no social life",
+        "contextID": "Dipakai untuk menyindir orang yang jarang keluar rumah atau hanya main game.",
+        "contextEN": "Used to tease someone who rarely goes out or only plays games.",
+        "exampleID": "Weekend gue nolep aja di rumah.",
+        "exampleEN": "I just no-life at home on weekends.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "wibu",
+    "canonicalPronunciation": "wi-bu",
+    "variants": [
+      {
+        "slang": "wibu",
+        "pronunciation": "wi-bu",
+        "translationID": "pecinta anime berlebihan",
+        "translationEN": "overly enthusiastic anime fan",
+        "contextID": "Kadang bercanda, kadang ejekan ringan untuk fans anime yang sangat obsesif.",
+        "contextEN": "Sometimes joking, sometimes teasing for hardcore anime fans.",
+        "exampleID": "Dia wibu garis keras.",
+        "exampleEN": "He’s a hardcore weeb.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "sigma",
+    "canonicalPronunciation": "sig-ma",
+    "variants": [
+      {
+        "slang": "sigma",
+        "pronunciation": "sig-ma",
+        "translationID": "cool / stoic",
+        "translationEN": "stoic / unbothered",
+        "contextID": "Dipakai saat seseorang terlihat cuek, tidak peduli drama, atau kelihatan ‘alpha’.",
+        "contextEN": "Used when someone looks unbothered or stoic.",
+        "exampleID": "Dia diem aja tapi sigma vibes.",
+        "exampleEN": "He just stays silent but sigma vibes.",
+        "sentiment": "positive"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "real",
+    "canonicalPronunciation": "ril",
+    "variants": [
+      {
+        "slang": "real",
+        "pronunciation": "ril",
+        "translationID": "iya bener / relatable",
+        "translationEN": "so true / relatable",
+        "contextID": "Dipakai untuk menegaskan persetujuan dalam gaya dramatis.",
+        "contextEN": "Used to emphasize agreement dramatically.",
+        "exampleID": "Capek kuliah? Real.",
+        "exampleEN": "Tired of college? Real.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "real banget",
+        "pronunciation": "ril ba-nget",
+        "translationID": "sangat relatable",
+        "translationEN": "extremely relatable",
+        "contextID": "Penekanan lebih kuat.",
+        "contextEN": "Stronger emphasis.",
+        "exampleID": "Panas banget hari ini, real banget.",
+        "exampleEN": "It’s crazy hot today, so real.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "frfr",
+    "canonicalPronunciation": "ef-ar-ef-ar",
+    "variants": [
+      {
+        "slang": "frfr",
+        "pronunciation": "ef-ar-ef-ar",
+        "translationID": "serius / beneran",
+        "translationEN": "for real",
+        "contextID": "Penegasan bahwa seseorang tidak bercanda.",
+        "contextEN": "Emphasis that someone is not joking.",
+        "exampleID": "Gue capek frfr.",
+        "exampleEN": "I’m tired frfr.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "kicep",
+    "canonicalPronunciation": "ki-cep",
+    "variants": [
+      {
+        "slang": "kicep",
+        "pronunciation": "ki-cep",
+        "translationID": "diam karena malu atau kalah argumen",
+        "translationEN": "silent from embarrassment",
+        "contextID": "Dipakai saat seseorang langsung diam karena dipermalukan atau salah.",
+        "contextEN": "Used when someone goes silent after getting exposed.",
+        "exampleID": "Kena roast langsung kicep.",
+        "exampleEN": "Got roasted and went silent.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "skena",
+    "canonicalPronunciation": "ske-na",
+    "variants": [
+      {
+        "slang": "skena",
+        "pronunciation": "ske-na",
+        "translationID": "anak komunitas / subkultur",
+        "translationEN": "scene kid",
+        "contextID": "Dipakai untuk menyebut orang yang aktif di subkultur tertentu.",
+        "contextEN": "Used for people belonging to niche subcultures.",
+        "exampleID": "Dia anak skena musik indie.",
+        "exampleEN": "He’s from the indie music scene.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "flex",
+    "canonicalPronunciation": "flek",
+    "variants": [
+      {
+        "slang": "flex",
+        "pronunciation": "flek",
+        "translationID": "pamer",
+        "translationEN": "showing off",
+        "contextID": "Dipakai ketika seseorang memamerkan sesuatu.",
+        "contextEN": "Used when someone shows off.",
+        "exampleID": "Itu HP baru? Flex banget.",
+        "exampleEN": "New phone? That's a flex.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "ngide",
+    "canonicalPronunciation": "ngi-de",
+    "variants": [
+      {
+        "slang": "ngide",
+        "pronunciation": "ngi-de",
+        "translationID": "sok tahu / ikut campur",
+        "translationEN": "acting smart / meddling",
+        "contextID": "Dipakai saat seseorang memberi saran yang tidak perlu.",
+        "contextEN": "Used when someone gives unsolicited ideas.",
+        "exampleID": "Lo ngide mulu deh.",
+        "exampleEN": "You keep meddling.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "slow",
+    "canonicalPronunciation": "slou",
+    "variants": [
+      {
+        "slang": "slow",
+        "pronunciation": "slou",
+        "translationID": "santai",
+        "translationEN": "take it easy",
+        "contextID": "Dipakai buat ngajakin santai.",
+        "contextEN": "Used to tell someone to chill.",
+        "exampleID": "Slow aja bro.",
+        "exampleEN": "Take it easy bro.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "bet",
+    "canonicalPronunciation": "bet",
+    "variants": [
+      {
+        "slang": "bet",
+        "pronunciation": "bet",
+        "translationID": "oke / siap",
+        "translationEN": "bet / okay",
+        "contextID": "Dipakai buat nyatakan siap atau setuju.",
+        "contextEN": "Used to show agreement.",
+        "exampleID": "Jam 7 ya? Bet.",
+        "exampleEN": "7 PM? Bet.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "lelah batin",
+    "canonicalPronunciation": "le-lah ba-tin",
+    "variants": [
+      {
+        "slang": "lelah batin",
+        "pronunciation": "le-lah ba-tin",
+        "translationID": "capek secara emosional",
+        "translationEN": "emotionally drained",
+        "contextID": "Dipakai untuk menggambarkan capek mental atau frustasi.",
+        "contextEN": "Used to express emotional exhaustion.",
+        "exampleID": "Kerjaan bikin lelah batin.",
+        "exampleEN": "Work is emotionally draining.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "mental breakdown",
+    "canonicalPronunciation": "men-tal brek-daun",
+    "variants": [
+      {
+        "slang": "mental breakdown",
+        "pronunciation": "men-tal brek-daun",
+        "translationID": "stres berat mendadak",
+        "translationEN": "sudden heavy stress",
+        "contextID": "Dipakai secara bercanda saat seseorang overwhelmed.",
+        "contextEN": "Used jokingly when someone feels overwhelmed.",
+        "exampleID": "Deadline bikin mental breakdown.",
+        "exampleEN": "The deadline is giving me a mental breakdown.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "ngabers",
+    "canonicalPronunciation": "nga-bers",
+    "variants": [
+      {
+        "slang": "ngabers",
+        "pronunciation": "nga-bers",
+        "translationID": "anak muda dengan gaya sok gaul",
+        "translationEN": "hyperactive trendy youth",
+        "contextID": "Dipakai untuk menggambarkan anak muda yang gaya berlebih.",
+        "contextEN": "Used for teens acting overly trendy.",
+        "exampleID": "Mall penuh ngabers hari ini.",
+        "exampleEN": "The mall is full of ngabers today.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "aci",
+    "canonicalPronunciation": "a-ci",
+    "variants": [
+      {
+        "slang": "aci",
+        "pronunciation": "a-ci",
+        "translationID": "adil / fair",
+        "translationEN": "fair / equal",
+        "contextID": "Digunakan untuk menandakan bahwa sebuah situasi, aturan, atau permainan itu adil. Sangat umum dalam konteks permainan masa kecil, taruhan kecil, dan percakapan santai.",
+        "contextEN": "Used to indicate that a situation, rule, or game is fair. Commonly used in casual conversations, childhood games, or friendly bets.",
+        "exampleID": "Eh aci ya, kalau curang gue cabut.",
+        "exampleEN": "Make it fair, if you cheat I'm out.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "ga aci",
+        "pronunciation": "ga a-ci",
+        "translationID": "tidak adil",
+        "translationEN": "unfair",
+        "contextID": "Dipakai untuk memprotes sesuatu yang dianggap tidak seimbang atau merugikan satu pihak.",
+        "contextEN": "Used to protest something considered unbalanced or unfair.",
+        "exampleID": "Woi itu ga aci, ulang dong!",
+        "exampleEN": "Hey that’s unfair, redo it!",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "aci dong",
+        "pronunciation": "a-ci dong",
+        "translationID": "minta adil",
+        "translationEN": "be fair please",
+        "contextID": "Digunakan saat meminta perlakuan yang seimbang atau aturan yang jelas.",
+        "contextEN": "Used when asking for fair treatment or clear rules.",
+        "exampleID": "Bagi tugasnya aci dong.",
+        "exampleEN": "Split the tasks fairly please.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "aci lah",
+        "pronunciation": "a-ci lah",
+        "translationID": "tentu saja adil / harus adil",
+        "translationEN": "of course fair / it must be fair",
+        "contextID": "Ekspresi penegasan bahwa sesuatu memang harus dilakukan secara adil.",
+        "contextEN": "An expression reinforcing that fairness is expected.",
+        "exampleID": "Aci lah, jangan curang.",
+        "exampleEN": "Of course it has to be fair, don’t cheat.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "paling aci",
+        "pronunciation": "pa-ling a-ci",
+        "translationID": "yang paling adil",
+        "translationEN": "the fairest option",
+        "contextID": "Dipakai ketika menilai opsi atau keputusan paling netral dan adil.",
+        "contextEN": "Used when assessing the most neutral and fair option.",
+        "exampleID": "Cara ini paling aci buat semua orang.",
+        "exampleEN": "This is the fairest way for everyone.",
+        "sentiment": "positive"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "lasak",
+    "canonicalPronunciation": "la-sak",
+    "variants": [
+      {
+        "slang": "lasak",
+        "pronunciation": "la-sak",
+        "translationID": "aktif / susah diam / nakal-usil",
+        "translationEN": "restless / hyperactive / mischievous",
+        "contextID": "Dipakai untuk menggambarkan seseorang—terutama anak kecil—yang sangat aktif, banyak bergerak, sulit diam, atau sedikit usil. Berasal dari slang Minang yang kini sering dipakai secara umum.",
+        "contextEN": "Used to describe someone—often a child—who is very active, restless, constantly moving, or slightly mischievous. Originates from Minang slang, now used more broadly.",
+        "exampleID": "Anak itu lasak banget, lima menit aja udah lari ke mana-mana.",
+        "exampleEN": "That kid is super restless, five minutes in and he’s already running everywhere.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "ngelasak",
+        "pronunciation": "nge-la-sak",
+        "translationID": "sedang lasak / lagi aktif",
+        "translationEN": "being restless / being hyper",
+        "contextID": "Dipakai ketika seseorang sedang bertingkah aktif atau tidak bisa diam pada momen tertentu.",
+        "contextEN": "Used when someone is actively being restless or jumpy at that moment.",
+        "exampleID": "Dia dari tadi ngelasak aja, kenapa sih?",
+        "exampleEN": "He’s been restless the whole time, what’s going on?",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "pelasak",
+        "pronunciation": "pe-la-sak",
+        "translationID": "orang yang lasak / tukang ribut",
+        "translationEN": "a hyperactive person / restless kid",
+        "contextID": "Dipakai sebagai sebutan buat orang yang kelakuannya selalu aktif, bawel, atau banyak gerak.",
+        "contextEN": "Used as a nickname for someone who is always energetic, talkative, or moving around.",
+        "exampleID": "Dia tuh pelasak dari kecil.",
+        "exampleEN": "He’s been a restless kid since forever.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "gamon",
+    "canonicalPronunciation": "ga-mon",
+    "variants": [
+      {
+        "slang": "gamon",
+        "pronunciation": "ga-mon",
+        "translationID": "gagal move on",
+        "translationEN": "unable to move on",
+        "contextID": "Dipakai untuk menggambarkan seseorang yang masih terikat secara emosional pada masa lalu—biasanya mantan atau hubungan yang sudah berakhir. Konteksnya sering bercanda, simpati, atau sindiran halus.",
+        "contextEN": "Used to describe someone emotionally stuck on their past—typically an ex or a ended relationship. Often used jokingly, sympathetically, or teasingly.",
+        "exampleID": "Udah setahun tapi dia masih gamon sama mantannya.",
+        "exampleEN": "It’s been a year but he still hasn’t moved on from his ex.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "kalcer",
+    "canonicalPronunciation": "kal-cher",
+    "variants": [
+      {
+        "slang": "kalcer",
+        "pronunciation": "kal-cher",
+        "translationID": "budaya / gaya / vibe",
+        "translationEN": "culture / vibe / aesthetic",
+        "contextID": "Dipakai untuk menyebut budaya, gaya hidup, atau tren tertentu dalam nada santai atau bercanda. Biasanya digunakan saat meniru gaya tertentu atau membahas fenomena pop culture.",
+        "contextEN": "Used to refer to a particular culture, lifestyle, or trend in a casual or humorous way. Often used when mimicking a style or talking about pop culture phenomena.",
+        "exampleID": "Pake baju kotak-kotak sama kamera film itu kalcer banget.",
+        "exampleEN": "Wearing flannels and carrying a film camera is such a vibe.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "kalcer banget",
+        "pronunciation": "kal-cher ba-nget",
+        "translationID": "sangat berbudaya / sangat aesthetic",
+        "translationEN": "very on-culture / extremely aesthetic",
+        "contextID": "Dipakai untuk menekankan bahwa seseorang atau sesuatu mengikuti gaya atau tren tertentu secara kuat.",
+        "contextEN": "Used to emphasize that someone or something strongly embodies a certain culture or aesthetic.",
+        "exampleID": "Anak itu nongkrong di coffee shop tiap hari, kalcer banget sumpah.",
+        "exampleEN": "That guy hangs out at coffee shops every day, super kalcer.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "ngalcer",
+        "pronunciation": "ngal-cher",
+        "translationID": "berusaha mengikuti budaya",
+        "translationEN": "trying to be on-culture",
+        "contextID": "Dipakai buat nyebut orang yang sedang berusaha ikut tren, estetik, atau style tertentu.",
+        "contextEN": "Used to describe someone trying to follow a trend, aesthetic, or cultural vibe.",
+        "exampleID": "Baru beli totebag langsung ngalcer ya sekarang.",
+        "exampleEN": "Bought a tote bag and now you're ‘ngalcer’, huh?",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "kalcerzz",
+        "pronunciation": "kal-cherz",
+        "translationID": "vibe berlebihan",
+        "translationEN": "exaggerated aesthetic / extra vibe",
+        "contextID": "Versi meme untuk menandai seseorang yang terlalu mencoba terlihat aesthetic atau trendy.",
+        "contextEN": "A meme-y version for someone trying too hard to appear aesthetic or trendy.",
+        "exampleID": "Masang lilin, baca buku tebal, minum matcha—kalcerzz sekali hidup lo.",
+        "exampleEN": "Lighting candles, reading thick books, drinking matcha—your life is so kalcerzz.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "skibidi",
+    "canonicalPronunciation": "ski-bi-di",
+    "variants": [
+      {
+        "slang": "skibidi",
+        "pronunciation": "ski-bi-di",
+        "translationID": "absurd / random / meme energy",
+        "translationEN": "absurd / chaotic meme energy",
+        "contextID": "Dipakai untuk menggambarkan sesuatu yang absurd, chaotic, atau bercanda ala budaya meme TikTok. Biasanya tidak punya makna literal, lebih ke vibe humor ngaco.",
+        "contextEN": "Used to describe something absurd, chaotic, or meme-like, originating from TikTok culture. Usually doesn’t carry literal meaning; it's all about chaotic humor.",
+        "exampleID": "Kelakuan lo skibidi banget sumpah.",
+        "exampleEN": "Your behavior is so skibidi I swear.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "skibidi toilet",
+        "pronunciation": "ski-bi-di toi-let",
+        "translationID": "chaotic meme referensi",
+        "translationEN": "chaotic meme reference",
+        "contextID": "Dipakai untuk menyindir sesuatu yang lebay, nggak masuk akal, atau kekanak-kanakan.",
+        "contextEN": "Used to tease something exaggerated, nonsensical, or childish.",
+        "exampleID": "Editan lo mirip skibidi toilet vibes wkwk.",
+        "exampleEN": "Your edit has total skibidi toilet vibes lol.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "skbd",
+        "pronunciation": "es-ke-be-de",
+        "translationID": "skibidi",
+        "translationEN": "skibidi",
+        "contextID": "Singkatan playful yang muncul di chat ketika merujuk ke skibidi tanpa ngetik panjang.",
+        "contextEN": "A playful abbreviation used casually in chats to refer to skibidi.",
+        "exampleID": "Gaya lo skbd banget.",
+        "exampleEN": "Your style is so skbd.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "sigma",
+    "canonicalPronunciation": "sig-ma",
+    "variants": [
+      {
+        "slang": "sigma",
+        "pronunciation": "sig-ma",
+        "translationID": "cool / stoic / unbothered",
+        "translationEN": "stoic / unbothered / cool",
+        "contextID": "Dipakai untuk menggambarkan seseorang yang cuek, tenang, tidak peduli drama, atau terlihat 'alpha' dalam gaya bercanda Gen-Z.",
+        "contextEN": "Used to describe someone calm, unbothered, detached from drama, or ‘alpha’-coded in humorous Gen-Z style.",
+        "exampleID": "Dia diem tapi sigma vibes banget.",
+        "exampleEN": "He stays silent but gives off sigma vibes.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "sigma male",
+        "pronunciation": "sig-ma meil",
+        "translationID": "alpha-cool",
+        "translationEN": "alpha-cool archetype",
+        "contextID": "Dipakai lebih sebagai meme, bukan literal, untuk menyebut orang yang terlihat misterius atau tenang.",
+        "contextEN": "Used more as a meme than a literal archetype, referring to mysterious or calm individuals.",
+        "exampleID": "Main catur sendirian di pojok, sigma male banget.",
+        "exampleEN": "Playing chess alone in the corner, such a sigma male moment.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "sigmaz",
+        "pronunciation": "sig-maz",
+        "translationID": "sigma (meme)",
+        "translationEN": "meme sigma",
+        "contextID": "Variasi bercanda untuk nunjukin vibe unbothered yang dilebih-lebihkan.",
+        "contextEN": "Meme variant exaggerating unbothered sigma vibes.",
+        "exampleID": "Gaya jalan lo sigmaz parah.",
+        "exampleEN": "Your walking style is pure sigmaz.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "rizz",
+    "canonicalPronunciation": "riz",
+    "variants": [
+      {
+        "slang": "rizz",
+        "pronunciation": "riz",
+        "translationID": "pesona / kemampuan menggoda",
+        "translationEN": "charisma / flirting ability",
+        "contextID": "Dipakai untuk menggambarkan kemampuan seseorang dalam menarik perhatian, menggoda, atau terlihat charming.",
+        "contextEN": "Used to describe someone’s ability to charm, flirt, or attract people.",
+        "exampleID": "Dia ga ganteng tapi rizz-nya tinggi.",
+        "exampleEN": "He's not handsome but his rizz is high.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "rizzler",
+        "pronunciation": "riz-ler",
+        "translationID": "ahli menggoda",
+        "translationEN": "master of rizz",
+        "contextID": "Dipakai secara bercanda untuk menyebut seseorang yang jago flirting.",
+        "contextEN": "Used jokingly to describe someone who’s very good at flirting.",
+        "exampleID": "Bro ini rizzler sejati.",
+        "exampleEN": "This guy is a true rizzler.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "rizzless",
+        "pronunciation": "riz-les",
+        "translationID": "tidak punya pesona",
+        "translationEN": "no charisma",
+        "contextID": "Dipakai untuk menggoda seseorang yang awkward atau gagal flirting.",
+        "contextEN": "Used to tease someone awkward or bad at flirting.",
+        "exampleID": "Chat-nya cringe banget, rizzless parah.",
+        "exampleEN": "Your chat is so cringe, you’re mad rizzless.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "gyatt",
+    "canonicalPronunciation": "gyat / gyatt",
+    "variants": [
+      {
+        "slang": "gyatt",
+        "pronunciation": "gyat",
+        "translationID": "reaksi kagum (biasanya ke fisik) / wow",
+        "translationEN": "wow / damn / impressed (usually physical reaction)",
+        "contextID": "Dipakai sebagai ekspresi spontan saat melihat sesuatu yang mencolok, keren, atau menarik secara fisik. Berasal dari streamer culture, lalu menyebar ke TikTok dan meme-sphere.",
+        "contextEN": "Used as a spontaneous reaction to something striking, cool, or physically impressive. Originates from streamer culture, then spread through TikTok and meme spaces.",
+        "exampleID": "GYATT, itu editan siapa keren banget!",
+        "exampleEN": "GYATT, who made that edit? It's insane!",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "gyattt",
+        "pronunciation": "gyat-t-t",
+        "translationID": "reaksi kagum berlebihan",
+        "translationEN": "exaggerated wow / stunned",
+        "contextID": "Digunakan untuk mengekspresikan reaksi kaget atau kagum yang dilebih-lebihkan.",
+        "contextEN": "Used for exaggerated shock or amazement.",
+        "exampleID": "GYATTT itu hasil fotonya gila sih.",
+        "exampleEN": "GYATTT that photo result is crazy.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "gyatt moment",
+        "pronunciation": "gyat mo-ment",
+        "translationID": "momen mengejutkan",
+        "translationEN": "shock moment",
+        "contextID": "Dipakai untuk menyebut momen yang mencolok atau bikin kaget.",
+        "contextEN": "Used to label moments that feel shocking or impressive.",
+        "exampleID": "Waktu dia muncul tiba-tiba itu gyatt moment banget.",
+        "exampleEN": "When he suddenly appeared, that was such a gyatt moment.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "fanum tax",
+    "canonicalPronunciation": "fa-num teks",
+    "variants": [
+      {
+        "slang": "fanum tax",
+        "pronunciation": "fa-num teks",
+        "translationID": "pajak pertemanan / mengambil jatah sedikit",
+        "translationEN": "friend tax / taking a little bit",
+        "contextID": "Dipakai saat seseorang mengambil sedikit makanan, minuman, atau barang milik teman sebagai 'jatah' bercanda. Asal dari streamer Fanum yang sering ngambil makanan teman-temannya.",
+        "contextEN": "Used when someone takes a bit of someone else's food, drink, or stuff as a joking 'tax'. Originates from streamer Fanum who often took his friends’ snacks.",
+        "exampleID": "Gue ambil satu kentang goreng ya, fanum tax.",
+        "exampleEN": "I’m taking one fries, fanum tax.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "taxing",
+        "pronunciation": "tak-sing",
+        "translationID": "ngambil jatah",
+        "translationEN": "taking someone's share",
+        "contextID": "Dipakai untuk menyebut aksi mengambil secara tiba-tiba atau diam-diam.",
+        "contextEN": "Used to call out someone taking a share unexpectedly or sneakily.",
+        "exampleID": "Woy lu taxing minuman gue ya?",
+        "exampleEN": "Bro did you just tax my drink?",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "fanum’d",
+        "pronunciation": "fa-numd",
+        "translationID": "diambil jatahnya",
+        "translationEN": "got taxed",
+        "contextID": "Dipakai saat seseorang menyadari barang/makanannya diambil temannya.",
+        "contextEN": "Used when someone realizes their food or stuff was taken.",
+        "exampleID": "Gue fanum’d barusan, coklat gue hilang.",
+        "exampleEN": "I just got fanum’d, my chocolate is gone.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "kalem",
+    "canonicalPronunciation": "ka-lem",
+    "variants": [
+      {
+        "slang": "kalem",
+        "pronunciation": "ka-lem",
+        "translationID": "tenang / santai",
+        "translationEN": "calm / chill",
+        "contextID": "Dipakai untuk meminta seseorang agar tidak panik, tidak marah, atau tetap tenang dalam situasi tertentu. Juga bisa menggambarkan kepribadian seseorang yang santai dan tidak mudah terpancing.",
+        "contextEN": "Used to tell someone to calm down, stay chill, or not panic. Also describes someone with a relaxed, unbothered personality.",
+        "exampleID": "Kalem bro, semua masih aman kok.",
+        "exampleEN": "Calm down bro, everything’s still fine.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "ngalemin",
+        "pronunciation": "nga-le-min",
+        "translationID": "jadi tenang / bikin tenang",
+        "translationEN": "to become calm / to calm someone",
+        "contextID": "Versi verbal yang dipakai untuk menggambarkan perubahan suasana menjadi lebih tenang atau membuat orang lain merasa rileks.",
+        "contextEN": "A verbal form describing becoming calm or calming someone down.",
+        "exampleID": "Musiknya ngalemin banget sih.",
+        "exampleEN": "This music is super calming.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "kalemmm",
+        "pronunciation": "ka-lemmm",
+        "translationID": "tenang (lebih playful)",
+        "translationEN": "calm (playful)",
+        "contextID": "Elongated version yang dipakai untuk bercanda, menggoda, atau menenangkan teman dengan tone Gen-Z.",
+        "contextEN": "Elongated variant used jokingly or playfully to calm someone down.",
+        "exampleID": "Kalemmm, jangan drama dulu wkwk.",
+        "exampleEN": "Calmm downnn, don’t start the drama yet lol.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "klm",
+        "pronunciation": "ka-el-em",
+        "translationID": "kalem",
+        "translationEN": "calm",
+        "contextID": "Bentuk singkat ala chat cepat, sering dipakai di game atau percakapan yang butuh respons pendek.",
+        "contextEN": "Shortened chat-style version, often used in gaming or quick conversations.",
+        "exampleID": "Klm bro, sabar.",
+        "exampleEN": "Calm bro, hold on.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "pick me",
+    "canonicalPronunciation": "pik-mi",
+    "variants": [
+      {
+        "slang": "pick me",
+        "pronunciation": "pik-mi",
+        "translationID": "mencari validasi dengan merendahkan diri / ingin dipilih",
+        "translationEN": "seeking validation by self-deprecation / wanting to be chosen",
+        "contextID": "Dipakai untuk menyebut seseorang yang berusaha terlihat berbeda atau rendah hati secara berlebihan demi perhatian atau validasi, sering dengan cara merendahkan diri atau orang lain.",
+        "contextEN": "Used to describe someone trying to appear different or overly humble to get attention or validation, often by putting themselves or others down.",
+        "exampleID": "Dia ngomong 'aku nggak kayak cewek lain' terus, pick me banget.",
+        "exampleEN": "She keeps saying 'I'm not like other girls', total pick me.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "pikmi",
+        "pronunciation": "pik-mi",
+        "translationID": "pick me",
+        "translationEN": "pick me",
+        "contextID": "Bentuk pelafalan Indonesia dari 'pick me', dipakai untuk menyebut orang yang mencari perhatian dengan cara merendahkan diri atau ingin dianggap spesial.",
+        "contextEN": "Indonesianized pronunciation of 'pick me', used to label someone seeking attention by acting different or self-deprecating.",
+        "exampleID": "Jangan pikmi deh, biasa aja kali.",
+        "exampleEN": "Don’t be such a pikmi, relax.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "pick me girl",
+        "pronunciation": "pik-mi geurl",
+        "translationID": "cewek pick me",
+        "translationEN": "pick me girl",
+        "contextID": "Dipakai untuk merujuk perempuan yang mencari validasi dengan merendahkan perempuan lain atau mencoba terlihat ‘berbeda dari cewek lain’.",
+        "contextEN": "Refers to a girl seeking validation by putting other girls down or trying to appear 'not like other girls'.",
+        "exampleID": "Dia bilang dia nggak suka drama padahal bikin, pick me girl banget.",
+        "exampleEN": "She says she hates drama but causes it, such a pick me girl.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "pick me boy",
+        "pronunciation": "pik-mi boi",
+        "translationID": "cowok pick me",
+        "translationEN": "pick me boy",
+        "contextID": "Dipakai untuk laki-laki yang mencari validasi dengan berpura-pura sedih, merendahkan diri, atau mencoba terlihat 'spesial'.",
+        "contextEN": "Used for men who seek validation by acting sad, overly humble, or trying too hard to seem special.",
+        "exampleID": "Cowok itu upload status sedih tiap hari, pick me boy vibes.",
+        "exampleEN": "That guy posts sad quotes every day, full pick me boy vibes.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "pikmiz",
+        "pronunciation": "pik-miz",
+        "translationID": "pick me (meme)",
+        "translationEN": "pick me (meme form)",
+        "contextID": "Versi bercanda untuk menyindir seseorang yang jelas-jelas haus validasi.",
+        "contextEN": "Playful meme-style variant used to tease someone obviously attention-seeking.",
+        "exampleID": "Pikmiz banget sumpah, ngakak.",
+        "exampleEN": "So pikmiz I swear, I’m dying.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "picky",
+    "canonicalPronunciation": "pik-ki",
+    "variants": [
+      {
+        "slang": "picky",
+        "pronunciation": "pik-ki",
+        "translationID": "pemilih / rewel",
+        "translationEN": "choosy / selective",
+        "contextID": "Dipakai untuk menggambarkan seseorang yang terlalu selektif—baik soal makanan, pasangan, selera, atau keputusan kecil sekalipun.",
+        "contextEN": "Used to describe someone who is overly selective—about food, relationships, tastes, or even small decisions.",
+        "exampleID": "Dia picky banget soal makanan.",
+        "exampleEN": "She’s super picky about food.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "no cap",
+    "canonicalPronunciation": "no-kep",
+    "variants": [
+      {
+        "slang": "no cap",
+        "pronunciation": "no-kep",
+        "translationID": "jujur / tidak bohong / serius",
+        "translationEN": "no lie / for real / seriously",
+        "contextID": "Dipakai untuk menegaskan bahwa perkataan seseorang itu jujur dan tidak dilebih-lebihkan. Umum di TikTok, Discord, dan chat.",
+        "contextEN": "Used to emphasize honesty or seriousness, meaning the speaker isn’t lying or exaggerating.",
+        "exampleID": "No cap, ini enak banget.",
+        "exampleEN": "No cap, this tastes amazing.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "nocap",
+        "pronunciation": "no-kep",
+        "translationID": "jujur",
+        "translationEN": "for real",
+        "contextID": "Bentuk tanpa spasi, sering dipakai di chat cepat atau komentar.",
+        "contextEN": "Spaceless form used in quick chats or comments.",
+        "exampleID": "Gue lapar nocap.",
+        "exampleEN": "I’m hungry fr, nocap.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "cap",
+        "pronunciation": "kep",
+        "translationID": "bohong / ngibul",
+        "translationEN": "lie / cap",
+        "contextID": "Kebalikan dari no cap, dipakai untuk menuduh orang berbohong atau ngelawak berlebihan.",
+        "contextEN": "Opposite of ‘no cap’, used to call out lies or exaggerations.",
+        "exampleID": "Cap banget sih itu.",
+        "exampleEN": "That’s total cap.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "ghosting",
+    "canonicalPronunciation": "gos-ting",
+    "variants": [
+      {
+        "slang": "ghosting",
+        "pronunciation": "gos-ting",
+        "translationID": "menghilang tanpa kabar",
+        "translationEN": "disappearing without notice",
+        "contextID": "Dipakai ketika seseorang tiba-tiba berhenti membalas pesan, menghilang tanpa alasan, atau memutus komunikasi secara sepihak. Umum dalam konteks PDKT, pacaran, atau pertemanan.",
+        "contextEN": "Used when someone suddenly stops replying, cuts off communication, or disappears without explanation. Common in dating, friendships, and casual interactions.",
+        "exampleID": "Dia ghosting gue padahal kemarin chat-nya intens banget.",
+        "exampleEN": "He ghosted me even though we chatted intensely yesterday.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "nge-ghost",
+        "pronunciation": "nge-gos",
+        "translationID": "melakukan ghosting",
+        "translationEN": "to ghost someone",
+        "contextID": "Bentuk verbal, dipakai untuk menyebut tindakan seseorang yang sengaja menghilang dari komunikasi.",
+        "contextEN": "Verbal form used to label the act of intentionally disappearing from communication.",
+        "exampleID": "Jangan tiba-tiba nge-ghost gitu lah.",
+        "exampleEN": "Don’t just ghost like that.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "di-ghost",
+        "pronunciation": "di-gos",
+        "translationID": "dighosting",
+        "translationEN": "getting ghosted",
+        "contextID": "Dipakai untuk menyebut keadaan ketika seseorang menjadi korban ghosting.",
+        "contextEN": "Used to describe someone being ghosted.",
+        "exampleID": "Baru kenal seminggu langsung di-ghost.",
+        "exampleEN": "Just knew them a week and already got ghosted.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "ghosting parah",
+        "pronunciation": "gos-ting pa-rah",
+        "translationID": "hilang total",
+        "translationEN": "complete disappearance",
+        "contextID": "Untuk menyebut ghosting yang ekstrem—tidak ada lagi balasan, aktivitas online, atau interaksi apa pun.",
+        "contextEN": "Used for extreme ghosting—no replies, no online presence, zero interaction.",
+        "exampleID": "Dia ghosting parah, WA pun nggak dibales.",
+        "exampleEN": "He ghosted me so hard he doesn’t even open my messages.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "vibe",
+    "canonicalPronunciation": "vaib",
+    "variants": [
+      {
+        "slang": "vibe",
+        "pronunciation": "vaib",
+        "translationID": "suasana / nuansa / energi",
+        "translationEN": "atmosphere / energy / feeling",
+        "contextID": "Dipakai untuk menggambarkan suasana atau feeling tertentu dari seseorang, tempat, musik, atau situasi. Sangat umum di kultur Gen-Z, sering dipakai untuk menilai 'mood' dari sesuatu.",
+        "contextEN": "Used to describe the atmosphere or emotional energy of a person, place, music, or situation. Popular in Gen-Z culture to express mood or aesthetic.",
+        "exampleID": "Kafenya kecil tapi vibe-nya enak banget.",
+        "exampleEN": "The café is small but the vibe is really nice.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "vibes",
+        "pronunciation": "vaibz",
+        "translationID": "suasana / energi",
+        "translationEN": "vibes / mood",
+        "contextID": "Dipakai dalam konteks lebih santai atau aesthetic; biasanya untuk menggambarkan mood secara keseluruhan.",
+        "contextEN": "Used in a more casual or aesthetic tone to describe overall mood.",
+        "exampleID": "Foto ini vibes banget sumpah.",
+        "exampleEN": "This picture has crazy good vibes.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "vibing",
+        "pronunciation": "vai-bing",
+        "translationID": "menikmati suasana / merasa cocok",
+        "translationEN": "enjoying the vibe / vibing",
+        "contextID": "Dipakai ketika seseorang lagi menikmati suasana, musik, atau momen tertentu.",
+        "contextEN": "Used when someone is enjoying the moment, music, or atmosphere.",
+        "exampleID": "Gue lagi vibing denger lagu ini.",
+        "exampleEN": "I’m vibing to this song.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "vibe check",
+        "pronunciation": "vaib cek",
+        "translationID": "cek suasana / cek energi seseorang",
+        "translationEN": "checking someone's vibe",
+        "contextID": "Digunakan untuk menilai apakah seseorang atau sesuatu memberi energi yang baik atau buruk. Bisa bercanda atau serius.",
+        "contextEN": "Used to gauge whether someone or something gives good or bad energy. Can be joking or serious.",
+        "exampleID": "Vibe check, lo kenapa murung?",
+        "exampleEN": "Vibe check, why do you look down?",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "vibez",
+        "pronunciation": "vai-bez",
+        "translationID": "vibe (versi aesthetic/meme)",
+        "translationEN": "aesthetic vibes",
+        "contextID": "Bentuk aesthetic untuk menekankan nuansa tertentu dalam foto, musik, atau tempat.",
+        "contextEN": "Aesthetic variant to emphasize visual or emotional tone in photos, music, or places.",
+        "exampleID": "Lighting kamar gue vibez banget sekarang.",
+        "exampleEN": "My room lighting is such vibez right now.",
+        "sentiment": "positive"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "aesthetic",
+    "canonicalPronunciation": "es-tet-ik / es-te-tik",
+    "variants": [
+      {
+        "slang": "aesthetic",
+        "pronunciation": "es-tet-ik",
+        "translationID": "indah / cantik secara visual / berestetika",
+        "translationEN": "visually pleasing / aesthetically beautiful",
+        "contextID": "Dipakai untuk menggambarkan sesuatu yang terlihat cantik, rapi, atau punya visual yang enak dilihat. Umum dalam konteks foto, outfit, dekor, mood board, dan konten social media.",
+        "contextEN": "Used to describe something visually pleasing, neat, or aesthetically curated. Common in photos, outfits, decor, mood boards, and social media content.",
+        "exampleID": "Kamarnya aesthetic banget, lightingnya pas.",
+        "exampleEN": "The room is super aesthetic, the lighting is perfect.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "estetik",
+        "pronunciation": "es-te-tik",
+        "translationID": "berestetika / indah",
+        "translationEN": "aesthetic / visually pleasing",
+        "contextID": "Versi adaptasi Bahasa Indonesia dari 'aesthetic', digunakan luas di konten lokal untuk menggambarkan sesuatu yang indah atau memiliki seni visual yang kuat.",
+        "contextEN": "Indonesianized version of 'aesthetic', widely used to describe visually beautiful or artistically styled things.",
+        "exampleID": "Foto ini estetik banget sumpah.",
+        "exampleEN": "This picture is so aesthetic, seriously.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "aesthetic vibes",
+        "pronunciation": "es-tet-ik vaibz",
+        "translationID": "nuansa estetik",
+        "translationEN": "aesthetic vibes",
+        "contextID": "Dipakai untuk menyebut suasana atau gaya visual yang dianggap cantik, rapi, dan pleasing.",
+        "contextEN": "Used to describe the overall aesthetic atmosphere or visual tone of something.",
+        "exampleID": "Lighting warm kayak gini aesthetic vibes parah.",
+        "exampleEN": "Warm lighting like this is major aesthetic vibes.",
+        "sentiment": "positive"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "pansos",
+    "canonicalPronunciation": "pan-sos",
+    "variants": [
+      {
+        "slang": "pansos",
+        "pronunciation": "pan-sos",
+        "translationID": "panjat sosial / mencari perhatian demi status",
+        "translationEN": "social climbing / seeking attention for status",
+        "contextID": "Dipakai untuk menyebut seseorang yang mencari perhatian, kedekatan, atau keuntungan dengan mendekati orang yang lebih terkenal, lebih kaya, atau lebih berpengaruh. Biasanya bernuansa sindiran.",
+        "contextEN": "Used to label someone seeking attention, proximity, or benefit by associating with someone more popular, richer, or influential. Often carries a sarcastic tone.",
+        "exampleID": "Dia tiba-tiba dekat sama artis itu, pansos banget sih.",
+        "exampleEN": "He suddenly got close to that celebrity, total pansos.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "panjat sosial",
+        "pronunciation": "pan-jat so-si-al",
+        "translationID": "pansos",
+        "translationEN": "social climbing",
+        "contextID": "Versi panjang yang lebih jelas maknanya, biasanya dipakai saat menjelaskan perilaku pansos secara langsung.",
+        "contextEN": "Full form used when explicitly describing social climbing behavior.",
+        "exampleID": "Itu udah panjat sosial banget kelakuannya.",
+        "exampleEN": "That’s straight-up social climbing behavior.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "pansosss",
+        "pronunciation": "pan-sosss",
+        "translationID": "pansos (dipertegas)",
+        "translationEN": "pansos (emphasized)",
+        "contextID": "Elongated version untuk memberi efek sindiran yang lebih kuat atau bercanda dengan teman.",
+        "contextEN": "Elongated version used to emphasize sarcasm or tease friends.",
+        "exampleID": "Update story mulu biar di-notice? Pansosss banget.",
+        "exampleEN": "Posting nonstop just to get noticed? So pansosss.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "receh",
+    "canonicalPronunciation": "re-ceh",
+    "variants": [
+      {
+        "slang": "receh",
+        "pronunciation": "re-ceh",
+        "translationID": "humor ringan / garing / lelucon kecil",
+        "translationEN": "light humor / corny joke",
+        "contextID": "Dipakai untuk menggambarkan lelucon yang sederhana, tidak penting, kadang garing, tapi tetap bikin ketawa kecil. Umum dalam percakapan santai dan chat Gen-Z.",
+        "contextEN": "Used to describe simple, low-effort jokes that may be corny or shallow but still funny. Common in casual chats and Gen-Z humor.",
+        "exampleID": "Jokes dia receh tapi bikin senyum.",
+        "exampleEN": "His jokes are corny but they make you smile.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "ngereceh",
+        "pronunciation": "nge-re-ceh",
+        "translationID": "membuat humor receh",
+        "translationEN": "making corny jokes",
+        "contextID": "Dipakai untuk menyebut seseorang yang terus-terusan bikin lelucon receh.",
+        "contextEN": "Used when someone keeps making corny jokes.",
+        "exampleID": "Udah malam, dia mulai ngereceh lagi.",
+        "exampleEN": "It's late and he’s starting to be corny again.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "recehan",
+        "pronunciation": "re-ceh-an",
+        "translationID": "kumpulan humor receh",
+        "translationEN": "corny humor compilation",
+        "contextID": "Biasanya dipakai untuk merujuk pada thread, chat, atau koleksi humor receh.",
+        "contextEN": "Often used to refer to threads, chats, or compilations of corny jokes.",
+        "exampleID": "Timeline gue penuh recehan pagi-pagi.",
+        "exampleEN": "My timeline is full of corny jokes this morning.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "recehhh",
+        "pronunciation": "re-cehhh",
+        "translationID": "receh (lebih playful)",
+        "translationEN": "corny (playful)",
+        "contextID": "Versi elongated untuk menambah vibe lucu atau menggoda.",
+        "contextEN": "Elongated variant used for playful or teasing tone.",
+        "exampleID": "Recehhh tapi bikin ngakak.",
+        "exampleEN": "Cornyyy but makes me laugh.",
+        "sentiment": "positive"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "tackut banget loch",
+    "canonicalPronunciation": "ta-kuut ba-nget loch",
+    "variants": [
+      {
+        "slang": "tackut banget loch",
+        "pronunciation": "ta-kuut ba-nget loch",
+        "translationID": "penakut banget",
+        "translationEN": "so scared / very timid",
+        "contextID": "Dipakai dalam konteks bercanda atau menggoda seseorang yang terlihat penakut. Gaya tulisannya sengaja dibuat manja/imut untuk menambah efek lucu.",
+        "contextEN": "Used jokingly to tease someone who appears scared. The intentionally cutesy spelling is part of the humor.",
+        "exampleID": "Tackut bangettt lochhh sama kamu",
+        "exampleEN": "I’m sooo scared of you",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "TBL",
+        "pronunciation": "ti-bi-el",
+        "translationID": "tackut banget loch",
+        "translationEN": "so scared (cute/slang)",
+        "contextID": "Singkatan dari 'tackut banget loch'. Dipakai cepat di chat sebagai reaksi saat melihat sesuatu yang bikin takut atau untuk mengejek teman yang penakut.",
+        "contextEN": "Abbreviation of 'tackut banget loch'. Used quickly in chat as a reaction or to tease a scared friend.",
+        "exampleID": "Ihhh TBL TBL TBL.",
+        "exampleEN": "Ughhh i'm so scared, like, so scaredddd",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "takut banget loh",
+        "pronunciation": "ta-kut ba-nget loh",
+        "translationID": "penakut banget",
+        "translationEN": "so scared",
+        "contextID": "Versi yang lebih 'normal', tapi tetap sering dipakai dalam konteks bercanda atau menyindir ketakutan kecil.",
+        "contextEN": "More normal spelling, still often used jokingly for small fears.",
+        "exampleID": "Takut banget loh cuma hujan deras gini.",
+        "exampleEN": "So scared just because it's raining this hard.",
+        "sentiment": "neutral"
+      },
+      {
+        "slang": "tackutt",
+        "pronunciation": "ta-kutt",
+        "translationID": "takut",
+        "translationEN": "scared (cute exaggeration)",
+        "contextID": "Elongated playful form untuk menambah nuansa lucu atau manja.",
+        "contextEN": "Elongated playful form to add a cute/exaggerated tone.",
+        "exampleID": "Jangan tinggalin aku, aku tackutt.",
+        "exampleEN": "Don’t leave me, I'm scaaared.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "framing",
+    "canonicalPronunciation": "frei-ming",
+    "variants": [
+      {
+        "slang": "framing",
+        "pronunciation": "frei-ming",
+        "translationID": "mengatur narasi / memutar sudut pandang",
+        "translationEN": "narrative manipulation / angle-setting",
+        "contextID": "Dipakai untuk menyebut tindakan mengatur narasi agar seseorang terlihat benar, terlihat korban, atau untuk menjatuhkan orang lain. Umum dalam konteks relationship drama, pertemanan, debat medsos, dan kasus manipulasi.",
+        "contextEN": "Used to describe manipulating a narrative to appear right, to look like a victim, or to discredit someone else. Common in relationship drama, friendships, social media debates, and manipulative situations.",
+        "exampleID": "Dia cerita setengah-setengah biar keliatan baik. Itu framing banget.",
+        "exampleEN": "He told only half the story to look good. That's total framing.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "nge-frame",
+        "pronunciation": "nge-frem",
+        "translationID": "mem-framing / mengatur narasi",
+        "translationEN": "to frame / to manipulate the narrative",
+        "contextID": "Bentuk verbal yang dipakai untuk menyebut tindakan framing secara aktif.",
+        "contextEN": "Verbal form describing the act of framing someone or a situation.",
+        "exampleID": "Jangan nge-frame orang lain biar lo keliatan benar.",
+        "exampleEN": "Don’t frame others just to make yourself look right.",
+        "sentiment": "negative"
+      },
+      {
+        "slang": "ke-frame",
+        "pronunciation": "ke-frem",
+        "translationID": "terkena framing",
+        "translationEN": "being framed",
+        "contextID": "Dipakai untuk menyebut seseorang yang dirugikan atau terkena framing dari pihak lain.",
+        "contextEN": "Used to describe someone who is harmed or targeted by someone else's framing.",
+        "exampleID": "Dia ke-frame parah, padahal bukan salah dia.",
+        "exampleEN": "He got framed badly even though it wasn’t his fault.",
+        "sentiment": "negative"
+      }
+    ]
+  },
+  {
+    "canonicalForm": "thrift",
+    "canonicalPronunciation": "trif / terif",
+    "variants": [
+      {
+        "slang": "thrift",
+        "pronunciation": "trif",
+        "translationID": "belanja barang bekas / preloved",
+        "translationEN": "thrifting / buying secondhand",
+        "contextID": "Dipakai untuk menyebut aktivitas belanja barang bekas, biasanya pakaian, yang dianggap murah, unik, atau punya nilai estetik. Populer di kalangan Gen-Z.",
+        "contextEN": "Used to describe the activity of buying secondhand items, usually clothing, often considered cheap, unique, or aesthetically appealing.",
+        "exampleID": "Gue dapet jaket keren cuma 40 ribu dari thrift.",
+        "exampleEN": "I got a cool jacket for only 40k from a thrift shop.",
+        "sentiment": "positive"
+      },
+      {
+        "slang": "thrifting",
+        "pronunciation": "trif-ting",
+        "translationID": "lagi thrift",
+        "translationEN": "going thrifting",
+        "contextID": "Dipakai untuk menyebut kegiatan berburu barang thrift secara langsung atau online.",
+        "contextEN": "Used to describe the act of hunting for thrift items, either offline or online.",
+        "exampleID": "Besok gue thrifting di Pasar Senen.",
+        "exampleEN": "Tomorrow I'm going thrifting at Pasar Senen.",
+        "sentiment": "neutral"
       }
     ]
   }

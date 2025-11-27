@@ -94,6 +94,7 @@
 		50FCF2072EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Resources/Data/slng_data_v1.2.json,
 				Shared/Common/Colors.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
@@ -118,6 +119,7 @@
 		50FCF2082EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Resources/Data/slng_data_v1.2.json,
 				Shared/Common/Colors.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
