@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAnalytics
 
 struct ThemeSettingsView: View {
     @Environment(\.dismiss) private var dismiss
@@ -52,6 +53,9 @@ struct ThemeSettingsView: View {
                             withAnimation(.spring(response: 0.6, dampingFraction: 0.6, blendDuration: 0)) {
                                 selectedThemeRaw = theme.rawValue
                             }
+                            Analytics.logEvent("settings_theme_selected", parameters: [
+                                "theme": theme.rawValue
+                            ])
                         } label: {
                             HStack(spacing: 12) {
                                 Image(systemName: theme.icon)
@@ -84,6 +88,7 @@ struct ThemeSettingsView: View {
                         .foregroundStyle(.primary)
                         .padding(.bottom, 24)
                 }
+                .listRowSeparatorTint(AppColor.Divider.primary)
                 .listRowBackground(AppColor.List.primary)
             }
             .scrollIndicators(.hidden)

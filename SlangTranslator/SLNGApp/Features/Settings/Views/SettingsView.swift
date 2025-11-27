@@ -27,6 +27,7 @@ struct SettingsView: View {
                 Spacer()
                 
                 Button {
+                    Analytics.logEvent("settings_close_pressed", parameters: nil)
                     showSettings = false
                 } label: {
                     Image(systemName: "xmark")
@@ -76,6 +77,7 @@ struct SettingsView: View {
                     .contentShape(.rect)
                     
                     Button {
+                        Analytics.logEvent("settings_theme_open_pressed", parameters: nil)
                         route.go(to: .settingsTheme)
                     } label: {
                         HStack {
@@ -87,6 +89,7 @@ struct SettingsView: View {
                         .contentShape(.rect)
                     }
                 }
+                .listRowSeparatorTint(AppColor.Divider.primary)
                 .listRowBackground(AppColor.List.primary)
 
                 Section {
@@ -100,10 +103,12 @@ struct SettingsView: View {
                     .contentShape(.rect)
                     
                 }
+                .listRowSeparatorTint(AppColor.Divider.primary)
                 .listRowBackground(AppColor.List.primary)
                 
                 Section {
                     Button {
+                        Analytics.logEvent("settings_about_open", parameters: nil)
                         guard let url = URL(string: "https://slng.space/") else { return }
                         UIApplication.shared.open(url)
                     } label: {
@@ -117,6 +122,7 @@ struct SettingsView: View {
                     }
                     
                     Button {
+                        Analytics.logEvent("settings_rate_open", parameters: nil)
                         guard let url = URL(string: "https://apps.apple.com/id/app/slng/id6754663192?action=write-review") else { return }
                         UIApplication.shared.open(url)
                     } label: {
@@ -130,6 +136,7 @@ struct SettingsView: View {
                     }
                     
                 }
+                .listRowSeparatorTint(AppColor.Divider.primary)
                 .listRowBackground(AppColor.List.primary)
             }
             .scrollIndicators(.hidden)

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import AVFoundation
 internal import Combine
 import SwiftData
 import FirebaseAnalytics
@@ -95,7 +96,7 @@ final class TranslateViewModel: ObservableObject {
     func startRecording() {
         audioRecorder.requestPermission { micGranted in
             if !micGranted {
-                Task { @MainActor in self.errorMessage = "Microphone access denied" }
+                Task { @MainActor in self.errorMessage = "Mic’s locked. Open Settings and free it" }
                 Analytics.logEvent("permissions_response", parameters: [
                     "permission_type": "microphone",
                     "result": "denied"
@@ -124,6 +125,17 @@ final class TranslateViewModel: ObservableObject {
     }
     
     func stopRecordingAndTranscribe() {
+        // Hard gate: if mic not active or permission not granted, avoid backend calls
+        let perm = AVAudioApplication.shared.recordPermission
+        if perm != .granted {
+            Task { @MainActor in
+                self.errorMessage = "Your mic said no. Respectfully, fix that in Settings"
+                self.isRecording = false
+                self.isTranscribing = false
+                self.audioLevel = -160
+            }
+            return
+        }
         speechStreamingManager.stop()
         do {
             let result = try audioRecorder.stopAndFetchData()

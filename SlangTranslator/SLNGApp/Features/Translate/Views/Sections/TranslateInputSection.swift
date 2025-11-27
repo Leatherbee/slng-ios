@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAnalytics
 
 struct TranslateInputSection: View {
     @ObservedObject var viewModel: TranslateViewModel
@@ -82,6 +83,9 @@ struct TranslateInputSection: View {
                 ), accessibilityLabel: "Translate button"){
                     UIApplication.shared.dismissKeyboard()
                     shouldPlaySequentialAnimation = true
+                    Analytics.logEvent("translate_button_pressed", parameters: [
+                        "input_length": viewModel.inputText.count
+                    ])
                     viewModel.translate(text: viewModel.inputText)
                 } label : {
                     HStack {

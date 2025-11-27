@@ -7,6 +7,7 @@ import SwiftUI
 import SwiftData
 import AVFoundation
 import UIKit
+import FirebaseAnalytics
 
 struct TranslateView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -20,6 +21,8 @@ struct TranslateView: View {
     @State private var fontSizeWorkItem: DispatchWorkItem?
     @AppStorage("hasRequestedSpeechMic", store: UserDefaults.shared) private var hasRequestedSpeechMic = false
     @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false
+    @AppStorage("notificationsRequested", store: UserDefaults.shared) private var notificationsRequested: Bool = false
+    @AppStorage("hasOnboarded") private var hasOnboarded: Bool = false
     
     @FocusState private var isKeyboardActive: Bool
     
@@ -109,19 +112,29 @@ struct TranslateView: View {
             }
             .overlay(alignment: .top) {
                 if let msg = viewModel.errorMessage, !msg.isEmpty {
-                    Text(msg)
-                        .font(.system(.footnote, design: .default, weight: .bold))
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Color.red.opacity(0.08))
-                        )
-                        .padding(.top, safeTop + 8)
-                        .padding(.horizontal, 24)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                        .animation(.easeInOut(duration: 0.25), value: viewModel.errorMessage)
+                    HStack(spacing: 10) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.system(size: 16, weight: .bold, design: .serif))
+                            .foregroundStyle(AppColor.Button.primary)
+                        Text(msg)
+                            .font(.system(.callout, design: .serif, weight: .bold))
+                            .foregroundStyle(Color.textPrimary)
+                            .multilineTextAlignment(.leading)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(colorScheme == .dark ? Color.white.opacity(0.08) : AppColor.Button.primary.opacity(0.08))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(AppColor.Button.primary.opacity(0.25), lineWidth: 0.8)
+                    )
+                    .padding(.top, safeTop + 8)
+                    .padding(.horizontal, 24)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .animation(.easeInOut(duration: 0.25), value: viewModel.errorMessage)
                 }
             }
                         
@@ -181,6 +194,23 @@ struct TranslateView: View {
             if dragHintTimer == nil {
                 dragHintTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
                     triggerDragHint()
+                }
+            }
+            if hasOnboarded && !notificationsRequested {
+                Analytics.logEvent("permissions_prompt", parameters: [
+                    "type": "notifications"
+                ])
+                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
+                    DispatchQueue.main.async {
+                        notificationsRequested = true
+                        Analytics.logEvent("permissions_response", parameters: [
+                            "type": "notifications",
+                            "status": granted ? "granted" : "denied"
+                        ])
+                        if granted {
+                            UIApplication.shared.registerForRemoteNotifications()
+                        }
+                    }
                 }
             }
         }

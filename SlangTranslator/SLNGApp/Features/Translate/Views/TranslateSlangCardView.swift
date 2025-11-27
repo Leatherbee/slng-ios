@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import FirebaseAnalytics
 
 // MARK: - TranslateSlangCardView
 struct TranslateSlangCardView: View {
@@ -112,6 +113,9 @@ struct TranslateSlangCardView: View {
         withAnimation(.spring(response: 0.35, dampingFraction: 0.80, blendDuration: 0.2)) {
             isExpanded.toggle()
         }
+        Analytics.logEvent("slang_card_toggle", parameters: [
+            "state": isExpanded ? "expanded" : "collapsed"
+        ])
         
         if Haptics.isEnabled {
             if isExpanded {

@@ -54,7 +54,7 @@ struct NormalKeyboardSection: View {
         .background(style.keyboardBackground)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .onTapGesture {
-            let defaults = UserDefaults(suiteName: "group.Slang")!
+            let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
             let countKey = "analytics.feature_used.explain_mode.count"
             defaults.set(defaults.integer(forKey: countKey) + 1, forKey: countKey)
             handlePasteAction()
@@ -105,7 +105,7 @@ struct NormalKeyboardSection: View {
             
             PlainKeyButton(label: nil, systemName: "face.smiling", width: 48, height: 44, fontSize: 18) {
                 vm.changeDisplayMode(.emoji)
-                let defaults = UserDefaults(suiteName: "group.Slang")!
+                let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG")!
                 let countKey = "analytics.feature_used.emoji_mode.count"
                 defaults.set(defaults.integer(forKey: countKey) + 1, forKey: countKey)
             }
