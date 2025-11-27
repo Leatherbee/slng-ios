@@ -51,7 +51,7 @@ struct TranslateInputSection: View {
                     .allowsHitTesting(!(viewModel.isRecording || viewModel.isTranscribing))
                 
                 if viewModel.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isRecording || viewModel.isTranscribing {
-                    Text(viewModel.isTranscribing ? "Okay… I’m piecing that together..." : (viewModel.isRecording ? "Alright, I'm all ears..." : "Heard a slang you don't get? Type here or hold below to say it"))
+                    Text(viewModel.isTranscribing ? "Okay… I’m piecing that together..." : (viewModel.isRecording ? "Alright, I'm all ears..." : (viewModel.sttPlaceholder ?? "Heard a slang you don't get? Type here or hold below to say it")))
                         .font(.system(dynamicTextStyle, design: .serif, weight: .bold))
                         .foregroundColor(Color.textDisable)
                         .padding(.horizontal, 5)
@@ -60,7 +60,7 @@ struct TranslateInputSection: View {
                         .accessibilityLabel("Input field for slang to translate")
                         .accessibilityHint("Type a slang word you want to translate")
                         .accessibilityHidden(false)
-                    
+                
                     if !isKeyboardActive && !(reduceMotion || reduceMotionEnabled) && !viewModel.isRecording && !viewModel.isTranscribing {
                         BlinkingCursor()
                             .padding(.horizontal, -3)
