@@ -101,6 +101,7 @@
 				Shared/Data/Model/SharedModelContainer.swift,
 				Shared/Data/Model/SlangModel.swift,
 				Shared/Data/Model/TranslationModel.swift,
+				Shared/Data/Model/VersionedSchema.swift,
 				Shared/Domain/Entities/SlangData.swift,
 				Shared/Domain/Entities/TranslationData.swift,
 				Shared/Domain/Entities/TranslationResult.swift,
@@ -125,6 +126,7 @@
 				Shared/Data/Model/SharedModelContainer.swift,
 				Shared/Data/Model/SlangModel.swift,
 				Shared/Data/Model/TranslationModel.swift,
+				Shared/Data/Model/VersionedSchema.swift,
 				Shared/Domain/Entities/SlangData.swift,
 				Shared/Domain/Entities/TranslationData.swift,
 				Shared/Domain/Entities/TranslationResult.swift,
@@ -710,7 +712,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
 				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -755,7 +757,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
 				PRODUCT_NAME = SLNG;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -871,7 +873,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -907,7 +909,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -943,7 +945,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -978,7 +980,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
