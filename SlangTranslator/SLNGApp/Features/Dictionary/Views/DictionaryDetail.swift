@@ -23,6 +23,7 @@ struct DictionaryDetail: View {
     @State private var audioPlayer: AVAudioPlayer?
     @State private var scale: CGFloat = 1
     @State private var opacity: CGFloat = 1
+    @State private var showAllVariants: Bool = false
     
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     @Environment(\.colorScheme) var colorScheme
@@ -94,19 +95,56 @@ struct DictionaryDetail: View {
                             .font(.system(size: 18, design: .serif))
                             .multilineTextAlignment(.center)
                             .foregroundColor(AppColor.Text.primary)
-                        WrapLayoutCenter(spacing: 8, lineSpacing: 8) {
-                            ForEach(Array(variants.prefix(6).enumerated()), id: \.offset) { idx, v in
-                                similiarButton(title: v.slang, isActive: idx == selectedVariantIndex) {
-                                    Analytics.logEvent("dictionary_similar_selected", parameters: ["index": idx])
-                                    showBurst = false
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
-                                        showBurst = true
-                                        triggerBurstHaptic()
-                                        selectedVariantIndex = idx
+                        if showAllVariants {
+                            ScrollView {
+                                WrapLayoutCenter(spacing: 8, lineSpacing: 8) {
+                                    ForEach(Array(variants.enumerated()), id: \.offset) { idx, v in
+                                        similiarButton(title: v.slang, isActive: idx == selectedVariantIndex) {
+                                            Analytics.logEvent("dictionary_similar_selected", parameters: ["index": idx])
+                                            showBurst = false
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                                                showBurst = true
+                                                triggerBurstHaptic()
+                                                selectedVariantIndex = idx
+                                            }
+                                        }
                                     }
-                                    
+                                }
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 6)
+                            }
+                            .frame(maxHeight: 280)
+                        } else {
+                            WrapLayoutCenter(spacing: 8, lineSpacing: 8) {
+                                ForEach(Array(variants.prefix(6).enumerated()), id: \.offset) { idx, v in
+                                    similiarButton(title: v.slang, isActive: idx == selectedVariantIndex) {
+                                        Analytics.logEvent("dictionary_similar_selected", parameters: ["index": idx])
+                                        showBurst = false
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                                            showBurst = true
+                                            triggerBurstHaptic()
+                                            selectedVariantIndex = idx
+                                        }
+                                    }
                                 }
                             }
+                        }
+                        if variants.count > 6 {
+                            Button {
+                                Analytics.logEvent("dictionary_variants_toggle", parameters: ["show_all": showAllVariants])
+                                showAllVariants.toggle()
+                            } label: {
+                                Text(showAllVariants ? "Show less" : "See all")
+                                    .font(.system(size: 14, design: .serif))
+                                    .foregroundColor(AppColor.Text.primary)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(AppColor.Button.primary)
+                                    )
+                            }
+                            .cornerRadius(20)
                         }
                     }
                 }
