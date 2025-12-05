@@ -65,7 +65,7 @@ final class DictionaryViewModel: ObservableObject {
         $searchText
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .removeDuplicates()
-            .debounce(for: .milliseconds(200), scheduler: RunLoop.main)
+            .debounce(for: .milliseconds(80), scheduler: RunLoop.main)
             .flatMap { [weak self] q -> AnyPublisher<[(canonical: String, variants: [SlangModel])], Never> in
                 guard let self = self else { return Just([]).eraseToAnyPublisher() }
                 if q.isEmpty {

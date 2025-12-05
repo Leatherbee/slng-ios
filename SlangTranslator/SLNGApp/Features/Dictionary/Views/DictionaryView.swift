@@ -25,6 +25,8 @@ struct DictionaryView: View {
     @State private var jumpAnimated: Bool = true
     @State private var lastJumpTime: CFTimeInterval = 0
     @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
+    @State private var pickerResetToken: UUID = UUID()
+    @State private var resetSequence: Int = 0
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -88,6 +90,7 @@ struct DictionaryView: View {
                             .frame(maxWidth: .infinity, alignment: .center)
                         )
                     }
+                    .id(pickerResetToken)
                     .frame(height: 620)
                     .frame(maxWidth: .infinity)
                     .clipped()
@@ -132,40 +135,33 @@ struct DictionaryView: View {
             viewModel.searchText = searchText
         }
         .onChange(of: viewModel.filteredCanonicals.map { $0.canonical }) {
+            resetSequence += 1
+            let seq = resetSequence
+            pickerResetToken = UUID()
+            jumpAnimated = false
             let count = viewModel.filteredCanonicals.count
-            if count == 0 {
-                selected = 0
-                viewModel.activeLetter = nil
-            } else {
-                let q = viewModel.searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-                var best = selected
-                if !q.isEmpty {
-                    best = viewModel.filteredCanonicals.firstIndex(where: { $0.canonical.lowercased().hasPrefix(q) })
-                    ?? viewModel.filteredCanonicals.firstIndex(where: { group in
-                        group.variants.contains { $0.slang.lowercased().hasPrefix(q) }
-                    })
-                    ?? 0
-                }
-                selected = min(max(0, best), count - 1)
+            selected = 0
+            scrollToIndexTrigger = nil
+            if count > 0 { updateActiveLetterFromSelection() } else { viewModel.activeLetter = nil }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+                guard seq == resetSequence else { return }
+                jumpAnimated = true
+                scrollToIndexTrigger = selected
             }
-            scrollToIndexTrigger = selected
-            updateActiveLetterFromSelection()
         }
         .onChange(of: viewModel.searchText) {
-            let count = viewModel.filteredCanonicals.count
-            guard count > 0 else { return }
-            let q = viewModel.searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-            var best = selected
-            if !q.isEmpty {
-                best = viewModel.filteredCanonicals.firstIndex(where: { $0.canonical.lowercased().hasPrefix(q) })
-                ?? viewModel.filteredCanonicals.firstIndex(where: { group in
-                    group.variants.contains { $0.slang.lowercased().hasPrefix(q) }
-                })
-                ?? 0
-            }
-            selected = min(max(0, best), count - 1)
-            scrollToIndexTrigger = selected
+            resetSequence += 1
+            let seq = resetSequence
+            pickerResetToken = UUID()
+            jumpAnimated = false
+            selected = 0
+            scrollToIndexTrigger = nil
             updateActiveLetterFromSelection()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                guard seq == resetSequence else { return }
+                jumpAnimated = true
+                scrollToIndexTrigger = selected
+            }
         }
         .onChange(of: selected) {
             updateActiveLetterFromSelection()
@@ -409,7 +405,7 @@ class SoundManager {
     }
 }
 
-public struct SwiftUIWheelPicker<Item>: View {
+public struct SwiftUIWheelPicker<Item: Hashable>: View {
     private let items: [Item]
     @Binding private var selection: Int
     private let content: (Item, Int, Bool) -> AnyView
@@ -433,6 +429,7 @@ public struct SwiftUIWheelPicker<Item>: View {
     @State private var lastSelection: Int = 0
     
     @State private var isQuickScrolling = false
+    @State private var isLayoutReady = false
 
     public init(
         items: [Item],
@@ -455,14 +452,14 @@ public struct SwiftUIWheelPicker<Item>: View {
                    ZStack {
                        ScrollViewReader { proxy in
                            ScrollView(.vertical, showsIndicators: false) {
-                               LazyVStack(spacing: 24) {
+                               LazyVStack(spacing: 20) {
                                    Color.clear.frame(height: outerGeo.size.height / 2)
                                    
                                    ForEach(items.indices, id: \.self) { idx in
                                        itemRow(for: idx)
                                            .background(
                                                GeometryReader { geo in
-                                                   let midY = geo.frame(in: .global).midY
+                                                   let midY = geo.frame(in: .named("wheel")).midY
                                                    Color.clear
                                                        .preference(
                                                            key: RowCenterKey.self,
@@ -483,7 +480,9 @@ public struct SwiftUIWheelPicker<Item>: View {
                                setupVelocityTimer()
                                
                                DispatchQueue.main.async {
-                                   proxy.scrollTo(selection, anchor: .center)
+                                   if items.indices.contains(selection) {
+                                       proxy.scrollTo(selection, anchor: .center)
+                                   }
                                }
                            }
                            .onDisappear {
@@ -492,47 +491,57 @@ public struct SwiftUIWheelPicker<Item>: View {
                            .onPreferenceChange(RowCenterKey.self) { values in
                                guard !dragging else { return }
                                guard !values.isEmpty else { return }
-                               
-                               let filtered = values.filter { visibleRange.contains($0.id) }
-                               for v in filtered {
+                               for v in values {
                                    centers[v.id] = v.midY
                                }
-                               containerCenterY = outerGeo.frame(in: .global).midY
+                               containerCenterY = outerGeo.size.height / 2
+                               isLayoutReady = true
                                updateSelection(containerCenterY: containerCenterY, shouldFeedback: false)
                            }
                            .gesture(
-                               DragGesture(minimumDistance: 1, coordinateSpace: .global)
-                                   .onChanged { _ in
-                                       if !dragging {
-                                           dragging = true
-                                           isQuickScrolling = true
-                                       }
-                                   }
-                                   .onEnded { _ in
-                                       dragging = false
-                                       
-                                       DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                           if Haptics.isEnabled {
-                                               engine.impactOccurred(intensity: 0.4)
-                                           }
-
-                                           isQuickScrolling = false
-                                           soundManager.resetVelocity()
-                                           lastSelectionTime = 0
-                                           selectionVelocity = 0
-                                       }
-                                       
-                                       snapToNearest(containerCenterY: outerGeo.frame(in: .global).midY)
-                                   }
-                           )
+                                DragGesture(minimumDistance: 1, coordinateSpace: .global)
+                                    .onChanged { _ in
+                                        if !dragging {
+                                            dragging = true
+                                            isQuickScrolling = true
+                                        }
+                                    }
+                                    .onEnded { _ in
+                                        dragging = false
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                            if Haptics.isEnabled {
+                                                engine.impactOccurred(intensity: 0.4)
+                                            }
+       
+                                            isQuickScrolling = false
+                                            soundManager.resetVelocity()
+                                            lastSelectionTime = 0
+                                            selectionVelocity = 0
+                                        }
+                                        
+                                        snapToNearest(containerCenterY: outerGeo.size.height / 2)
+                                    }
+                            )
+                           .onChange(of: items) {
+                               centers.removeAll()
+                               visibleRange = 0..<min(10, items.count)
+                               containerCenterY = outerGeo.size.height / 2
+                               lastSelection = selection
+                               isLayoutReady = false
+                               DispatchQueue.main.async {
+                                   proxy.scrollTo(selection, anchor: .center)
+                               }
+                           }
                        }
                    }
+                   .coordinateSpace(name: "wheel")
                }
-               .onChange(of: scrollToIndexTrigger) {
-                   guard let index = scrollToIndexTrigger else { return }
-                   scrollToIndex(index, animated: true)
-                   scrollToIndexTrigger = nil
-               }
+                .onChange(of: scrollToIndexTrigger) {
+                    guard let index = scrollToIndexTrigger else { return }
+                    scrollToIndex(index, animated: true)
+                    scrollToIndexTrigger = nil
+                }
     }
 
     @ViewBuilder
@@ -541,6 +550,7 @@ public struct SwiftUIWheelPicker<Item>: View {
         content(items[idx], idx, isSelected)
             .frame(maxWidth: .infinity)
             .contentShape(Rectangle())
+            .id(idx)
             .onTapGesture {
                 if isSelected {
                     onSelectedTap?(idx)
@@ -562,9 +572,9 @@ public struct SwiftUIWheelPicker<Item>: View {
     }
 
     private func updateSelection(containerCenterY: CGFloat, shouldFeedback: Bool) {
+        guard isLayoutReady else { return }
         guard !centers.isEmpty else { return }
-        let visibleCenters = centers.filter { visibleRange.contains($0.key) }
-        guard let nearest = visibleCenters.min(by: {
+        guard let nearest = centers.min(by: {
             abs($0.value - containerCenterY) < abs($1.value - containerCenterY)
         })?.key else { return }
 
@@ -583,6 +593,7 @@ public struct SwiftUIWheelPicker<Item>: View {
             lastSelectionTime = currentTime
             lastSelection = selection
             selection = nearest
+            updateVisibleRange(around: selection)
             
             DispatchQueue.global(qos: .userInteractive).async {
                 soundManager.playClick(withVelocity: selectionVelocity)
@@ -601,8 +612,7 @@ public struct SwiftUIWheelPicker<Item>: View {
 
     private func snapToNearest(containerCenterY: CGFloat) {
         guard !centers.isEmpty else { return }
-        let visibleCenters = centers.filter { visibleRange.contains($0.key) }
-        guard let nearest = visibleCenters.min(by: {
+        guard let nearest = centers.min(by: {
             abs($0.value - containerCenterY) < abs($1.value - containerCenterY)
         })?.key else { return }
         updateSelection(to: nearest, animated: true)
@@ -612,6 +622,7 @@ public struct SwiftUIWheelPicker<Item>: View {
         guard newIndex >= 0 && newIndex < items.count else { return }
         
         selection = newIndex
+        lastSelection = newIndex
         updateVisibleRange(around: newIndex)
         guard let proxy = scrollProxy else { return }
         
@@ -630,6 +641,7 @@ public struct SwiftUIWheelPicker<Item>: View {
     public func scrollToIndex(_ index: Int, animated: Bool = true) {
         guard index >= 0 && index < items.count else { return }
         selection = index
+        lastSelection = index
         updateVisibleRange(around: index)
         guard let proxy = scrollProxy else { return }
         
@@ -669,37 +681,4 @@ private struct RowCenterKey: PreferenceKey {
     static func reduce(value: inout [RowCenter], nextValue: () -> [RowCenter]) {
         value.append(contentsOf: nextValue())
     }
-}
-final class KeyboardObserver: ObservableObject {
-    @Published var height: CGFloat = 0
-    private var cancellables: Set<AnyCancellable> = []
-
-    init() {
-        let willChange = NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification)
-        let willHide = NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
-
-        willChange
-            .merge(with: willHide)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] notification in
-                guard let self = self else { return }
-                self.updateHeight(from: notification)
-            }
-            .store(in: &cancellables)
-    }
-
-    private func updateHeight(from notification: Notification) {
-        guard let userInfo = notification.userInfo else { return }
-        let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect) ?? .zero
-        let screenHeight = UIScreen.main.bounds.height
-        let isHidden = endFrame.origin.y >= screenHeight
-        let bottomSafeArea = UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap { $0.windows }
-            .first { $0.isKeyWindow }?
-            .safeAreaInsets.bottom ?? 0
-
-        let rawHeight = isHidden ? 0 : endFrame.height
-        height = max(0, rawHeight - bottomSafeArea)
-    }
-}
+} 
