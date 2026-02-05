@@ -110,17 +110,11 @@
 			);
 			target = 502CE8DB2EA1F638007F38E3 /* SlangTranslator */;
 		};
-		5092FB282F32D8AD00122C1C /* Exceptions for "SlangWidgetExtension" folder in "SlangWidgetExtensionExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */;
-		};
 		5092FB292F32D8AD00122C1C /* Exceptions for "SlangTranslator" folder in "SlangWidgetExtensionExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Data/slng_data_v1.2.json,
+				Shared/Common/Logger.swift,
 			);
 			target = 5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */;
 		};
@@ -128,10 +122,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Data/slng_data_v1.2.json,
-				Shared/Common/AnalyticsService.swift,
-				Shared/Common/AppPreferences.swift,
 				Shared/Common/Colors.swift,
-				Shared/Common/DesignSystem.swift,
 				Shared/Common/Logger.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
@@ -157,10 +148,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Data/slng_data_v1.2.json,
-				Shared/Common/AnalyticsService.swift,
-				Shared/Common/AppPreferences.swift,
 				Shared/Common/Colors.swift,
-				Shared/Common/DesignSystem.swift,
 				Shared/Common/Logger.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
@@ -224,10 +212,17 @@
 		5092FB182F32D8AC00122C1C /* SlangWidgetExtension */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				5092FB282F32D8AD00122C1C /* Exceptions for "SlangWidgetExtension" folder in "SlangWidgetExtensionExtension" target */,
+				5092FB2A2F32D8AD00122C1C /* Exceptions for "SlangWidgetExtension" folder in "SlangWidgetExtensionExtension" target */,
 			);
 			path = SlangWidgetExtension;
 			sourceTree = "<group>";
+		};
+		5092FB2A2F32D8AD00122C1C /* Exceptions for "SlangWidgetExtension" folder in "SlangWidgetExtensionExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */;
 		};
 		50FDB68E2EB200AC004304A3 /* KeyboardSlangExtension */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -1061,7 +1056,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR3T853788;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SlangWidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Widget";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -1098,7 +1093,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR3T853788;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SlangWidgetExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Widget";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
