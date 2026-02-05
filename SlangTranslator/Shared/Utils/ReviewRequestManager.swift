@@ -6,16 +6,7 @@ final class ReviewRequestManager {
     static let shared = ReviewRequestManager()
     private init() {}
 
-    private let defaults = UserDefaults.shared
-    private let keyTranslationCount = "review.translationCount"
-    private let keySTTCount = "review.sttCount"
-    private let keyFirstOpenDate = "review.firstOpenDate"
-    private let keyActiveDaysCount = "review.activeDaysCount"
-    private let keyLastActiveDay = "review.lastActiveDay"
-    private let keyReviewRequestCount = "review.requestCount"
-    private let keyFirstRequestDate = "review.firstRequestDate"
-    private let keyActiveDaysAtFirstRequest = "review.activeDaysAtFirstRequest"
-    private let keyFinalChanceShown = "review.finalChanceShown"
+    private let prefs = AppPreferences.shared
 
     func recordAppOpenAndMaybePrompt() {
         updateActiveDays()
@@ -23,64 +14,61 @@ final class ReviewRequestManager {
     }
 
     func recordTranslationAndMaybePrompt() {
-        let c = defaults.integer(forKey: keyTranslationCount) + 1
-        defaults.set(c, forKey: keyTranslationCount)
+        prefs.reviewTranslationCount += 1
         maybeRequestReviewIfEligible()
     }
 
     func recordSTTAndMaybePrompt() {
-        let c = defaults.integer(forKey: keySTTCount) + 1
-        defaults.set(c, forKey: keySTTCount)
+        prefs.reviewSTTCount += 1
         maybeRequestReviewIfEligible()
     }
 
     private func updateActiveDays() {
         let today = Self.dayString(from: Date())
-        let lastDay = defaults.string(forKey: keyLastActiveDay)
+        let lastDay = prefs.reviewLastActiveDay
         if lastDay != today {
-            let count = defaults.integer(forKey: keyActiveDaysCount) + 1
-            defaults.set(count, forKey: keyActiveDaysCount)
-            defaults.set(today, forKey: keyLastActiveDay)
+            prefs.reviewActiveDaysCount += 1
+            prefs.reviewLastActiveDay = today
         }
-        if defaults.object(forKey: keyFirstOpenDate) == nil {
-            defaults.set(Date().timeIntervalSince1970, forKey: keyFirstOpenDate)
+        if prefs.reviewFirstOpenDate == 0 {
+            prefs.reviewFirstOpenDate = Date().timeIntervalSince1970
         }
     }
 
     private func maybeRequestReviewIfEligible() {
         let initialEligible = isInitialEligibilityMet()
-        let hasRequested = defaults.integer(forKey: keyReviewRequestCount) > 0
+        let hasRequested = prefs.reviewRequestCount > 0
         let finalEligible = isFinalChanceEligibilityMet()
 
         if initialEligible && !hasRequested {
             requestReview()
-            defaults.set(Date().timeIntervalSince1970, forKey: keyFirstRequestDate)
-            defaults.set(defaults.integer(forKey: keyActiveDaysCount), forKey: keyActiveDaysAtFirstRequest)
-            defaults.set(defaults.integer(forKey: keyReviewRequestCount) + 1, forKey: keyReviewRequestCount)
+            prefs.reviewFirstRequestDate = Date().timeIntervalSince1970
+            prefs.reviewActiveDaysAtFirstRequest = prefs.reviewActiveDaysCount
+            prefs.reviewRequestCount += 1
             return
         }
 
         if finalEligible {
             requestReview()
-            defaults.set(true, forKey: keyFinalChanceShown)
+            prefs.reviewFinalChanceShown = true
         }
     }
 
     private func isInitialEligibilityMet() -> Bool {
-        let translations = defaults.integer(forKey: keyTranslationCount)
-        let stt = defaults.integer(forKey: keySTTCount)
-        let firstOpenTs = defaults.double(forKey: keyFirstOpenDate)
+        let translations = prefs.reviewTranslationCount
+        let stt = prefs.reviewSTTCount
+        let firstOpenTs = prefs.reviewFirstOpenDate
         let sevenDays: TimeInterval = 7 * 24 * 60 * 60
         let hasSevenDays = firstOpenTs > 0 && (Date().timeIntervalSince1970 - firstOpenTs) >= sevenDays
         return translations >= 6 || stt >= 6 || hasSevenDays
     }
 
     private func isFinalChanceEligibilityMet() -> Bool {
-        let hasRequested = defaults.integer(forKey: keyReviewRequestCount) > 0
-        let finalShown = defaults.bool(forKey: keyFinalChanceShown)
+        let hasRequested = prefs.reviewRequestCount > 0
+        let finalShown = prefs.reviewFinalChanceShown
         if !hasRequested || finalShown { return false }
-        let activeNow = defaults.integer(forKey: keyActiveDaysCount)
-        let activeAtFirst = defaults.integer(forKey: keyActiveDaysAtFirstRequest)
+        let activeNow = prefs.reviewActiveDaysCount
+        let activeAtFirst = prefs.reviewActiveDaysAtFirstRequest
         return (activeNow - activeAtFirst) >= 30
     }
 

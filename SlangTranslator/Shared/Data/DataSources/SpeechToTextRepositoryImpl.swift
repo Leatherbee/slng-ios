@@ -29,13 +29,8 @@ final class SpeechToTextRepositoryImpl: SpeechToTextRepository {
 
         request.httpBody = body
 
-        let (respData, resp) = try await client.session.data(for: request)
-        guard let http = resp as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
-            let status = (resp as? HTTPURLResponse)?.statusCode ?? -1
-            let body = String(data: respData, encoding: .utf8) ?? ""
-            let info: [String: Any] = [NSLocalizedDescriptionKey: "Transcription failed", "status": status, "body": body]
-            throw NSError(domain: "STTError", code: status, userInfo: info)
-        }
+        // Use performRequest with automatic retry
+        let (respData, _) = try await client.performRequest(request)
 
         let dto = try JSONDecoder().decode(TranscriptionDTO.self, from: respData)
         return TranscriptionResponse(id: UUID(), text: dto.text, confidence: dto.confidence, source: .backend)

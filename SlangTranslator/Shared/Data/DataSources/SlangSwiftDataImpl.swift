@@ -41,7 +41,7 @@ final class SlangSwiftDataImpl {
         do {
             return try context.fetch(descriptor)
         } catch {
-            print("Failed to fetch slangs: \(error)")
+            logError("Failed to fetch slangs: \(error)", category: .data)
             return []
         }
     }
@@ -118,7 +118,7 @@ final class SlangSwiftDataImpl {
         do {
             return try context.fetch(descriptor).count
         } catch {
-            print("Failed to count slangs: \(error)")
+            logError("Failed to count slangs: \(error)", category: .data)
             return 0
         }
     }

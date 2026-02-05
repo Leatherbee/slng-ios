@@ -64,6 +64,7 @@ struct OnboardingView: View {
                 pageNumber = 6
             }
         }
+        .trackScreen("OnboardingView")
     }
     
     private var firstPage: some View {

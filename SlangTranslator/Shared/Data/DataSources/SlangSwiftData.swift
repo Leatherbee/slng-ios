@@ -21,18 +21,18 @@ final class SlangSwiftData {
 
         let descriptor = FetchDescriptor<SlangModel>()
         if let slangs = try? context.fetch(descriptor), !slangs.isEmpty {
-            print("Loaded \(slangs.count) slangs from SwiftData.")
+            logDebug("Loaded \(slangs.count) slangs from SwiftData.", category: .data)
             return slangs
         }
 
-        print("Importing slangs from JSON...")
+        logInfo("Importing slangs from JSON...", category: .data)
         if let newSlangs = loadFromJSON() {
             for (index, slang) in newSlangs.enumerated() {
                 context.insert(slang)
                 if index % 500 == 0 { try? context.save() }
             }
             try? context.save()
-            print("Imported \(newSlangs.count) slangs into SwiftData.")
+            logInfo("Imported \(newSlangs.count) slangs into SwiftData.", category: .data)
             return newSlangs
         }
 
@@ -45,7 +45,7 @@ final class SlangSwiftData {
 
         guard let url = Bundle.main.url(forResource: "slng_data_v1.2", withExtension: "json"),
               let stream = InputStream(url: url) else {
-            print("Slang JSON not found!")
+            logError("Slang JSON not found!", category: .data)
             return nil
         }
 
@@ -78,10 +78,10 @@ final class SlangSwiftData {
                 temp.append(slangModel)
             }
 
-            print("Finished decoding \(temp.count) slangs from JSON.")
+            logDebug("Finished decoding \(temp.count) slangs from JSON.", category: .data)
             return temp
         } catch {
-            print("Failed to parse slang JSON: \(error)")
+            logError("Failed to parse slang JSON: \(error)", category: .data)
             return nil
         }
     }

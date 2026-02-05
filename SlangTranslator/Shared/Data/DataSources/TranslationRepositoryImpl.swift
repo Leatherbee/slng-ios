@@ -48,13 +48,9 @@ final class TranslationRepositoryImpl: TranslationRepository {
         let payload = TranslationRequest(text: text, model: nil, temperature: 0.3)
         req.httpBody = try JSONEncoder().encode(payload)
 
-        let (data, resp) = try await client.session.data(for: req)
-        guard let http = resp as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
-            let status = (resp as? HTTPURLResponse)?.statusCode ?? -1
-            let body = String(data: data, encoding: .utf8) ?? ""
-            let info: [String: Any] = [NSLocalizedDescriptionKey: "Backend error", "status": status, "body": body]
-            throw NSError(domain: "HTTPError", code: status, userInfo: info)
-        }
+        // Use performRequest with automatic retry
+        let (data, _) = try await client.performRequest(req)
+
         let decoded = try JSONDecoder().decode(BackendTranslationDTO.self, from: data)
         let sentiment = SentimentType(rawValue: decoded.sentiment ?? "") ?? .neutral
         return TranslationResponse(

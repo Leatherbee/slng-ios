@@ -5,7 +5,7 @@
 //  Created by Filza Rizki Ramadhan on 22/10/25.
 //
 import Foundation
-import Combine
+internal import Combine
 import Translation
 import UIKit
 

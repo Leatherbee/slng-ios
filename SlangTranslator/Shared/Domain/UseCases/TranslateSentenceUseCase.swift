@@ -24,11 +24,11 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
     func execute(_ text: String) async throws -> TranslationResult {
         let translation = try await translationRepository.translateSentence(text)
         let trSent = translation.sentiment?.rawValue ?? "nil"
-        print("Debug overall sentence sentiment=\(trSent) text=\(text)")
+        logDebug("Overall sentence sentiment=\(trSent) text=\(text)", category: .translation)
         let detectedSlangs = findSlang(in: text, matching: translation.sentiment)
         let sentimentsList = detectedSlangs.map { "\($0.slang):\($0.sentiment.rawValue)" }.joined(separator: ", ")
         let sentimentsOut = sentimentsList.isEmpty ? "none" : sentimentsList
-        print("Debug detected slangs sentiments=\(sentimentsOut)")
+        logDebug("Detected slangs sentiments=\(sentimentsOut)", category: .translation)
         return TranslationResult(translation: translation, detectedSlangs: detectedSlangs)
     }
     
@@ -177,27 +177,27 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
         let lowerToken = inputToken.lowercased()
         let sRaw = sentiment?.rawValue ?? "nil"
         let variantsDesc = variants.map { "\($0.slang):\($0.sentiment.rawValue)" }.joined(separator: ", ")
-        print("Debug selecting variant for token=\(lowerToken) sentiment=\(sRaw)")
-        print("Debug variants for token=\(lowerToken) -> \(variantsDesc)")
+        logDebug("Selecting variant for token=\(lowerToken) sentiment=\(sRaw)", category: .translation)
+        logDebug("Variants for token=\(lowerToken) -> \(variantsDesc)", category: .translation)
         
         let exactMatches = variants.filter { $0.slang.lowercased() == lowerToken }
         
         if !exactMatches.isEmpty {
             // Priority 1: Exact match with matching sentiment
             if let s = sentiment, let pick = exactMatches.first(where: { $0.sentiment == s }) {
-                print("Debug chosen variant=\(pick.slang) sentiment=\(pick.sentiment.rawValue) reason=exact+sentiment")
+                logDebug("Chosen variant=\(pick.slang) sentiment=\(pick.sentiment.rawValue) reason=exact+sentiment", category: .translation)
                 return pick
             }
-            
+
             // Priority 2: Exact match with neutral sentiment
             if let pickNeutral = exactMatches.first(where: { $0.sentiment == .neutral }) {
-                print("Debug chosen variant=\(pickNeutral.slang) sentiment=\(pickNeutral.sentiment.rawValue) reason=exact+neutral")
+                logDebug("Chosen variant=\(pickNeutral.slang) sentiment=\(pickNeutral.sentiment.rawValue) reason=exact+neutral", category: .translation)
                 return pickNeutral
             }
-            
+
             // Priority 3: Any exact match (longest)
             let pick = exactMatches.max(by: { $0.slang.count < $1.slang.count })!
-            print("Debug chosen variant=\(pick.slang) sentiment=\(pick.sentiment.rawValue) reason=exact+longest")
+            logDebug("Chosen variant=\(pick.slang) sentiment=\(pick.sentiment.rawValue) reason=exact+longest", category: .translation)
             return pick
         }
 
@@ -228,7 +228,7 @@ final class TranslateSentenceUseCaseImpl: TranslateSentenceUseCase {
         let chosen = sorted.first ?? variants.first
         let chosenSent = chosen?.sentiment.rawValue ?? "nil"
         let reason = chosen == sorted.first ? "fuzzy+sorted" : "fallback"
-        print("Debug chosen variant=\(chosen?.slang ?? "-") sentiment=\(chosenSent) reason=\(reason)")
+        logDebug("Chosen variant=\(chosen?.slang ?? "-") sentiment=\(chosenSent) reason=\(reason)", category: .translation)
         return chosen
     }
     

@@ -18,6 +18,14 @@
 		503E21682ED8A4220048DDD6 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21672ED8A4220048DDD6 /* FirebaseAnalyticsCore */; };
 		503E216A2ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21692ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport */; };
 		503E216C2ED8A4220048DDD6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 503E216B2ED8A4220048DDD6 /* FirebaseMessaging */; };
+		5092FB152F32D8AC00122C1C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5092FB142F32D8AC00122C1C /* WidgetKit.framework */; };
+		5092FB172F32D8AC00122C1C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5092FB162F32D8AC00122C1C /* SwiftUI.framework */; };
+		5092FB242F32D8AD00122C1C /* SlangWidgetExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5092FB132F32D8AC00122C1C /* SlangWidgetExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		50ADC16A2F2A126000ED07D6 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 50ADC1692F2A126000ED07D6 /* FirebaseCore */; };
+		50ADC16C2F2A126000ED07D6 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 50ADC16B2F2A126000ED07D6 /* FirebaseCrashlytics */; };
+		50ADC16E2F2A126000ED07D6 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 50ADC16D2F2A126000ED07D6 /* FirebasePerformance */; };
+		50ADC1762F2B79BB00ED07D6 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 50ADC1752F2B79BB00ED07D6 /* FirebasePerformance */; };
+		50ADC1782F2B79E600ED07D6 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 50ADC1772F2B79E600ED07D6 /* FirebasePerformance */; };
 		50F060C62ECA61BB0081A1CB /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */; };
 		50F060C82ECA61BB0081A1CB /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */; };
 		50F060CA2ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */; };
@@ -44,6 +52,13 @@
 			remoteGlobalIDString = 502CE8DB2EA1F638007F38E3;
 			remoteInfo = SlangTranslator;
 		};
+		5092FB222F32D8AD00122C1C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 502CE8D42EA1F638007F38E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5092FB122F32D8AC00122C1C;
+			remoteInfo = SlangWidgetExtensionExtension;
+		};
 		50FDB6922EB200AC004304A3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 502CE8D42EA1F638007F38E3 /* Project object */;
@@ -61,6 +76,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */,
+				5092FB242F32D8AD00122C1C /* SlangWidgetExtensionExtension.appex in Embed Foundation Extensions */,
 				50FDB6942EB200AC004304A3 /* KeyboardSlangExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
@@ -73,6 +89,9 @@
 		502CE8E92EA1F639007F38E3 /* SlangTranslatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SlangTranslatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		502CE8F32EA1F639007F38E3 /* SlangTranslatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SlangTranslatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SLNGShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5092FB132F32D8AC00122C1C /* SlangWidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SlangWidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5092FB142F32D8AC00122C1C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		5092FB162F32D8AC00122C1C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = KeyboardSlangExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -91,11 +110,29 @@
 			);
 			target = 502CE8DB2EA1F638007F38E3 /* SlangTranslator */;
 		};
+		5092FB282F32D8AD00122C1C /* Exceptions for "SlangWidgetExtension" folder in "SlangWidgetExtensionExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */;
+		};
+		5092FB292F32D8AD00122C1C /* Exceptions for "SlangTranslator" folder in "SlangWidgetExtensionExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Data/slng_data_v1.2.json,
+			);
+			target = 5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */;
+		};
 		50FCF2072EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Data/slng_data_v1.2.json,
+				Shared/Common/AnalyticsService.swift,
+				Shared/Common/AppPreferences.swift,
 				Shared/Common/Colors.swift,
+				Shared/Common/DesignSystem.swift,
+				Shared/Common/Logger.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Data/Model/SharedModelContainer.swift,
@@ -120,7 +157,11 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Data/slng_data_v1.2.json,
+				Shared/Common/AnalyticsService.swift,
+				Shared/Common/AppPreferences.swift,
 				Shared/Common/Colors.swift,
+				Shared/Common/DesignSystem.swift,
+				Shared/Common/Logger.swift,
 				Shared/Data/DataSources/SlangRepositoryImpl.swift,
 				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
 				Shared/Data/Model/SharedModelContainer.swift,
@@ -157,6 +198,7 @@
 				502CEB662EAE54ED007F38E3 /* Exceptions for "SlangTranslator" folder in "SlangTranslator" target */,
 				50FCF2072EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "ExplainSlangExtension" target */,
 				50FCF2082EBB94A900B2C472 /* Exceptions for "SlangTranslator" folder in "KeyboardSlangExtension" target */,
+				5092FB292F32D8AD00122C1C /* Exceptions for "SlangTranslator" folder in "SlangWidgetExtensionExtension" target */,
 			);
 			path = SlangTranslator;
 			sourceTree = "<group>";
@@ -179,6 +221,14 @@
 			path = ExplainSlangExtension;
 			sourceTree = "<group>";
 		};
+		5092FB182F32D8AC00122C1C /* SlangWidgetExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				5092FB282F32D8AD00122C1C /* Exceptions for "SlangWidgetExtension" folder in "SlangWidgetExtensionExtension" target */,
+			);
+			path = SlangWidgetExtension;
+			sourceTree = "<group>";
+		};
 		50FDB68E2EB200AC004304A3 /* KeyboardSlangExtension */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -196,8 +246,11 @@
 			files = (
 				503E21582ED8947B0048DDD6 /* FirebaseMessaging in Frameworks */,
 				50FCF94C2EBF510E00B2C472 /* EmojiKit in Frameworks */,
+				50ADC16E2F2A126000ED07D6 /* FirebasePerformance in Frameworks */,
 				50F060CA2ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport in Frameworks */,
 				50F060C82ECA61BB0081A1CB /* FirebaseAnalyticsCore in Frameworks */,
+				50ADC16A2F2A126000ED07D6 /* FirebaseCore in Frameworks */,
+				50ADC16C2F2A126000ED07D6 /* FirebaseCrashlytics in Frameworks */,
 				50F060C62ECA61BB0081A1CB /* FirebaseAnalytics in Frameworks */,
 				50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */,
 			);
@@ -221,6 +274,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50ADC1762F2B79BB00ED07D6 /* FirebasePerformance in Frameworks */,
 				503E215A2ED8A3F30048DDD6 /* EmojiKit in Frameworks */,
 				503E21602ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
 				503E21642ED8A3F30048DDD6 /* FirebaseMessaging in Frameworks */,
@@ -230,10 +284,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5092FB102F32D8AC00122C1C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5092FB172F32D8AC00122C1C /* SwiftUI.framework in Frameworks */,
+				5092FB152F32D8AC00122C1C /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		50FDB68A2EB200AC004304A3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50ADC1782F2B79E600ED07D6 /* FirebasePerformance in Frameworks */,
 				503E216C2ED8A4220048DDD6 /* FirebaseMessaging in Frameworks */,
 				50FCF9502EBF527700B2C472 /* EmojiKit in Frameworks */,
 				503E216A2ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
@@ -254,6 +318,7 @@
 				502CE8F62EA1F639007F38E3 /* SlangTranslatorUITests */,
 				502CE9112EA1F8F2007F38E3 /* ExplainSlangExtension */,
 				50FDB68E2EB200AC004304A3 /* KeyboardSlangExtension */,
+				5092FB182F32D8AC00122C1C /* SlangWidgetExtension */,
 				50FCF13B2EBB19E800B2C472 /* Frameworks */,
 				502CE8DD2EA1F638007F38E3 /* Products */,
 			);
@@ -267,6 +332,7 @@
 				502CE8F32EA1F639007F38E3 /* SlangTranslatorUITests.xctest */,
 				502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */,
 				50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */,
+				5092FB132F32D8AC00122C1C /* SlangWidgetExtensionExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -274,6 +340,8 @@
 		50FCF13B2EBB19E800B2C472 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5092FB142F32D8AC00122C1C /* WidgetKit.framework */,
+				5092FB162F32D8AC00122C1C /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -294,6 +362,7 @@
 			);
 			dependencies = (
 				50FDB6932EB200AC004304A3 /* PBXTargetDependency */,
+				5092FB232F32D8AD00122C1C /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				502CE8DE2EA1F638007F38E3 /* SlangTranslator */,
@@ -306,6 +375,9 @@
 				50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */,
 				50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */,
 				503E21572ED8947B0048DDD6 /* FirebaseMessaging */,
+				50ADC1692F2A126000ED07D6 /* FirebaseCore */,
+				50ADC16B2F2A126000ED07D6 /* FirebaseCrashlytics */,
+				50ADC16D2F2A126000ED07D6 /* FirebasePerformance */,
 			);
 			productName = SlangTranslator;
 			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
@@ -380,9 +452,32 @@
 				503E215D2ED8A3F30048DDD6 /* FirebaseAnalyticsCore */,
 				503E215F2ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport */,
 				503E21632ED8A3F30048DDD6 /* FirebaseMessaging */,
+				50ADC1752F2B79BB00ED07D6 /* FirebasePerformance */,
 			);
 			productName = ExplainSlangExtension;
 			productReference = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5092FB252F32D8AD00122C1C /* Build configuration list for PBXNativeTarget "SlangWidgetExtensionExtension" */;
+			buildPhases = (
+				5092FB0F2F32D8AC00122C1C /* Sources */,
+				5092FB102F32D8AC00122C1C /* Frameworks */,
+				5092FB112F32D8AC00122C1C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5092FB182F32D8AC00122C1C /* SlangWidgetExtension */,
+			);
+			name = SlangWidgetExtensionExtension;
+			packageProductDependencies = (
+			);
+			productName = SlangWidgetExtensionExtension;
+			productReference = 5092FB132F32D8AC00122C1C /* SlangWidgetExtensionExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */ = {
@@ -408,6 +503,7 @@
 				503E21672ED8A4220048DDD6 /* FirebaseAnalyticsCore */,
 				503E21692ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport */,
 				503E216B2ED8A4220048DDD6 /* FirebaseMessaging */,
+				50ADC1772F2B79E600ED07D6 /* FirebasePerformance */,
 			);
 			productName = KeyboardSlangExtension;
 			productReference = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */;
@@ -428,12 +524,16 @@
 					};
 					502CE8E82EA1F639007F38E3 = {
 						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 502CE8DB2EA1F638007F38E3;
 					};
 					502CE8F22EA1F639007F38E3 = {
 						CreatedOnToolsVersion = 26.0;
 						TestTargetID = 502CE8DB2EA1F638007F38E3;
 					};
 					502CE90F2EA1F8F2007F38E3 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					5092FB122F32D8AC00122C1C = {
 						CreatedOnToolsVersion = 26.0;
 					};
 					50FDB68C2EB200AC004304A3 = {
@@ -465,6 +565,7 @@
 				502CE8F22EA1F639007F38E3 /* SlangTranslatorUITests */,
 				502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */,
 				50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */,
+				5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -492,6 +593,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		502CE90E2EA1F8F2007F38E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5092FB112F32D8AC00122C1C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -536,6 +644,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5092FB0F2F32D8AC00122C1C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		50FDB6892EB200AC004304A3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -555,6 +670,11 @@
 			isa = PBXTargetDependency;
 			target = 502CE8DB2EA1F638007F38E3 /* SlangTranslator */;
 			targetProxy = 502CE8F42EA1F639007F38E3 /* PBXContainerItemProxy */;
+		};
+		5092FB232F32D8AD00122C1C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */;
+			targetProxy = 5092FB222F32D8AD00122C1C /* PBXContainerItemProxy */;
 		};
 		50FDB6932EB200AC004304A3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -778,6 +898,7 @@
 		502CE9012EA1F639007F38E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR3T853788;
@@ -792,12 +913,14 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SLNG.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SLNG";
 			};
 			name = Debug;
 		};
 		502CE9022EA1F639007F38E3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR3T853788;
@@ -812,6 +935,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SLNG.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SLNG";
 			};
 			name = Release;
 		};
@@ -913,6 +1037,80 @@
 				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
 				PRODUCT_NAME = SLNGShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		5092FB262F32D8AD00122C1C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SlangWidgetExtension/SlangWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SlangWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SlangWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		5092FB272F32D8AD00122C1C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SlangWidgetExtension/SlangWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SlangWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SlangWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1045,6 +1243,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		5092FB252F32D8AD00122C1C /* Build configuration list for PBXNativeTarget "SlangWidgetExtensionExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5092FB262F32D8AD00122C1C /* Debug */,
+				5092FB272F32D8AD00122C1C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		50FDB6952EB200AC004304A3 /* Build configuration list for PBXNativeTarget "KeyboardSlangExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1133,6 +1340,31 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		50ADC1692F2A126000ED07D6 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		50ADC16B2F2A126000ED07D6 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		50ADC16D2F2A126000ED07D6 /* FirebasePerformance */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebasePerformance;
+		};
+		50ADC1752F2B79BB00ED07D6 /* FirebasePerformance */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebasePerformance;
+		};
+		50ADC1772F2B79E600ED07D6 /* FirebasePerformance */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebasePerformance;
 		};
 		50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

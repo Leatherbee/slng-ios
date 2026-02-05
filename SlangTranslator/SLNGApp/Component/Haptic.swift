@@ -100,10 +100,7 @@ public enum Haptics {
                 lastFiredAt[key] = now
                 
                 #if targetEnvironment(simulator)
-                // No-op on simulator, optionally log
-                #if DEBUG
-                print("[Haptics] \(key) would fire on device")
-                #endif
+                // No-op on simulator
                 #else
                 action()
                 #endif

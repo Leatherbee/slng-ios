@@ -31,7 +31,7 @@ final class SlangRepositoryImpl: SlangRepository {
         )
         
         guard let models = try? context.fetch(descriptor) else {
-            print("Failed to fetch from Local DB")
+            logError("Failed to fetch from Local DB", category: .data)
             return []
         }
         
@@ -56,36 +56,36 @@ final class SlangRepositoryImpl: SlangRepository {
     private func LoadFromLocalDB() {
         guard !isLoaded else { return }
         isLoaded = true
-        
+
         let previousHash = defaults?.string(forKey: Self.jsonHashKey)
         let currentHash = computeJSONHash()
-        
+
         let descriptor = FetchDescriptor<SlangModel>()
         let existing = (try? context.fetch(descriptor)) ?? []
-        
+
         let shouldSync = (previousHash != currentHash) || existing.isEmpty
         if shouldSync {
-            print("Syncing data from JSON...")
+            logInfo("Syncing data from JSON...", category: .data)
             upsertFromJSON()
             if let currentHash { defaults?.set(currentHash, forKey: Self.jsonHashKey) }
             let final = (try? context.fetch(descriptor)) ?? []
-            print("Loaded \(final.count) from Local DB. JSON synced.")
+            logInfo("Loaded \(final.count) from Local DB. JSON synced.", category: .data)
         } else {
-            print("Loaded \(existing.count) from Local DB. JSON is not changed.")
+            logDebug("Loaded \(existing.count) from Local DB. JSON is not changed.", category: .data)
         }
     }
     
     private func upsertFromJSON() {
         guard let url = Bundle.main.url(forResource: "slng_data_v1.2", withExtension: "json"),
               let stream = InputStream(url: url) else {
-            print("Slang JSON not found!")
+            logError("Slang JSON not found!", category: .data)
             return
         }
         
         do {
             let allSlangs = try SlangData.decodeFromStream(stream)
             let canonicalCount = Set(allSlangs.map { $0.canonicalForm }).count
-            print("Decoded \(allSlangs.count) slangs across \(canonicalCount) canonical forms")
+            logDebug("Decoded \(allSlangs.count) slangs across \(canonicalCount) canonical forms", category: .data)
             
             let descriptor = FetchDescriptor<SlangModel>()
             let existing = (try? context.fetch(descriptor)) ?? []
@@ -139,16 +139,16 @@ final class SlangRepositoryImpl: SlangRepository {
             for model in toDelete { context.delete(model) }
             
             try? context.save()
-            print("Sync finished: \(processed) slangs upserted, \(toDelete.count) deleted.")
+            logInfo("Sync finished: \(processed) slangs upserted, \(toDelete.count) deleted.", category: .data)
         } catch {
-            print("Failed to parse slang JSON: \(error)")
+            logError("Failed to parse slang JSON: \(error)", category: .data)
         }
     }
     
     private func computeJSONHash() -> String? {
         guard let url = Bundle.main.url(forResource: "slng_data_v1.2", withExtension: "json"),
               let data = try? Data(contentsOf: url) else {
-            print("Cannot find SLNG JSON for hashing")
+            logWarning("Cannot find SLNG JSON for hashing", category: .data)
             return nil
         }
         

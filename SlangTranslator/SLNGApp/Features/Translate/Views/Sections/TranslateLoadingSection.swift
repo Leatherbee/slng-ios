@@ -4,7 +4,7 @@ internal import Combine
 struct TranslateLoadingSection: View {
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false
-    @ObservedObject var viewModel: TranslateViewModel
+    @Bindable var viewModel: TranslateViewModel
     var textNamespace: Namespace.ID
     var dynamicTextStyle: Font.TextStyle
 

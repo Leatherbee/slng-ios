@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAnalytics
 
 struct TranslateInputSection: View {
-    @ObservedObject var viewModel: TranslateViewModel
+    @Bindable var viewModel: TranslateViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false

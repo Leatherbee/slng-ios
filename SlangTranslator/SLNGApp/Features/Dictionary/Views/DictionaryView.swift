@@ -27,90 +27,101 @@ struct DictionaryView: View {
     @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            AppColor.Background.secondary
-                .ignoresSafeArea()
-            
-            VStack(spacing: 24) {
-                HStack {
-                    SwiftUIWheelPicker(
-                        items: viewModel.filteredCanonicals.map { $0.canonical },
-                        selection: $selected,
-                        scrollToIndexTrigger: $scrollToIndexTrigger,
-                        jumpAnimated: $jumpAnimated,
-                        onSelectedTap: { index in
-                            if viewModel.filteredCanonicals.indices.contains(index) {
-                                let group = viewModel.filteredCanonicals[selected]
-                                popupManager.setCanonicalForm(group.canonical)
-                                popupManager.setVariants(group.variants)
-                                Analytics.logEvent("dictionary_item_viewed", parameters: [
-                                    "variants_count": group.variants.count
-                                ])
-                                popupManager.isPresented.toggle()
-                            }
-                        }
-                    ) { (item: String, idx: Int, isSelected: Bool) in
-                        let distance = abs(selected - idx)
-                        let (fontSize, opacity, rowHeight): (CGFloat, Double, CGFloat)
-                        switch distance {
-                        case 0: (fontSize, opacity, rowHeight) = (60, 1.0, 76)
-                        case 1: (fontSize, opacity, rowHeight) = (44, 0.8, 57)
-                        case 2: (fontSize, opacity, rowHeight) = (30, 0.6, 58)
-                        case 3: (fontSize, opacity, rowHeight) = (24, 0.4, 41)
-                        case 4: (fontSize, opacity,rowHeight) = (20, 0.2, 33)
-                        default: (fontSize, opacity, rowHeight) = (20, 0.0, 33)
-                        }
+        GeometryReader { geometry in
+            let safeTop = geometry.safeAreaInsets.top
+            let safeBottom = geometry.safeAreaInsets.bottom
+            let availableHeight = geometry.size.height - 60 // Reserve space for search bar area
 
-                        return AnyView(
-                            HStack(spacing: 28) {
-                                Text(item)
-                                    .font(.system(size: fontSize, weight: isSelected ? .bold : .medium, design: .serif))
-                                    .padding(.leading, 8)
-                                    .opacity(opacity)
-                                    .scaleEffect(isSelected ? 1.1 : 1.0)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.4)
-                                    .layoutPriority(1)
+            ZStack(alignment: .topLeading) {
+                AppColor.Background.secondary
+                    .ignoresSafeArea()
 
-                                if isSelected {
-                                    Image(systemName: "arrow.right")
-                                        .resizable()
-                                        .frame(width: 44, height: 24)
-                                        .foregroundColor(.primary)
-                                        .transition(.asymmetric(
-                                            insertion: .move(edge: .trailing).combined(with: .opacity),
-                                            removal: .opacity
-                                        ))
-                                        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isSelected)
+                VStack(spacing: 0) {
+                    HStack(alignment: .center) {
+                        SwiftUIWheelPicker(
+                            items: viewModel.filteredCanonicals.map { $0.canonical },
+                            selection: $selected,
+                            scrollToIndexTrigger: $scrollToIndexTrigger,
+                            jumpAnimated: $jumpAnimated,
+                            onSelectedTap: { index in
+                                if viewModel.filteredCanonicals.indices.contains(index) {
+                                    let group = viewModel.filteredCanonicals[selected]
+                                    popupManager.setCanonicalForm(group.canonical)
+                                    popupManager.setVariants(group.variants)
+                                    Analytics.logEvent("dictionary_item_viewed", parameters: [
+                                        "variants_count": group.variants.count
+                                    ])
+                                    popupManager.isPresented.toggle()
                                 }
                             }
-                            .frame(height: rowHeight)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                        )
-                    }
-                    .frame(height: 620)
-                    .frame(maxWidth: .infinity)
-                    .clipped()
+                        ) { (item: String, idx: Int, isSelected: Bool) in
+                            let distance = abs(selected - idx)
+                            let (fontSize, opacity, rowHeight): (CGFloat, Double, CGFloat)
+                            switch distance {
+                            case 0: (fontSize, opacity, rowHeight) = (56, 1.0, 72)
+                            case 1: (fontSize, opacity, rowHeight) = (40, 0.8, 54)
+                            case 2: (fontSize, opacity, rowHeight) = (28, 0.6, 44)
+                            case 3: (fontSize, opacity, rowHeight) = (22, 0.4, 36)
+                            case 4: (fontSize, opacity, rowHeight) = (18, 0.2, 30)
+                            default: (fontSize, opacity, rowHeight) = (18, 0.0, 30)
+                            }
 
-                    optimizedAlphabetSidebar
+                            return AnyView(
+                                HStack(spacing: 24) {
+                                    Text(item)
+                                        .font(.system(size: fontSize, weight: isSelected ? .bold : .medium, design: .serif))
+                                        .padding(.leading, 8)
+                                        .opacity(opacity)
+                                        .scaleEffect(isSelected ? 1.05 : 1.0)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.4)
+                                        .layoutPriority(1)
+
+                                    if isSelected {
+                                        Image(systemName: "arrow.right")
+                                            .resizable()
+                                            .frame(width: 40, height: 22)
+                                            .foregroundColor(.primary)
+                                            .transition(.asymmetric(
+                                                insertion: .move(edge: .trailing).combined(with: .opacity),
+                                                removal: .opacity
+                                            ))
+                                            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: isSelected)
+                                    }
+                                }
+                                .frame(height: rowHeight)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            )
+                        }
+                        .frame(height: min(availableHeight, 680))
+                        .frame(maxWidth: .infinity)
+                        .clipped()
+
+                        optimizedAlphabetSidebar
+                            .frame(height: min(availableHeight, 680))
+                    }
+                    .padding(.horizontal, 16)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                // Letter indicator - positioned safely below status bar
+                VStack {
+                    let displayLetter: String = {
+                        if let l = viewModel.activeLetter, !l.isEmpty { return l }
+                        return lastOverlayLetter
+                    }()
+                    Text(displayLetter.uppercased())
+                        .font(.system(size: 56, design: .serif))
+                        .foregroundColor(AppColor.Text.secondary)
+                        .allowsHitTesting(false)
+                }
+                .frame(width: 100, height: 100)
+                .background(.clear)
+                .clipShape(.circle)
+                .allowsHitTesting(false)
+                .padding(.leading, 16)
+                .padding(.top, safeTop + 8)
             }
-            .padding()
-             
-            VStack {
-                let displayLetter: String = {
-                    if let l = viewModel.activeLetter, !l.isEmpty { return l }
-                    return lastOverlayLetter
-                }()
-                Text(displayLetter.uppercased())
-                    .font(.system(size: 64, design: .serif))
-                    .foregroundColor(AppColor.Text.secondary)
-                    .allowsHitTesting(false)
-            }
-            .frame(width: 128, height: 128)
-            .background(.clear)
-            .clipShape(.circle)
-            .allowsHitTesting(false)
         }
         .task {
             viewModel.setContext(context: modelContext)
@@ -128,6 +139,7 @@ struct DictionaryView: View {
         .onDisappear {
             Analytics.logEvent("dictionary_close", parameters: ["source": "tab"])
         }
+        .trackScreen("DictionaryView")
         .onChange(of: searchText) {
             viewModel.searchText = searchText
         }
@@ -287,16 +299,16 @@ class SoundManager {
             try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.005)
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
-            print("Audio session setup failed: \(error)")
+            logError("Audio session setup failed: \(error)", category: .audio)
         }
     }
     
     private func createAudioPlayerPool() {
         guard let url = Bundle.main.url(forResource: "click-1", withExtension: "wav") else {
-            print("Sound file not found")
+            logWarning("Sound file not found", category: .audio)
             return
         }
-        
+
         for _ in 0..<poolSize {
             do {
                 let player = try AVAudioPlayer(contentsOf: url)
@@ -306,7 +318,7 @@ class SoundManager {
                 player.enableRate = shouldVaryPitch
                 audioPlayers.append(player)
             } catch {
-                print("Failed to create audio player: \(error)")
+                logError("Failed to create audio player: \(error)", category: .audio)
             }
         }
     }
@@ -329,12 +341,7 @@ class SoundManager {
     }
     
     func playClick(withVelocity velocity: Double = 0) {
-        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
-        let enabled: Bool = {
-            if defaults.object(forKey: "soundEffectEnabled") == nil { return true }
-            return defaults.bool(forKey: "soundEffectEnabled")
-        }()
-        guard enabled else { return }
+        guard AppPreferences.shared.soundEffectEnabled else { return }
         let currentTime = CACurrentMediaTime()
         
         if velocity > 0 {
@@ -385,12 +392,7 @@ class SoundManager {
     }
     
     func playSystemClick(intensity: CGFloat = 0.5) {
-        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
-        let soundOn: Bool = {
-            if defaults.object(forKey: "soundEffectEnabled") == nil { return true }
-            return defaults.bool(forKey: "soundEffectEnabled")
-        }()
-        if soundOn {
+        if AppPreferences.shared.soundEffectEnabled {
             AudioServicesPlaySystemSound(1104)
         }
 

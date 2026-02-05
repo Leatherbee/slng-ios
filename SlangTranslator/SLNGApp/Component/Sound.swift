@@ -6,7 +6,7 @@
 //
 
 import AVFoundation
- 
+
 enum SoundPlayer {
     static var player: AVAudioPlayer?
     private static var isEnabled: Bool {
@@ -20,7 +20,9 @@ enum SoundPlayer {
         guard isEnabled else { return }
         let components = filename.split(separator: ".")
         guard let name = components.first else {
+            #if DEBUG
             print("Invalid sound filename:", filename)
+            #endif
             return
         }
 
@@ -28,7 +30,9 @@ enum SoundPlayer {
         let ext = components.count > 1 ? String(components.last!) : "wav"
 
         guard let url = Bundle.main.url(forResource: String(name), withExtension: ext) else {
+            #if DEBUG
             print("Sound not found:", filename)
+            #endif
             return
         }
 
@@ -37,7 +41,9 @@ enum SoundPlayer {
             player?.prepareToPlay()
             player?.play()
         } catch {
+            #if DEBUG
             print("Error playing sound:", error)
+            #endif
         }
     }
 }

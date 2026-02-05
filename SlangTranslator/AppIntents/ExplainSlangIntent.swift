@@ -180,7 +180,7 @@ struct ExplainSingleSlangIntent: AppIntent {
         }
 
         let term = input.value.trimmingCharacters(in: .whitespacesAndNewlines)
-        let all = repository.loadAll()
+        let all = await repository.loadAll()
         let matches = all.filter {
             $0.slang.lowercased() == term.lowercased() ||
             $0.canonicalForm.lowercased() == term.lowercased()
