@@ -9,18 +9,13 @@ import Observation
 
 @Observable
 final class Router {
-    // MARK: Navigation state
     var path: [Route] = []
 
-    // MARK: Entry
-    /// The initial route for the app. Adjust as needed (e.g., gate by auth state).
     var root: Route = .mainTab
 
-    // MARK: Navigation helpers
     func reset(to route: Route) {
         path.removeAll()
         if route != root {
-            // The stack shows root as the first screen, then pushes route if different
             path = [route]
         }
     }
@@ -28,21 +23,7 @@ final class Router {
     func go(to route: Route) {
         path.append(route)
     }
-
-    func go(_ name: String) {
-        let key = name.lowercased()
-        switch key {
-        case "languagesettingview", "language":
-            path.append(.settingsLanguage)
-        case "themesettingview", "theme":
-            path.append(.settingsTheme)
-        case "aboutview", "about":
-            path.append(.settingsAbout)
-        default:
-            break
-        }
-    }
-
+    
     func goBack() {
         _ = path.popLast()
     }

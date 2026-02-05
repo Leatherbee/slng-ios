@@ -164,11 +164,13 @@ extension SlangData {
         for groupDict in array {
             guard let groupData = try? JSONSerialization.data(withJSONObject: groupDict),
                   let group = try? decoder.decode(SlangGroup.self, from: groupData) else {
+                #if DEBUG
                 if let canonical = groupDict["canonicalForm"] as? String {
                     print("Skipped group '\(canonical)' due to invalid structure")
                 } else {
                     print("Skipped group due to invalid structure")
                 }
+                #endif
                 continue
             }
             

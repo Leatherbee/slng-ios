@@ -12,7 +12,7 @@ import FirebaseAnalytics
 struct TranslateView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.accessibilityReduceMotion) var reduceMotion
-    @StateObject private var viewModel = TranslateViewModel()
+    @State private var viewModel = TranslateViewModel()
     @Namespace private var textNamespace
     
     @State private var dynamicTextStyle: Font.TextStyle = .largeTitle
@@ -218,6 +218,7 @@ struct TranslateView: View {
             dragHintTimer?.invalidate()
             dragHintTimer = nil
         }
+        .trackScreen("TranslateView")
         .onChange(of: viewModel.isTranslated) { _, isRes in
             if isRes {
                 isDragHandleReady = false
@@ -291,8 +292,6 @@ struct TranslateView: View {
                 onDragEnded: handleInputDragEnded
             )
             .background(AppColor.Background.secondary)
-            
-            
         } else {
             TranslateResultSection(
                 viewModel: viewModel,
@@ -309,7 +308,6 @@ struct TranslateView: View {
                 onDragEnded: handleResultDragEnded
             )
             .background(AppColor.Background.secondary)
-            
         }
     }
     
@@ -363,7 +361,6 @@ struct TranslateView: View {
         }
     }
     
-    // MARK: - Input Section Drag Handlers (Light sensitivity)
     private func handleInputDragChanged(_ value: DragGesture.Value) {
         guard !isKeyboardActive else { return }
         guard !viewModel.isRecording && !viewModel.isTranscribing else { return }
@@ -383,7 +380,6 @@ struct TranslateView: View {
         
         isDragPressed = false
         
-        // Light threshold for input section (80pt)
         let shouldOpen = value.translation.height > 20
         if shouldOpen {
             withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.85)) {
@@ -397,7 +393,6 @@ struct TranslateView: View {
         }
     }
     
-    // MARK: - Result Section Drag Handlers (Medium sensitivity)
     private func handleResultDragChanged(_ value: DragGesture.Value) {
         guard !isKeyboardActive else { return }
         guard !viewModel.isRecording && !viewModel.isTranscribing else { return }

@@ -43,5 +43,6 @@ struct KeyboardView: View {
                 viewModel.updateKeyboardStatus()
             }
         }
+        .trackScreen("KeyboardView")
     }
 }

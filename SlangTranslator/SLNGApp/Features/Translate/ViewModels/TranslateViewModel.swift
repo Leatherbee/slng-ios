@@ -10,54 +10,51 @@ import SwiftUI
 import AVFoundation
 internal import Combine
 import SwiftData
-import FirebaseAnalytics
+import Observation
+import FirebasePerformance
+import ActivityKit
 
 @MainActor
-final class TranslateViewModel: ObservableObject {
-    @Published var inputText: String = ""
-    @Published var translatedText: String? = nil
-    @Published var isTranslated: Bool = false
-    @Published var isExpanded: Bool = false
-    @Published var copiedToKeyboardAlert: Bool = false
-    @Published var isDetectedSlangShown: Bool = false
-    @Published var slangDetected: [String] = []
-    @Published var slangData: [SlangData] = []
+@Observable
+final class TranslateViewModel {
+    var inputText: String = ""
+    var translatedText: String? = nil
+    var isTranslated: Bool = false
+    var isExpanded: Bool = false
+    var copiedToKeyboardAlert: Bool = false
+    var isDetectedSlangShown: Bool = false
+    var slangDetected: [String] = []
+    var slangData: [SlangData] = []
     
-    @Published var isLoading: Bool = false
-    @Published var isInitializing: Bool = true
-    @Published var errorMessage: String? = nil
+    var isLoading: Bool = false
+    var isInitializing: Bool = true
+    var errorMessage: String? = nil
     
-    @Published var result: TranslationResult? = nil
-    @Published var isRecording: Bool = false
-    @Published var isTranscribing: Bool = false
-    @Published var sttPlaceholder: String? = nil
-    @Published var audioLevel: Float = -160
-    @Published var isRecorderUIVisible: Bool = false
-    
+    var result: TranslationResult? = nil
+    var isRecording: Bool = false
+    var isTranscribing: Bool = false
+    var sttPlaceholder: String? = nil
+    var audioLevel: Float = -160
+    var isRecorderUIVisible: Bool = false
+
     private let audioRecorder = AudioRecorderManager()
     private let speechStreamingManager = SpeechStreamingManager()
-    
+
     private var translateSentenceUseCase: TranslateSentenceUseCase?
     private var speechUseCase: TranscribeSpeechUseCase?
+    private var currentTranscriptionTask: Task<Void, Never>?
+
+    private let analytics = AnalyticsService.shared
+    private var recordingStartTime: Date?
 
     func prewarmPermissions() {
-        Analytics.logEvent("permissions_prompt", parameters: [
-            "permission_type": "microphone"
-        ])
-        audioRecorder.requestPermission { granted in
-            Analytics.logEvent("permissions_response", parameters: [
-                "permission_type": "microphone",
-                "result": granted ? "authorized" : "denied"
-            ])
+        analytics.logPermissionPrompt(type: "microphone")
+        audioRecorder.requestPermission { [analytics] granted in
+            analytics.logPermissionResponse(type: "microphone", granted: granted)
         }
-        Analytics.logEvent("permissions_prompt", parameters: [
-            "permission_type": "speech_recognition"
-        ])
-        speechStreamingManager.requestAuthorization { granted in
-            Analytics.logEvent("permissions_response", parameters: [
-                "permission_type": "speech_recognition",
-                "result": granted ? "authorized" : "denied"
-            ])
+        analytics.logPermissionPrompt(type: "speech_recognition")
+        speechStreamingManager.requestAuthorization { [analytics] granted in
+            analytics.logPermissionResponse(type: "speech_recognition", granted: granted)
         }
     }
     
@@ -94,32 +91,46 @@ final class TranslateViewModel: ObservableObject {
     }
     
     func startRecording() {
-        audioRecorder.requestPermission { micGranted in
+        // Cancel any pending transcription
+        currentTranscriptionTask?.cancel()
+        currentTranscriptionTask = nil
+
+        audioRecorder.requestPermission { [weak self, analytics] micGranted in
+            guard let self else { return }
+
             if !micGranted {
-                Task { @MainActor in self.errorMessage = "Mic’s locked. Open Settings and free it" }
-                Analytics.logEvent("permissions_response", parameters: [
-                    "permission_type": "microphone",
-                    "result": "denied"
-                ])
+                DispatchQueue.main.async {
+                    self.errorMessage = "Mic's locked. Open Settings and free it"
+                }
+                analytics.logPermissionResponse(type: "microphone", granted: false)
                 return
             }
+
             do {
-                self.audioRecorder.setLevelUpdateHandler { level in
-                    Task { @MainActor in
+                self.audioRecorder.setLevelUpdateHandler { [weak self] level in
+                    DispatchQueue.main.async {
+                        guard let self else { return }
                         self.audioLevel = level
+                        // Update Live Activity with audio level
+                        if let startTime = self.recordingStartTime {
+                            let elapsed = Int(Date().timeIntervalSince(startTime))
+                            LiveActivityManager.shared.updateRecordingActivity(elapsed: elapsed, audioLevel: level)
+                        }
                     }
                 }
                 try self.audioRecorder.start()
-                Task { @MainActor in
+                DispatchQueue.main.async {
                     self.sttPlaceholder = nil
                     self.isRecording = true
+                    self.recordingStartTime = Date()
+                    // Start Live Activity
+                    LiveActivityManager.shared.startRecordingActivity()
                 }
-                Analytics.logEvent("permissions_response", parameters: [
-                    "permission_type": "microphone",
-                    "result": "authorized"
-                ])
+                analytics.logPermissionResponse(type: "microphone", granted: true)
             } catch {
-                Task { @MainActor in self.errorMessage = error.localizedDescription }
+                DispatchQueue.main.async {
+                    self.errorMessage = error.localizedDescription
+                }
             }
         }
     }
@@ -128,63 +139,129 @@ final class TranslateViewModel: ObservableObject {
         // Hard gate: if mic not active or permission not granted, avoid backend calls
         let perm = AVAudioApplication.shared.recordPermission
         if perm != .granted {
-            Task { @MainActor in
-                self.errorMessage = "Your mic said no. Respectfully, fix that in Settings"
-                self.isRecording = false
-                self.isTranscribing = false
-                self.audioLevel = -160
-            }
+            errorMessage = "Your mic said no. Respectfully, fix that in Settings"
+            isRecording = false
+            isTranscribing = false
+            audioLevel = -160
+            LiveActivityManager.shared.endRecordingActivity(error: true)
+            recordingStartTime = nil
             return
         }
+
         speechStreamingManager.stop()
+
         do {
             let result = try audioRecorder.stopAndFetchData()
+
+            // Calculate elapsed time before clearing
+            let elapsed = recordingStartTime.map { Int(Date().timeIntervalSince($0)) } ?? 0
+
+            // Batch state updates
             isRecording = false
             audioLevel = -160
-            guard let speechUseCase else { return }
+
+            guard let speechUseCase else {
+                LiveActivityManager.shared.endRecordingActivity(cancelled: true)
+                recordingStartTime = nil
+                return
+            }
             isTranscribing = true
-            Task {
+
+            // Update Live Activity to transcribing state
+            LiveActivityManager.shared.updateRecordingToTranscribing(elapsed: elapsed)
+
+            // Cancel previous transcription if any
+            currentTranscriptionTask?.cancel()
+
+            currentTranscriptionTask = Task { [weak self] in
+                guard let self else { return }
+
+                let trace = PerformanceTracker.shared.startOperationTrace(
+                    name: "stt_transcription_flow",
+                    attributes: [
+                        "audio_size": String(result.data.count),
+                        "mime_type": result.mimeType
+                    ]
+                )
+
                 do {
-                    let text = try await speechUseCase.execute(audioData: result.data, fileName: result.fileName, mimeType: result.mimeType)
-                    await MainActor.run {
-                        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-                        if trimmed.isEmpty {
-                            let randomFallback = emptySTTMessages.randomElement() ?? "Seems like you didn’t say anything"
-                            self.sttPlaceholder = randomFallback
-                            self.isTranscribing = false
-                        } else {
-                            self.sttPlaceholder = nil
-                            self.inputText = text
-                            self.isTranscribing = false
-                        }
+                    // Check for cancellation before network call
+                    try Task.checkCancellation()
+
+                    let text = try await speechUseCase.execute(
+                        audioData: result.data,
+                        fileName: result.fileName,
+                        mimeType: result.mimeType
+                    )
+
+                    // Check for cancellation after network call
+                    try Task.checkCancellation()
+
+                    let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if trimmed.isEmpty {
+                        self.sttPlaceholder = self.emptySTTMessages.randomElement() ?? "Seems like you didn't say anything"
+                        trace?.setValue("empty", forAttribute: "result_type")
+                        // End Live Activity with no text
+                        LiveActivityManager.shared.endRecordingActivity()
+                    } else {
+                        self.sttPlaceholder = nil
+                        self.inputText = text
+                        trace?.setValue("success", forAttribute: "result_type")
+                        trace?.setValue(String(text.count), forAttribute: "transcription_length")
+                        // End Live Activity with transcribed text
+                        LiveActivityManager.shared.endRecordingActivity(text: text)
                     }
+                    self.isTranscribing = false
+                    self.recordingStartTime = nil
+
                     ReviewRequestManager.shared.recordSTTAndMaybePrompt()
+                    PerformanceTracker.shared.stopOperationTrace(trace, attributes: ["status": "success"])
+                } catch is CancellationError {
+                    // Task was cancelled, don't update UI
+                    PerformanceTracker.shared.stopOperationTrace(trace, attributes: ["status": "cancelled"])
+                    LiveActivityManager.shared.endRecordingActivity(cancelled: true)
+                    self.recordingStartTime = nil
+                    return
                 } catch {
-                    await MainActor.run {
-                        let ns = error as NSError
-                        let code = ns.code
-                        let status = (ns.userInfo["status"] as? Int) ?? code
-                        if status == 429 {
-                            self.errorMessage = "You’re tapping faster than my brain can think… chill for a sec"
-                        } else if status == 500 {
-                            self.errorMessage = "Yeah that’s on me, not you. Fixing the chaos"
-                        } else {
-                            self.errorMessage = error.localizedDescription
-                        }
-                        self.isTranscribing = false
+                    let ns = error as NSError
+                    let status = (ns.userInfo["status"] as? Int) ?? ns.code
+
+                    switch status {
+                    case 429:
+                        self.errorMessage = "You're tapping faster than my brain can think… chill for a sec"
+                    case 500:
+                        self.errorMessage = "Yeah that's on me, not you. Fixing the chaos"
+                    default:
+                        self.errorMessage = error.localizedDescription
                     }
+                    self.isTranscribing = false
+                    self.recordingStartTime = nil
+                    // End Live Activity with error
+                    LiveActivityManager.shared.endRecordingActivity(error: true)
+                    PerformanceTracker.shared.stopOperationTrace(trace, attributes: [
+                        "status": "error",
+                        "error_code": String(status)
+                    ])
                 }
             }
         } catch {
             errorMessage = error.localizedDescription
+            LiveActivityManager.shared.endRecordingActivity(error: true)
+            recordingStartTime = nil
         }
     }
     
     func stopRecording() {
+        currentTranscriptionTask?.cancel()
+        currentTranscriptionTask = nil
         speechStreamingManager.stop()
         audioRecorder.stop()
         isRecording = false
+        isTranscribing = false
         audioLevel = -160
+        recordingStartTime = nil
+        // End Live Activity (cancelled)
+        LiveActivityManager.shared.endRecordingActivity(cancelled: true)
     }
     
     func translate(text: String) {
@@ -193,7 +270,7 @@ final class TranslateViewModel: ObservableObject {
             errorMessage = "Translation engine not ready yet. Please wait a moment."
             return
         }
-        
+
         sttPlaceholder = nil
         inputText = text
 
@@ -205,12 +282,25 @@ final class TranslateViewModel: ObservableObject {
         slangDetected.removeAll()
         slangData.removeAll()
         errorMessage = nil
-        
+
+        // Start Translation Live Activity (only if not cached)
+        if !hasCache {
+            LiveActivityManager.shared.startTranslationActivity(input: text)
+        }
+
         let startTime = Date()
+        let trace = PerformanceTracker.shared.startOperationTrace(
+            name: "translation_flow",
+            attributes: [
+                "input_length": String(text.count),
+                "has_cache": String(hasCache)
+            ]
+        )
+
         Task {
             do {
                 let result = try await useCase.execute(inputText)
-                
+
                 await MainActor.run {
                     self.result = result
                     self.translatedText = result.translation.englishTranslation
@@ -218,26 +308,32 @@ final class TranslateViewModel: ObservableObject {
                     self.slangData = result.detectedSlangs
                     self.slangDetected = result.detectedSlangs.map { $0.slang }
                     self.isLoading = false
-                    
+
                     switch result.translation.source {
                     case .localDB:
-                        print("Loaded from SwiftData cache")
+                        logDebug("Loaded from SwiftData cache", category: .translation)
+                        trace?.setValue("cache", forAttribute: "source")
                     case .openAI:
-                        print("Loaded from OpenAI")
+                        logDebug("Loaded from OpenAI", category: .translation)
+                        trace?.setValue("api", forAttribute: "source")
                     default:
-                        print("Unknown source")
+                        logDebug("Unknown source", category: .translation)
+                        trace?.setValue("unknown", forAttribute: "source")
                     }
+
+                    // End Translation Live Activity with result
+                    LiveActivityManager.shared.endTranslationActivity(
+                        result: result.translation.englishTranslation,
+                        slangsCount: result.detectedSlangs.count
+                    )
                 }
                 ReviewRequestManager.shared.recordTranslationAndMaybePrompt()
                 let elapsedMs = Int(Date().timeIntervalSince(startTime) * 1000)
-                let bucket: String = elapsedMs < 50 ? "<50ms" : elapsedMs < 100 ? "50-100ms" : elapsedMs < 250 ? "100-250ms" : elapsedMs < 500 ? "250-500ms" : ">=500ms"
-                Analytics.logEvent("latency_bucket", parameters: [
-                    "feature_name": "translation_execute",
-                    "bucket": bucket
-                ])
-                Analytics.logEvent("network_status", parameters: [
-                    "status": "online"
-                ])
+                self.analytics.logLatency(feature: "translation_execute", milliseconds: elapsedMs)
+                self.analytics.logNetworkSuccess()
+
+                trace?.setValue(String(result.detectedSlangs.count), forAttribute: "slangs_detected")
+                PerformanceTracker.shared.stopOperationTrace(trace, attributes: ["status": "success"])
             } catch {
                 await MainActor.run {
                     let ns = error as NSError
@@ -249,18 +345,22 @@ final class TranslateViewModel: ObservableObject {
                         self.errorMessage = error.localizedDescription
                     }
                     self.isLoading = false
+
+                    // End Translation Live Activity with error
+                    LiveActivityManager.shared.endTranslationActivity(error: true)
                 }
-                Analytics.logEvent("network_status", parameters: [
-                    "status": "error"
-                ])
-                Analytics.logEvent("extension_error", parameters: [
-                    "code": "translation_execute_error"
-                ])
+                self.analytics.logNetworkError()
+                self.analytics.log(.extensionError(code: "translation_execute_error"))
+                PerformanceTracker.shared.stopOperationTrace(trace, attributes: ["status": "error"])
             }
         }
     }
 
     func reset() {
+        // Cancel any pending tasks
+        currentTranscriptionTask?.cancel()
+        currentTranscriptionTask = nil
+
         inputText = ""
         translatedText = nil
         isTranslated = false
@@ -270,6 +370,7 @@ final class TranslateViewModel: ObservableObject {
         slangData.removeAll()
         result = nil
         isLoading = false
+        isTranscribing = false
         errorMessage = nil
         sttPlaceholder = nil
     }

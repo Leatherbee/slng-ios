@@ -36,26 +36,26 @@ struct DictionaryDetailView: View {
                             (
                                 Text("/")
                                     .font(.system(size: 14.5, weight: .bold))
-                                    .foregroundColor(.white) +
+                                    .foregroundColor(AppColor.Text.primary) +
                                 Text(current?.pronunciation ?? "")
                                     .font(.system(size: 14.5, weight: .bold))
-                                    .foregroundColor(.white) +
+                                    .foregroundColor(AppColor.Text.primary) +
                                 Text("/")
                                     .font(.system(size: 14.5, weight: .bold))
-                                    .foregroundColor(.white)
+                                    .foregroundColor(AppColor.Text.primary)
                             )
                             .frame(height: 20)
                             Image(systemName: "speaker.wave.3")
                                 .font(.system(size: 14.5, weight: .semibold))
-                                .foregroundColor(.white)
+                                .foregroundColor(AppColor.Text.primary)
                             
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                     }
-                    .background(AppColor.StatusBar.color.opacity(0.2))
+                    .background(.white.opacity(0.1))
                     .cornerRadius(37)
-                    .shadow(radius: -10)
+//                    .shadow(radius: -10)
                     .modifier(GlassIfAvailable(isActive: true))
                     .padding(.bottom, 32)
                     
@@ -92,6 +92,7 @@ struct DictionaryDetailView: View {
             .padding(.horizontal)
             .frame(maxWidth: geo.size.width, maxHeight: geo.size.height, alignment: .top)
         }
+        .trackScreen("DictionaryDetailView")
     }
 }
 

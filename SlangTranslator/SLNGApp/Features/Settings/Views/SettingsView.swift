@@ -15,6 +15,8 @@ struct SettingsView: View {
     @AppStorage("hapticEnabled", store: UserDefaults.shared) private var hapticEnabled: Bool = true
     @AppStorage("reduceMotionEnabled", store: UserDefaults.shared) private var reduceMotionEnabled: Bool = false
     @AppStorage("soundEffectEnabled", store: UserDefaults.shared) private var soundEffectEnabled: Bool = true
+    @AppStorage("notifications.slangEnabled", store: UserDefaults.shared) private var slangNotificationsEnabled: Bool = false
+    @State private var showPermissionDeniedAlert = false
     enum ThemeOption: String { case dark, light, system }
     
     var body: some View {
@@ -101,11 +103,51 @@ struct SettingsView: View {
                             .tint(.green)
                     }
                     .contentShape(.rect)
-                    
+
                 }
                 .listRowSeparatorTint(AppColor.Divider.primary)
                 .listRowBackground(AppColor.List.primary)
-                
+
+                Section {
+                    HStack {
+                        Image(systemName: "bell.badge")
+                        Text("Slang Notifications")
+                        Spacer()
+                        Toggle("", isOn: $slangNotificationsEnabled)
+                            .tint(.green)
+                            .onChange(of: slangNotificationsEnabled) { oldValue, newValue in
+                                Task {
+                                    if newValue {
+                                        let status = await SlangNotificationManager.shared.checkAuthorizationStatus()
+                                        if status == .denied {
+                                            slangNotificationsEnabled = false
+                                            showPermissionDeniedAlert = true
+                                        } else {
+                                            await SlangNotificationManager.shared.setEnabled(true)
+                                            Analytics.logEvent("settings_changed", parameters: [
+                                                "setting_name": "slang_notifications",
+                                                "state": "enabled"
+                                            ])
+                                        }
+                                    } else {
+                                        await SlangNotificationManager.shared.setEnabled(false)
+                                        Analytics.logEvent("settings_changed", parameters: [
+                                            "setting_name": "slang_notifications",
+                                            "state": "disabled"
+                                        ])
+                                    }
+                                }
+                            }
+                    }
+                    .contentShape(.rect)
+                } footer: {
+                    Text("Receive a new slang word to learn Indonesian slang.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                .listRowSeparatorTint(AppColor.Divider.primary)
+                .listRowBackground(AppColor.List.primary)
+
                 Section {
                     Button {
                         Analytics.logEvent("settings_about_open", parameters: nil)
@@ -155,6 +197,17 @@ struct SettingsView: View {
             if defaults.object(forKey: "selectedTheme") == nil {
                 selectedThemeRaw = ThemeOption.system.rawValue
             }
+        }
+        .trackScreen("SettingsView")
+        .alert("Notifications Disabled", isPresented: $showPermissionDeniedAlert) {
+            Button("Open Settings") {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("To receive slang notifications, please enable notifications in Settings.")
         }
     }
 }

@@ -14,9 +14,7 @@ class HapticManager {
     
     private var engine: CHHapticEngine?
     private var isEnabled: Bool {
-        let defaults = UserDefaults(suiteName: "group.prammmoe.SLNG") ?? .standard
-        if defaults.object(forKey: "hapticEnabled") == nil { return true }
-        return defaults.bool(forKey: "hapticEnabled")
+        AppPreferences.shared.hapticEnabled
     }
     
     init() {
@@ -34,11 +32,11 @@ class HapticManager {
                 do {
                     try self?.engine?.start()
                 } catch {
-                    print("Failed to restart haptic engine: \(error)")
+                    logError("Failed to restart haptic engine: \(error)", category: .haptic)
                 }
             }
         } catch {
-            print("Failed to create haptic engine: \(error)")
+            logError("Failed to create haptic engine: \(error)", category: .haptic)
         }
     }
     
@@ -78,7 +76,7 @@ class HapticManager {
             let player = try engine?.makePlayer(with: pattern)
             try player?.start(atTime: 0)
         } catch {
-            print("Failed to play haptic pattern: \(error)")
+            logError("Failed to play haptic pattern: \(error)", category: .haptic)
         }
     }
     

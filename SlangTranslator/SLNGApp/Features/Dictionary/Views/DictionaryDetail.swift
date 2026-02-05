@@ -245,11 +245,11 @@ struct DictionaryDetail: View {
             Button(action: onTap) {
                 Text(title)
                     .font(.system(size: 16, design: .serif))
-                    .foregroundColor(isActive ? .white : AppColor.Text.primary)
+                    .foregroundColor(AppColor.Text.primary)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
             }
-            .background(isActive ? AppColor.StatusBar.color.opacity(0.2) : .clear)
+            .background(isActive ? .white.opacity(0.2) : .clear)
             .cornerRadius(37)
             .overlay {
                 if !isActive {

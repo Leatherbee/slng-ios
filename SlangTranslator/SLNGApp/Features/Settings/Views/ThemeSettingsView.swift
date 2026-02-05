@@ -96,6 +96,7 @@ struct ThemeSettingsView: View {
             .background(Color(AppColor.Onboarding.background))
         }
         .background(Color(AppColor.Onboarding.background))
+        .trackScreen("ThemeSettingsView")
     }
 }
 
