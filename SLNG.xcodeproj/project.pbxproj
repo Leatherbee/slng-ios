@@ -1,0 +1,1422 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		503E21582ED8947B0048DDD6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21572ED8947B0048DDD6 /* FirebaseMessaging */; };
+		503E215A2ED8A3F30048DDD6 /* EmojiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21592ED8A3F30048DDD6 /* EmojiKit */; };
+		503E215C2ED8A3F30048DDD6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 503E215B2ED8A3F30048DDD6 /* FirebaseAnalytics */; };
+		503E215E2ED8A3F30048DDD6 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 503E215D2ED8A3F30048DDD6 /* FirebaseAnalyticsCore */; };
+		503E21602ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 503E215F2ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport */; };
+		503E21642ED8A3F30048DDD6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21632ED8A3F30048DDD6 /* FirebaseMessaging */; };
+		503E21662ED8A4220048DDD6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21652ED8A4220048DDD6 /* FirebaseAnalytics */; };
+		503E21682ED8A4220048DDD6 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21672ED8A4220048DDD6 /* FirebaseAnalyticsCore */; };
+		503E216A2ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 503E21692ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport */; };
+		503E216C2ED8A4220048DDD6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 503E216B2ED8A4220048DDD6 /* FirebaseMessaging */; };
+		5092FB152F32D8AC00122C1C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5092FB142F32D8AC00122C1C /* WidgetKit.framework */; };
+		5092FB172F32D8AC00122C1C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5092FB162F32D8AC00122C1C /* SwiftUI.framework */; };
+		5092FB242F32D8AD00122C1C /* SlangWidgetExtensionExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5092FB132F32D8AC00122C1C /* SlangWidgetExtensionExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		50ADC16A2F2A126000ED07D6 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 50ADC1692F2A126000ED07D6 /* FirebaseCore */; };
+		50ADC16C2F2A126000ED07D6 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 50ADC16B2F2A126000ED07D6 /* FirebaseCrashlytics */; };
+		50ADC16E2F2A126000ED07D6 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 50ADC16D2F2A126000ED07D6 /* FirebasePerformance */; };
+		50ADC1762F2B79BB00ED07D6 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 50ADC1752F2B79BB00ED07D6 /* FirebasePerformance */; };
+		50ADC1782F2B79E600ED07D6 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 50ADC1772F2B79E600ED07D6 /* FirebasePerformance */; };
+		50F060C62ECA61BB0081A1CB /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */; };
+		50F060C82ECA61BB0081A1CB /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */; };
+		50F060CA2ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport in Frameworks */ = {isa = PBXBuildFile; productRef = 50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */; };
+		50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7982EBCFD6900B2C472 /* Lottie */; };
+		50FCF79D2EBCFD7E00B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF79C2EBCFD7E00B2C472 /* Lottie */; };
+		50FCF7A12EBCFD8300B2C472 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF7A02EBCFD8300B2C472 /* Lottie */; };
+		50FCF94C2EBF510E00B2C472 /* EmojiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF94B2EBF510E00B2C472 /* EmojiKit */; };
+		50FCF9502EBF527700B2C472 /* EmojiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 50FCF94F2EBF527700B2C472 /* EmojiKit */; };
+		50FDB6942EB200AC004304A3 /* KeyboardSlangExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		502CE8EA2EA1F639007F38E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 502CE8D42EA1F638007F38E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 502CE8DB2EA1F638007F38E3;
+			remoteInfo = SlangTranslator;
+		};
+		502CE8F42EA1F639007F38E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 502CE8D42EA1F638007F38E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 502CE8DB2EA1F638007F38E3;
+			remoteInfo = SlangTranslator;
+		};
+		5092FB222F32D8AD00122C1C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 502CE8D42EA1F638007F38E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5092FB122F32D8AC00122C1C;
+			remoteInfo = SlangWidgetExtensionExtension;
+		};
+		50FDB6922EB200AC004304A3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 502CE8D42EA1F638007F38E3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 50FDB68C2EB200AC004304A3;
+			remoteInfo = KeyboardSlangExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		502CE91F2EA1F8F2007F38E3 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				502CE91A2EA1F8F2007F38E3 /* SLNGShareExtension.appex in Embed Foundation Extensions */,
+				5092FB242F32D8AD00122C1C /* SlangWidgetExtensionExtension.appex in Embed Foundation Extensions */,
+				50FDB6942EB200AC004304A3 /* KeyboardSlangExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		502CE8DC2EA1F638007F38E3 /* SLNG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SLNG.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		502CE8E92EA1F639007F38E3 /* SLNGTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SLNGTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		502CE8F32EA1F639007F38E3 /* SLNGUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SLNGUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SLNGShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5092FB132F32D8AC00122C1C /* SlangWidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SlangWidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5092FB142F32D8AC00122C1C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		5092FB162F32D8AC00122C1C /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = KeyboardSlangExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0DE00012F00000000000001 /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
+		C0DE00012F00000000000002 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		502CEB662EAE54ED007F38E3 /* Exceptions for "SLNG" folder in "SLNG" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"info-release.plist",
+				"info-staging.plist",
+			);
+			target = 502CE8DB2EA1F638007F38E3 /* SLNG */;
+		};
+		502CE91B2EA1F8F2007F38E3 /* Exceptions for "ExplainSlangExtension" folder in "ExplainSlangExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
+		};
+		5092FB292F32D8AD00122C1C /* Exceptions for "SLNG" folder in "SlangWidgetExtensionExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Data/slng_data_v1.2.json,
+				Shared/Common/Logger.swift,
+			);
+			target = 5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */;
+		};
+		5092FB2A2F32D8AD00122C1C /* Exceptions for "SlangWidgetExtension" folder in "SlangWidgetExtensionExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */;
+		};
+		50FCF2072EBB94A900B2C472 /* Exceptions for "SLNG" folder in "ExplainSlangExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Data/slng_data_v1.2.json,
+				Shared/Common/Colors.swift,
+				Shared/Common/Logger.swift,
+				Shared/Data/DataSources/SlangRepositoryImpl.swift,
+				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
+				Shared/Data/Model/SharedModelContainer.swift,
+				Shared/Data/Model/SlangModel.swift,
+				Shared/Data/Model/TranslationModel.swift,
+				Shared/Data/Model/VersionedSchema.swift,
+				Shared/Domain/Entities/SlangData.swift,
+				Shared/Domain/Entities/TranslationData.swift,
+				Shared/Domain/Entities/TranslationResult.swift,
+				Shared/Domain/Repositories/SlangRepository.swift,
+				Shared/Domain/Repositories/TranslationRepository.swift,
+				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
+				"Shared/Extensions/String+SlangNormalization.swift",
+				Shared/Utils/BackendClient.swift,
+				SLNGApp/Component/Haptic.swift,
+				SLNGApp/Features/Translate/Views/SunburstView.swift,
+				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
+			);
+			target = 502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */;
+		};
+		50FCF2082EBB94A900B2C472 /* Exceptions for "SLNG" folder in "KeyboardSlangExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Data/slng_data_v1.2.json,
+				Shared/Common/Colors.swift,
+				Shared/Common/Logger.swift,
+				Shared/Data/DataSources/SlangRepositoryImpl.swift,
+				Shared/Data/DataSources/TranslationRepositoryImpl.swift,
+				Shared/Data/Model/SharedModelContainer.swift,
+				Shared/Data/Model/SlangModel.swift,
+				Shared/Data/Model/TranslationModel.swift,
+				Shared/Data/Model/VersionedSchema.swift,
+				Shared/Domain/Entities/SlangData.swift,
+				Shared/Domain/Entities/TranslationData.swift,
+				Shared/Domain/Entities/TranslationResult.swift,
+				Shared/Domain/Repositories/SlangRepository.swift,
+				Shared/Domain/Repositories/TranslationRepository.swift,
+				Shared/Domain/UseCases/TranslateSentenceUseCase.swift,
+				"Shared/Extensions/String+SlangNormalization.swift",
+				Shared/Utils/BackendClient.swift,
+				SLNGApp/Component/Haptic.swift,
+				SLNGApp/Features/Translate/Views/SunburstView.swift,
+				SLNGApp/Features/Translate/Views/TranslateSlangCardView.swift,
+			);
+			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
+		};
+		50FDB6982EB200AC004304A3 /* Exceptions for "KeyboardSlangExtension" folder in "KeyboardSlangExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		502CE8DE2EA1F638007F38E3 /* SLNG */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				502CEB662EAE54ED007F38E3 /* Exceptions for "SLNG" folder in "SLNG" target */,
+				50FCF2072EBB94A900B2C472 /* Exceptions for "SLNG" folder in "ExplainSlangExtension" target */,
+				50FCF2082EBB94A900B2C472 /* Exceptions for "SLNG" folder in "KeyboardSlangExtension" target */,
+				5092FB292F32D8AD00122C1C /* Exceptions for "SLNG" folder in "SlangWidgetExtensionExtension" target */,
+			);
+			path = SLNG;
+			sourceTree = "<group>";
+		};
+		502CE8EC2EA1F639007F38E3 /* SlangTranslatorTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SlangTranslatorTests;
+			sourceTree = "<group>";
+		};
+		502CE8F62EA1F639007F38E3 /* SlangTranslatorUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SlangTranslatorUITests;
+			sourceTree = "<group>";
+		};
+		502CE9112EA1F8F2007F38E3 /* ExplainSlangExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				502CE91B2EA1F8F2007F38E3 /* Exceptions for "ExplainSlangExtension" folder in "ExplainSlangExtension" target */,
+			);
+			path = ExplainSlangExtension;
+			sourceTree = "<group>";
+		};
+		5092FB182F32D8AC00122C1C /* SlangWidgetExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				5092FB2A2F32D8AD00122C1C /* Exceptions for "SlangWidgetExtension" folder in "SlangWidgetExtensionExtension" target */,
+			);
+			path = SlangWidgetExtension;
+			sourceTree = "<group>";
+		};
+		50FDB68E2EB200AC004304A3 /* KeyboardSlangExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				50FDB6982EB200AC004304A3 /* Exceptions for "KeyboardSlangExtension" folder in "KeyboardSlangExtension" target */,
+			);
+			path = KeyboardSlangExtension;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		502CE8D92EA1F638007F38E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				503E21582ED8947B0048DDD6 /* FirebaseMessaging in Frameworks */,
+				50FCF94C2EBF510E00B2C472 /* EmojiKit in Frameworks */,
+				50ADC16E2F2A126000ED07D6 /* FirebasePerformance in Frameworks */,
+				50F060CA2ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport in Frameworks */,
+				50F060C82ECA61BB0081A1CB /* FirebaseAnalyticsCore in Frameworks */,
+				50ADC16A2F2A126000ED07D6 /* FirebaseCore in Frameworks */,
+				50ADC16C2F2A126000ED07D6 /* FirebaseCrashlytics in Frameworks */,
+				50F060C62ECA61BB0081A1CB /* FirebaseAnalytics in Frameworks */,
+				50FCF7992EBCFD6900B2C472 /* Lottie in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		502CE8E62EA1F639007F38E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		502CE8F02EA1F639007F38E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		502CE90D2EA1F8F2007F38E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50ADC1762F2B79BB00ED07D6 /* FirebasePerformance in Frameworks */,
+				503E215A2ED8A3F30048DDD6 /* EmojiKit in Frameworks */,
+				503E21602ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
+				503E21642ED8A3F30048DDD6 /* FirebaseMessaging in Frameworks */,
+				50FCF79D2EBCFD7E00B2C472 /* Lottie in Frameworks */,
+				503E215C2ED8A3F30048DDD6 /* FirebaseAnalytics in Frameworks */,
+				503E215E2ED8A3F30048DDD6 /* FirebaseAnalyticsCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5092FB102F32D8AC00122C1C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5092FB172F32D8AC00122C1C /* SwiftUI.framework in Frameworks */,
+				5092FB152F32D8AC00122C1C /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50FDB68A2EB200AC004304A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50ADC1782F2B79E600ED07D6 /* FirebasePerformance in Frameworks */,
+				503E216C2ED8A4220048DDD6 /* FirebaseMessaging in Frameworks */,
+				50FCF9502EBF527700B2C472 /* EmojiKit in Frameworks */,
+				503E216A2ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport in Frameworks */,
+				50FCF7A12EBCFD8300B2C472 /* Lottie in Frameworks */,
+				503E21662ED8A4220048DDD6 /* FirebaseAnalytics in Frameworks */,
+				503E21682ED8A4220048DDD6 /* FirebaseAnalyticsCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		502CE8D32EA1F638007F38E3 = {
+			isa = PBXGroup;
+			children = (
+				C0DE00012F00000000000003 /* Configurations */,
+				502CE8DE2EA1F638007F38E3 /* SLNG */,
+				502CE8EC2EA1F639007F38E3 /* SlangTranslatorTests */,
+				502CE8F62EA1F639007F38E3 /* SlangTranslatorUITests */,
+				502CE9112EA1F8F2007F38E3 /* ExplainSlangExtension */,
+				50FDB68E2EB200AC004304A3 /* KeyboardSlangExtension */,
+				5092FB182F32D8AC00122C1C /* SlangWidgetExtension */,
+				50FCF13B2EBB19E800B2C472 /* Frameworks */,
+				502CE8DD2EA1F638007F38E3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		502CE8DD2EA1F638007F38E3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				502CE8DC2EA1F638007F38E3 /* SLNG.app */,
+				502CE8E92EA1F639007F38E3 /* SLNGTests.xctest */,
+				502CE8F32EA1F639007F38E3 /* SLNGUITests.xctest */,
+				502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */,
+				50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */,
+				5092FB132F32D8AC00122C1C /* SlangWidgetExtensionExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		50FCF13B2EBB19E800B2C472 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5092FB142F32D8AC00122C1C /* WidgetKit.framework */,
+				5092FB162F32D8AC00122C1C /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C0DE00012F00000000000003 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE00012F00000000000001 /* Staging.xcconfig */,
+				C0DE00012F00000000000002 /* Release.xcconfig */,
+			);
+			path = Configurations;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		502CE8DB2EA1F638007F38E3 /* SLNG */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 502CE8FD2EA1F639007F38E3 /* Build configuration list for PBXNativeTarget "SLNG" */;
+			buildPhases = (
+				502CE8D82EA1F638007F38E3 /* Sources */,
+				502CE8D92EA1F638007F38E3 /* Frameworks */,
+				502CE8DA2EA1F638007F38E3 /* Resources */,
+				502CE91F2EA1F8F2007F38E3 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				50FDB6932EB200AC004304A3 /* PBXTargetDependency */,
+				5092FB232F32D8AD00122C1C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				502CE8DE2EA1F638007F38E3 /* SLNG */,
+			);
+			name = SLNG;
+			packageProductDependencies = (
+				50FCF7982EBCFD6900B2C472 /* Lottie */,
+				50FCF94B2EBF510E00B2C472 /* EmojiKit */,
+				50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */,
+				50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */,
+				50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */,
+				503E21572ED8947B0048DDD6 /* FirebaseMessaging */,
+				50ADC1692F2A126000ED07D6 /* FirebaseCore */,
+				50ADC16B2F2A126000ED07D6 /* FirebaseCrashlytics */,
+				50ADC16D2F2A126000ED07D6 /* FirebasePerformance */,
+			);
+			productName = SlangTranslator;
+			productReference = 502CE8DC2EA1F638007F38E3 /* SLNG.app */;
+			productType = "com.apple.product-type.application";
+		};
+		502CE8E82EA1F639007F38E3 /* SLNGTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 502CE9002EA1F639007F38E3 /* Build configuration list for PBXNativeTarget "SLNGTests" */;
+			buildPhases = (
+				502CE8E52EA1F639007F38E3 /* Sources */,
+				502CE8E62EA1F639007F38E3 /* Frameworks */,
+				502CE8E72EA1F639007F38E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				502CE8EB2EA1F639007F38E3 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				502CE8EC2EA1F639007F38E3 /* SlangTranslatorTests */,
+			);
+			name = SLNGTests;
+			packageProductDependencies = (
+			);
+			productName = SlangTranslatorTests;
+			productReference = 502CE8E92EA1F639007F38E3 /* SLNGTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		502CE8F22EA1F639007F38E3 /* SLNGUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 502CE9032EA1F639007F38E3 /* Build configuration list for PBXNativeTarget "SLNGUITests" */;
+			buildPhases = (
+				502CE8EF2EA1F639007F38E3 /* Sources */,
+				502CE8F02EA1F639007F38E3 /* Frameworks */,
+				502CE8F12EA1F639007F38E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				502CE8F52EA1F639007F38E3 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				502CE8F62EA1F639007F38E3 /* SlangTranslatorUITests */,
+			);
+			name = SLNGUITests;
+			packageProductDependencies = (
+			);
+			productName = SlangTranslatorUITests;
+			productReference = 502CE8F32EA1F639007F38E3 /* SLNGUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 502CE91C2EA1F8F2007F38E3 /* Build configuration list for PBXNativeTarget "ExplainSlangExtension" */;
+			buildPhases = (
+				502CE90C2EA1F8F2007F38E3 /* Sources */,
+				502CE90D2EA1F8F2007F38E3 /* Frameworks */,
+				502CE90E2EA1F8F2007F38E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				502CE9112EA1F8F2007F38E3 /* ExplainSlangExtension */,
+			);
+			name = ExplainSlangExtension;
+			packageProductDependencies = (
+				50FCF79C2EBCFD7E00B2C472 /* Lottie */,
+				503E21592ED8A3F30048DDD6 /* EmojiKit */,
+				503E215B2ED8A3F30048DDD6 /* FirebaseAnalytics */,
+				503E215D2ED8A3F30048DDD6 /* FirebaseAnalyticsCore */,
+				503E215F2ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport */,
+				503E21632ED8A3F30048DDD6 /* FirebaseMessaging */,
+				50ADC1752F2B79BB00ED07D6 /* FirebasePerformance */,
+			);
+			productName = ExplainSlangExtension;
+			productReference = 502CE9102EA1F8F2007F38E3 /* SLNGShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5092FB252F32D8AD00122C1C /* Build configuration list for PBXNativeTarget "SlangWidgetExtensionExtension" */;
+			buildPhases = (
+				5092FB0F2F32D8AC00122C1C /* Sources */,
+				5092FB102F32D8AC00122C1C /* Frameworks */,
+				5092FB112F32D8AC00122C1C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5092FB182F32D8AC00122C1C /* SlangWidgetExtension */,
+			);
+			name = SlangWidgetExtensionExtension;
+			packageProductDependencies = (
+			);
+			productName = SlangWidgetExtensionExtension;
+			productReference = 5092FB132F32D8AC00122C1C /* SlangWidgetExtensionExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50FDB6952EB200AC004304A3 /* Build configuration list for PBXNativeTarget "KeyboardSlangExtension" */;
+			buildPhases = (
+				50FDB6892EB200AC004304A3 /* Sources */,
+				50FDB68A2EB200AC004304A3 /* Frameworks */,
+				50FDB68B2EB200AC004304A3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				50FDB68E2EB200AC004304A3 /* KeyboardSlangExtension */,
+			);
+			name = KeyboardSlangExtension;
+			packageProductDependencies = (
+				50FCF7A02EBCFD8300B2C472 /* Lottie */,
+				50FCF94F2EBF527700B2C472 /* EmojiKit */,
+				503E21652ED8A4220048DDD6 /* FirebaseAnalytics */,
+				503E21672ED8A4220048DDD6 /* FirebaseAnalyticsCore */,
+				503E21692ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport */,
+				503E216B2ED8A4220048DDD6 /* FirebaseMessaging */,
+				50ADC1772F2B79E600ED07D6 /* FirebasePerformance */,
+			);
+			productName = KeyboardSlangExtension;
+			productReference = 50FDB68D2EB200AC004304A3 /* KeyboardSlangExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		502CE8D42EA1F638007F38E3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					502CE8DB2EA1F638007F38E3 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					502CE8E82EA1F639007F38E3 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 502CE8DB2EA1F638007F38E3;
+					};
+					502CE8F22EA1F639007F38E3 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 502CE8DB2EA1F638007F38E3;
+					};
+					502CE90F2EA1F8F2007F38E3 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					5092FB122F32D8AC00122C1C = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					50FDB68C2EB200AC004304A3 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+				};
+			};
+			buildConfigurationList = 502CE8D72EA1F638007F38E3 /* Build configuration list for PBXProject "SLNG" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 502CE8D32EA1F638007F38E3;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */,
+				50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 502CE8DD2EA1F638007F38E3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				502CE8DB2EA1F638007F38E3 /* SLNG */,
+				502CE8E82EA1F639007F38E3 /* SLNGTests */,
+				502CE8F22EA1F639007F38E3 /* SLNGUITests */,
+				502CE90F2EA1F8F2007F38E3 /* ExplainSlangExtension */,
+				50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */,
+				5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		502CE8DA2EA1F638007F38E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		502CE8E72EA1F639007F38E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		502CE8F12EA1F639007F38E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		502CE90E2EA1F8F2007F38E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5092FB112F32D8AC00122C1C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50FDB68B2EB200AC004304A3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		502CE8D82EA1F638007F38E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		502CE8E52EA1F639007F38E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		502CE8EF2EA1F639007F38E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		502CE90C2EA1F8F2007F38E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5092FB0F2F32D8AC00122C1C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50FDB6892EB200AC004304A3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		502CE8EB2EA1F639007F38E3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 502CE8DB2EA1F638007F38E3 /* SLNG */;
+			targetProxy = 502CE8EA2EA1F639007F38E3 /* PBXContainerItemProxy */;
+		};
+		502CE8F52EA1F639007F38E3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 502CE8DB2EA1F638007F38E3 /* SLNG */;
+			targetProxy = 502CE8F42EA1F639007F38E3 /* PBXContainerItemProxy */;
+		};
+		5092FB232F32D8AD00122C1C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5092FB122F32D8AC00122C1C /* SlangWidgetExtensionExtension */;
+			targetProxy = 5092FB222F32D8AD00122C1C /* PBXContainerItemProxy */;
+		};
+		50FDB6932EB200AC004304A3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 50FDB68C2EB200AC004304A3 /* KeyboardSlangExtension */;
+			targetProxy = 50FDB6922EB200AC004304A3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		502CE8FB2EA1F639007F38E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C0DE00012F00000000000001 /* Staging.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = RR3T853788;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		502CE8FC2EA1F639007F38E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C0DE00012F00000000000002 /* Release.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = RR3T853788;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		502CE8FE2EA1F639007F38E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SLNG/SlangTranslator.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "SLNG/info-staging.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SLNG;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "SLNG uses your microphone only when you choose to record slang so we can convert your speech into text. Nothing is stored or shared.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "SLNG processes your speech locally to understand what you say and turn it into text. Your audio is not saved or uploaded.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
+				PRODUCT_NAME = SLNG;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		502CE8FF2EA1F639007F38E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SLNG/SlangTranslator.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "SLNG/info-release.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = SLNG;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "SLNG uses your microphone only when you choose to record slang so we can convert your speech into text. Nothing is stored or shared.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "SLNG processes your speech locally to understand what you say and turn it into text. Your audio is not saved or uploaded.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator;
+				PRODUCT_NAME = SLNG;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		502CE9012EA1F639007F38E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = prammmoe.SlangTranslatorTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SLNG.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SLNG";
+			};
+			name = Debug;
+		};
+		502CE9022EA1F639007F38E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = prammmoe.SlangTranslatorTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SLNG.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SLNG";
+			};
+			name = Release;
+		};
+		502CE9042EA1F639007F38E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = prammmoe.SlangTranslatorUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SlangTranslator;
+			};
+			name = Debug;
+		};
+		502CE9052EA1F639007F38E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = prammmoe.SlangTranslatorUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SlangTranslator;
+			};
+			name = Release;
+		};
+		502CE91D2EA1F8F2007F38E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ExplainSlangExtension/ExplainSlangExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Share Sheet";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
+				PRODUCT_NAME = SLNGShareExtension;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		502CE91E2EA1F8F2007F38E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ExplainSlangExtension/ExplainSlangExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ExplainSlangExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Share Sheet";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SLNGShareExtension;
+				PRODUCT_NAME = SLNGShareExtension;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		5092FB262F32D8AD00122C1C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SlangWidgetExtension/SlangWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SlangWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SlangWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		5092FB272F32D8AD00122C1C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SlangWidgetExtension/SlangWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SlangWidgetExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.SlangWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		50FDB6962EB200AC004304A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KeyboardSlangExtension/KeyboardSlangExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Keyboard";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		50FDB6972EB200AC004304A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = KeyboardSlangExtension/KeyboardSlangExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR3T853788;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = KeyboardSlangExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "SLNG Keyboard";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = group.prammmoe.SLNG.prammmoe.SlangTranslator.KeyboardSlangExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		502CE8D72EA1F638007F38E3 /* Build configuration list for PBXProject "SLNG" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				502CE8FB2EA1F639007F38E3 /* Debug */,
+				502CE8FC2EA1F639007F38E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		502CE8FD2EA1F639007F38E3 /* Build configuration list for PBXNativeTarget "SLNG" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				502CE8FE2EA1F639007F38E3 /* Debug */,
+				502CE8FF2EA1F639007F38E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		502CE9002EA1F639007F38E3 /* Build configuration list for PBXNativeTarget "SLNGTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				502CE9012EA1F639007F38E3 /* Debug */,
+				502CE9022EA1F639007F38E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		502CE9032EA1F639007F38E3 /* Build configuration list for PBXNativeTarget "SLNGUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				502CE9042EA1F639007F38E3 /* Debug */,
+				502CE9052EA1F639007F38E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		502CE91C2EA1F8F2007F38E3 /* Build configuration list for PBXNativeTarget "ExplainSlangExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				502CE91D2EA1F8F2007F38E3 /* Debug */,
+				502CE91E2EA1F8F2007F38E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5092FB252F32D8AD00122C1C /* Build configuration list for PBXNativeTarget "SlangWidgetExtensionExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5092FB262F32D8AD00122C1C /* Debug */,
+				5092FB272F32D8AD00122C1C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50FDB6952EB200AC004304A3 /* Build configuration list for PBXNativeTarget "KeyboardSlangExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50FDB6962EB200AC004304A3 /* Debug */,
+				50FDB6972EB200AC004304A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.6.0;
+			};
+		};
+		50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
+		50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielsaidi/EmojiKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		503E21572ED8947B0048DDD6 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		503E21592ED8A3F30048DDD6 /* EmojiKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */;
+			productName = EmojiKit;
+		};
+		503E215B2ED8A3F30048DDD6 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		503E215D2ED8A3F30048DDD6 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		503E215F2ED8A3F30048DDD6 /* FirebaseAnalyticsIdentitySupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsIdentitySupport;
+		};
+		503E21632ED8A3F30048DDD6 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		503E21652ED8A4220048DDD6 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		503E21672ED8A4220048DDD6 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		503E21692ED8A4220048DDD6 /* FirebaseAnalyticsIdentitySupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsIdentitySupport;
+		};
+		503E216B2ED8A4220048DDD6 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		50ADC1692F2A126000ED07D6 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		50ADC16B2F2A126000ED07D6 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		50ADC16D2F2A126000ED07D6 /* FirebasePerformance */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebasePerformance;
+		};
+		50ADC1752F2B79BB00ED07D6 /* FirebasePerformance */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebasePerformance;
+		};
+		50ADC1772F2B79E600ED07D6 /* FirebasePerformance */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebasePerformance;
+		};
+		50F060C52ECA61BB0081A1CB /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		50F060C72ECA61BB0081A1CB /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		50F060C92ECA61BB0081A1CB /* FirebaseAnalyticsIdentitySupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50F060C42ECA61BB0081A1CB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsIdentitySupport;
+		};
+		50FCF7982EBCFD6900B2C472 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
+		50FCF79C2EBCFD7E00B2C472 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
+		50FCF7A02EBCFD8300B2C472 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF7972EBCFD6900B2C472 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
+		50FCF94B2EBF510E00B2C472 /* EmojiKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */;
+			productName = EmojiKit;
+		};
+		50FCF94F2EBF527700B2C472 /* EmojiKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50FCF94A2EBF510E00B2C472 /* XCRemoteSwiftPackageReference "EmojiKit" */;
+			productName = EmojiKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 502CE8D42EA1F638007F38E3 /* Project object */;
+}

@@ -2,8 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BackendBaseURL</key>
+	<string>$(BASE_URL)</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>APIKey</key>
-	<string>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</string>
+	<string>$(API_KEY)</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>

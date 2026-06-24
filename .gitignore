@@ -1,0 +1,5 @@
+.DS_Store
+
+# Local build secrets
+Configurations/StagingSecrets.xcconfig
+Configurations/ReleaseSecrets.xcconfig
